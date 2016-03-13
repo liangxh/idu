@@ -1,0 +1,65 @@
+# Research Log
+Xihao Liang, 2016.02.15
+
+---
+
+## Procedure
+
+1. 篩選出僅包含一種表情符, 文字非空, 評論非空的微博, 得出不同表情符對應的微博 mid (statica.collect_emo_mids > emo_mids.pkl)
+2. 统计出不同表情符的覆蓋率 (statica.analyse_emo_mids)
+3. 把emo_mids.pkl拆出子文件方便讀取 (statica.split_emo_mids > eid_mids/$EID.txt)
+4. 得出不同emo 對應的mids 各自對應的uids (statica.export_uids > eid_uids/$EID.pkl)
+5. 對不同eid 對應的微博篩選出4000條微博, 另外透過檢查樣例添加剔除規則 (如除去韓文在等1.中未實現) (sampler.sample(eid))
+6. 觀察用戶分布情況 (userdist.py)
+7. 為數據集建立字符編碼 (tfcoder.init > dataset/tfcoder.pkl)
+8. 建立字符編碼組成的訓練數據 (unidatica.prepare > dataset/unidata.pkl)
+8. 字符編碼-LSTM 運行 (lstm.py)
+9. 在數據庫中找出數據集中每條微博的上文(該作者的前數條微博) (lastblog.get / lastblog.exists)
+10. 檢查HowNet對數據集的覆蓋率, hownet對每一句的覆蓋率 (hownettest.test)
+11. 未覆蓋詞檢查 (hownettestt.test)
+12. 篩選出足夠多評論的微博信息 (MYSQL select user_id, mid, text, comments_count from microblogs where comments_count >= 10 limit 400000 into outfile 'blogs_400000.txt')
+13. 從blogs_400000.txt 中根據blogger.extract() is not None篩選出blogs_subset.txt (commdatca.prepare)
+14. 分析blogs_400000.txt (commdatica.analyse)
+15. 觀察數據 (weiboparser.test_one)
+	1) 評論過多者經常出現廣告
+	2) 帶表情的微博一般有"質量較佳"的評論
+16. 測試多線程微博評論下載 (weibolauncher.test)
+
+17. lstm代碼修改完成 (lstm.main > data/lstm_model.npz, lstm_model.npz.pkl)
+18. lstm測試結果生成 (lstm.valid > output/lstm_result.pkl)
+19. lstm測試結果分析 (lstmreporter.test)
+
+20. 選擇詞表示方法
+	1) 字符編碼
+	2) 隨機詞向量 (原lstm.py中param['Wemb'])
+	3) matrix factorization (SVD)
+	4) denoise autocoder
+	5) word2vec
+
+## NEXT
+
+1. 數據收集
+	1) 選定40,000 ~ 100,000條微博
+	2) 部署到3台機器上運行
+	3) 分析數據質量
+	4) 決定下載更多或開始整理
+
+2. 特征提取
+	1) 基於第一批數據完成 20. 中5種詞表示方法的代碼
+	2) 編寫腳本結合lstm 和特征提取的代碼
+	3) 運行4個程式
+
+## LATER
+
+*. 各腳本的數據讀取函數load將统一移至datica.py
+*. 修改commdatica.py作為流程腳本或測試腳本
+*. 人工標注工具開發
+
+## Extra
+
+1. 對樣本集進行分詞 (zhprocessor.segment)
+2. 實現基於occurrence matrix的詞向量訓練器 (concept.ConceptClassifier)
+
+---
+
+Created on 2016.02.06
