@@ -10,36 +10,29 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import cPickle
 
+import zhtokenizer
 from utils import progbar
-from zhtokenizer import unigramize, tokenize
-
-ENCODER_UNIGRAM = 1
-ENCODER_TOKEN = 2
 
 class ZhEncoder:
-	def __init__(self, encoder = ENCODER_TOKEN):
-		self.f_tokenize = {ENCODER_UNIGRAM: unigramize, ENCODER_TOKEN: tokenize}[encoder]
+	def __init__(self):
 		self.n_code = 0
 		self.code = {}
 
-	def build_code(self, lines):
-		def build_one(self, line):
-			tokens = self.f_tokenize(line)
-
-			for token in set(tokens):
+	def build_code(self, seqs):
+		def build_one(self, seq):
+			for token in set(seq):
 				if not self.code.has_key(token):
 					self.code[token] = self.n_code
 					self.n_code += 1
 		
-		if not isinstance(lines, list):
-			build_one(self, lines)
+		if not isinstance(seqs[0], list):
+			build_one(self, seqs)
 		else:
-			for line in lines:
-				build_one(self, line)
+			for seq in seqs:
+				build_one(self, seq)
 
-	def encode(self, line):
-		tokens = self.f_tokenize(line)
-		codes = [self.code.get(token, '-1') for token in tokens]
+	def encode(self, seq):
+		codes = [self.code.get(token, '-1') for token in seq]
 
 		return codes
 
@@ -54,7 +47,7 @@ def load_sample():
 	return open('data/blogs1000.txt', 'r').read().split('\n')
 
 def test():
-	lines = load_sample()
+	lines = [zhtokenizer.tokenize(l) for l in load_sample()]
 	encoder = ZhEncoder()
 	encoder.build_code(lines)
 
