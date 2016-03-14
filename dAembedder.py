@@ -48,13 +48,28 @@ def train(
 
 	return da
 
-
 class dAEmbedder:
 	'''
 	an denoise autocoder embedder based on trained dA model
 	'''
-	def __init__(self, fname_model):
-		self.da = dAtool.load_model(fname_model)
+	def __init__(self, da):
+		self.da  = da
+
+	@classmethod
+	def load(self, src):
+		if isinstance(src, dAtool.dA):
+			'''
+			module dA expected
+			'''
+			return dAEmbedder(src)
+		elif isinstance(src, str):
+			'''
+			filename of saved model expected
+			'''
+			return dAEmbedder(dAtool.load_model(fname_model))
+		else:
+			print 'unexpected data type for dAEmbedder.load'
+			return None
 
 	def embed(self, x):
 		return self.da.get_hidden_values(x).eval()

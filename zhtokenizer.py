@@ -69,7 +69,7 @@ def tokenize(text):
 	unwanted_pos = set(['x', 'm'])
 	for w in words:
 		if not w.flag in unwanted_pos:
-			tokens.append(w.word)
+			tokens.append(w.word.decode('utf8'))
 
 	return tokens
 

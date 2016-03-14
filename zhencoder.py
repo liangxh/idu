@@ -32,7 +32,7 @@ class ZhEncoder:
 				build_one(self, seq)
 
 	def encode(self, seq):
-		codes = [self.code.get(token, '-1') for token in seq]
+		codes = [self.code.get(token, -1) for token in seq]
 
 		return codes
 

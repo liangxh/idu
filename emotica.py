@@ -13,7 +13,6 @@ sys.setdefaultencoding('utf8')
 
 import re
 import json
-from utils import textcleaner
 from const import JSON_EMO
 
 class Emotica:
@@ -152,6 +151,8 @@ class Emotica:
 		return self._collections.items()
 
 if __name__ == '__main__':
+	from utils import zhprocessor
+
 	db = Emotica()
 
 	print '# of Emoticon Collections: ',  len(db.keys())
@@ -163,7 +164,7 @@ if __name__ == '__main__':
 			print '%s/%s'%(vi['phrase'], vi['value'])
 
 	t = u'你好[泪] [泪] 我是 [泪] 梁錫豪'
-	t = textcleaner.simplify_chinese(t)
+	t = zhprocessor.simplify(t)
 	print t
 	print db.has_emoticon(t)
 
