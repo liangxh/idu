@@ -24,7 +24,21 @@ def svd(bow, dim):
 	u, s, v = np.linalg.svd(W)
 	return u[:, :dim]
 
-def 
+def dA(vecs, dim,
+	corruption_level = 0.,
+	training_epochs = 15,
+	batch_size = 64,
+	learning_rate = 0.1,
+	saveto = None,
+	):
+	
+	from dAembedder import train, dAEmbedder
+	da = dAembedder.train(vecs, dim, corruption_level, training_epochs, batch_size, learning_rate, saveto)
+	
+	embedder = dAEmbedder.load(da)
+	
+	Wemb = [embedder.embed(vec) for vec in vecs]
+	return Wemb
 
 if __name__ == '__main__':
-	
+	pass
