@@ -42,7 +42,7 @@ class CooccurrenceEmbedder(AbstractEmbedder):
 		n_token = len(tf)
 
 		# get representative words	
-		min_count = 0.01 * math.sqrt(float(L) / a)
+		#min_count = 0.01 * math.sqrt(float(L) / a)
 		n_repr = len([None for t, f in tf.items() if f >= min_count])
 
 		sorted_tf = sorted(tf.items(), key = lambda k: -k[1])
@@ -50,10 +50,9 @@ class CooccurrenceEmbedder(AbstractEmbedder):
 		for i, item in enumerate(sorted_tf):
 			t, f = item
 			tinfo[t] = (i, f, f >= min_count) # idx, freq, bool_repr?
-
 		
 		# initialization of matrix R
-		mat_R = np.zeros((n_token, n_repr), dtype = float)
+		mat_R = np.zeros((n_repr, n_repr), dtype = float)
 
 		a_half = a / 2
 		for seq in seqs:
@@ -65,20 +64,14 @@ class CooccurrenceEmbedder(AbstractEmbedder):
 
 					if info1[0] == info2[0]:
 						continue
-				
-					if info1[2] and info2[2]:
-						mat_R[info1[0]][info1[0]] += 1
-						mat_R[info1[0]][info2[0]] += 1
-					elif info1[2]:
+					elif info1[2] and info2[2]:
 						mat_R[info2[0]][info1[0]] += 1
-					elif info2[2]:
 						mat_R[info1[0]][info2[0]] += 1
-
+		
 		# initialization of matrix M
-		vec_tf = np.asmatrix([f for t, f in sorted_tf])
+		vec_tf = np.asmatrix([f for t, f in sorted_tf[:n_repr]])
 		mat_M = float(a) * vec_tf.T * vec_tf / L
-		mat_M = mat_M[:, :n_repr]
-
+		
 
 		# initialization of matrix N
 		mat_N = np.divide(mat_M - mat_R, mat_R)
@@ -86,10 +79,11 @@ class CooccurrenceEmbedder(AbstractEmbedder):
 
 		# turn the matrix into map of tokens and vectors
 		self.code = {}
-		for i, item in enumerate(sorted_tf):
+		for i, item in enumerate(sorted_tf[:n_repr]):
 			t, f = item
-			self.code[t] = np.asarray(mat_N[i, :dim])[0].tolist()
+			self.code[t] = np.asarray(mat_N[i, :])[0].tolist()
 
+		self.set_default_value = [0. for i in range(n_repr)]
 
 ClassEmbedder = CooccurrenceEmbedder
 
