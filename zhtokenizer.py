@@ -3,7 +3,7 @@
 '''
 Author: Xihao Liang
 Created: 2016.02.09
-Description: interface for using jieba
+Description: functions for cutting sentences into unigrams or tokens, specifically for chinese based text
 '''
 
 import sys
@@ -17,19 +17,11 @@ from jieba import posseg
 jieba.initialize()
 jieba.enable_parallel(4)
 
-re_zh = u'\u4e00-\u9fa5'
-pattern_not_zh = re.compile(u'[^%s]+'%(re_zh))
-
-def clean(text):
-	try:
-		text = text.decode('utf8')
-	except:
-		print '[Warning] cannot convert to UTF-8: ', text
-	
-	text = re.sub(pattern_no_zh, ' ', text)
-	return text
-
 def segment(text, pos_tagging = False):
+	'''
+	interface for using jieba
+	'''
+
 	if pos_tagging:
 		return posseg.cut(text)
 	else:
