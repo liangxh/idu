@@ -20,7 +20,7 @@ class Word2Vec(AbstractEmbedder):
 
 	default_value = None
 
-	def build(self, seqs, dim, min_count = 0, workers = 1):
+	def build(self, seqs, dim, min_count = 0, workers = 4):
 		'''
 		simply call gensim.models.Word2Vec to construct the model 
 		'''

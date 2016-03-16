@@ -31,8 +31,8 @@ FNAME_MODEL = 'data/new_lstm_model.npz'
 RANDOM_SEED = 123
 np.random.seed(RANDOM_SEED)
 
-def seqs_to2D(x):
-	return [[[xi, xi] for xi in seq] for seq in x]
+def seqs_to2D(seqs):
+	return [[[xi, xi] for xi in seq] for seq in seqs]
 
 def np_floatX(data):
 	'''
@@ -222,7 +222,7 @@ class LstmClassifier:
 
 		params = self.init_params(model_options)
 
-		self.load_params(fname_model, params)
+		lstmtool.load_params(fname_model, params)
 		tparams = lstmtool.init_tparams(params)
 
 		use_noise, x, mask, y, f_pred_prob, f_pred, cost = self.build_model(tparams, model_options)
@@ -231,6 +231,9 @@ class LstmClassifier:
 		self.f_pred_prob = f_pred_prob
 	
 	def classify_batch(self, seqs):
+		if not isinstance(seqs[0][0], list):
+			seqs = seqs_to2D(seqs)
+
 		x, x_mask = self.prepare_x(seqs)
 		#ps = self.f_pred(x, x_mask)
 		pds = self.f_pred_prob(x, x_mask)
@@ -353,6 +356,8 @@ class LstmClassifier:
 		tparams = lstmtool.init_tparams(params)
 		use_noise, x, mask, y, f_pred_prob, f_pred, cost = self.build_model(tparams, model_options)
 
+		cPickle.dump(model_options, open('%s.pkl'%(fname_model), 'wb'), -1) # why -1??
+
 		# preparing functions for training
 		logger.info('preparing functions')
 
@@ -436,7 +441,6 @@ class LstmClassifier:
 							params = lstmtool.unzip(tparams)
 					
 						np.savez(fname_model, history_errs = history_errs, **params)
-						cPickle.dump(model_options, open('%s.pkl'%(fname_model), 'wb'), -1) # why -1??
 
 					if np.mod(uidx, validFreq) == 0:
 						'''
@@ -501,9 +505,10 @@ class LstmClassifier:
 
 		logger.info('totally %d epoches in %.1f sec'%(eidx + 1, end_time - start_time))
 
-		return train_err, valid_err, test_err
+		self.f_pred_prob = f_pred_prob
+		self.f_pred = f_pred
 
-from tfcoder import TfCoder
+		return train_err, valid_err, test_err
 
 def main():
 	from const import N_EMO
@@ -532,9 +537,6 @@ def valid(outfile = 'output/new_lstm_result.pkl'):
 	lstm.load()
 
 	test_x, test_y = dataset[2]
-	if len(test_x[0][0]) == 1:
-		test_x = seqs_to2D(test_x)
-
 	preds_prob = lstm.classify(test_x)
 	cPickle.dump((test_y, preds_prob), open(outfile, 'w'))
 

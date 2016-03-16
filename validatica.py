@@ -12,10 +12,9 @@ sys.setdefaultencoding('utf8')
 import cPickle
 import matplotlib.pyplot as plt
 
-
 from utils import progbar
 
-def analyse_result(ys, pred_probs, ofname = 'output/precision.png'):
+def report(ys, pred_probs, prefix):
 	'''
 	analyse the result of test set after model training
 	'''
@@ -47,9 +46,9 @@ def analyse_result(ys, pred_probs, ofname = 'output/precision.png'):
 	rand_y = [float(xi) / y_dim for xi in rand_x]
 	plt.plot(rand_x, rand_y, '--r') 
 
-	plt.savefig(ofname)
+	plt.savefig('%s_precision.png'%(prefix))
 
-def test(ifname = 'output/lstm_result.pkl', ofname = 'output/precision.png'):
+def report_from_file(ifname = 'output/lstm_result.pkl', prefix = 'test'):
 	'''
 	demo
 	'''
@@ -57,7 +56,7 @@ def test(ifname = 'output/lstm_result.pkl', ofname = 'output/precision.png'):
 	import cPickle
 	test_y, pred_probs = cPickle.load(open(ifname, 'r'))
 	
-	analyse_result(test_y, pred_probs, ofname)
+	analyse_result(test_y, pred_probs, prefix)
 
 if __name__ == '__main__':
-	test()
+	report_from_file

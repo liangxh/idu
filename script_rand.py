@@ -16,14 +16,15 @@ import lstm
 import datica
 import validatica
 from const import N_EMO, DIR_MODEL, DIR_TEST
-from id_embedder import IdEmbedder
+from rand_embedder import RandEmbedder
 from lstm import LstmClassifier
 
 def main():
 	parser = OptionParser()
 
 	# necessary
-	parser.add_option('-p', '--prefix', action='store', dest='prefix')
+	parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
+	parser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
 
 	# optional
 	parser.add_option('-u', '--unigram', action='store_true', dest='unigram', default = False)
@@ -37,6 +38,7 @@ def main():
 	n_emo = opts.ydim
 	datalen = opts.n_samples
 	prefix = opts.prefix
+	dim_proj = opts.dim_proj
 
 	fname_model = DIR_MODEL + '%s_model.npz'%(prefix)
 	fname_test = DIR_TEST + '%s_test.pkl'%(prefix)
@@ -51,19 +53,15 @@ def main():
 
 		if os.path.exists(fname):
 			print >> sys.stderr, 'embedding model %s found and loaded'%(fname)
-			return IdEmbedder.load(fname)
+			return RandEmbedder.load(fname)
 		else:
-			class x_iterator:
-				def __init__(self, dataset):	
-					self.dataset = dataset
-				
-				def __iter__(self):
-					for set_x, set_y in self.dataset:
-						for x in set_x:
-							yield x
+			def x_iterator(dataset):
+				for set_x, set_y in dataset:
+					for x in set_x:
+						yield x
 
-			embedder = IdEmbedder()
-			embedder.build(x_iterator(dataset))
+			embedder = RandEmbedder()
+			embedder.build(x_iterator(dataset), dim_proj)
 			embedder.dump(fname)
 	
 		return embedder

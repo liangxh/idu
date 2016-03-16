@@ -32,7 +32,6 @@ DIR_UNIGRAM = DIR_DATASET + 'unigram/'
 DIR_TOKEN = DIR_DATASET + 'token/'
 
 # created by script of training
-DIR_EMBEDDER = DIR_DATASET + 'embedder/'
 DIR_MODEL = DIR_DATASET + 'model/'
 DIR_TEST = DIR_DATASET + 'test/'
 

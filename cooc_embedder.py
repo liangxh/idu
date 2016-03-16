@@ -31,7 +31,7 @@ def get_tf(seqs):
 class CooccurrenceEmbedder(AbstractEmbedder):
 	default_value = None
 
-	def build(self, seqs, min_count = 10, window_size = 20):
+	def build(self, seqs, min_count = 0, window_size = 20):
 		lengths = [len(seq) for seq in seqs]
 		L = np.sum(lengths)  # length the dataset
 		mean_L = L / len(seqs)
@@ -108,7 +108,7 @@ def test():
 	print >> sys.stderr, 'done'
 
 	embedder = ClassEmbedder()
-	embedder.build(lines, 10)
+	embedder.build(lines)
 
 	embedder.dump('output/1.pkl')
 

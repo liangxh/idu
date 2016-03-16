@@ -42,7 +42,7 @@ def dA(
 
 	# changed recommended
 	corruption_level = 0.,
-	training_epochs = 15,
+	training_epochs = 1000,
 
 	# params for training
 	batch_size = 64,
@@ -71,21 +71,7 @@ def dA(
 	if saveto is not None:
 		da.dump(saveto)
 
-	from utils import progbar
-
-	'''n_loop = len(code)
-	pbar = progbar.start(n_loop)
-	i = 0
-
-	new_code = {}
-	for token, vec in code.items():
-		new_code[token] = da.get_hidden_values(vec).eval()
-
-		i += 1
-		pbar.update(i)'''
-
 	mat_code = da.get_hidden_values(np.asarray(vecs)).eval()
-	print mat_code.shape	
 
 	new_code = {}
 	for i, token in enumerate(tokens):
