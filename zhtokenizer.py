@@ -58,7 +58,7 @@ def tokenize(text):
 	words = segment(text, True)
 	tokens = []
 
-	unwanted_pos = set(['x', 'm'])
+	unwanted_pos = set(['x', ])
 	for w in words:
 		if not w.flag in unwanted_pos:
 			tokens.append(w.word.decode('utf8'))
