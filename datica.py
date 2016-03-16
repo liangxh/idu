@@ -37,7 +37,7 @@ def prepare(n_emo = N_EMO):
 		print 'preparing data for EID-%d'%(eid)
 		pbar = progbar.start(len(lines))
 	
-		for i, line in enumerate(lines[:100]):
+		for i, line in enumerate(lines):
 			text, emo = blogger.extract(line)
 			text = zhprocessor.simplify(text)
 
