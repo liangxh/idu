@@ -26,8 +26,15 @@ DIR_OUTPUT = 'output/'
 DIR_DATASET = DIR_DATA + 'dataset/'
 DIR_TEXT = DIR_DATASET + 'text/'
 DIR_MUID = DIR_DATASET + 'muid/'
+
+# created by datica.prepare
 DIR_UNIGRAM = DIR_DATASET + 'unigram/'
 DIR_TOKEN = DIR_DATASET + 'token/'
+
+# created by script of training
+DIR_EMBEDDER = DIR_DATASET + 'embedder/'
+DIR_MODEL = DIR_DATASET + 'model/'
+DIR_TEST = DIR_DATASET + 'test/'
 
 PKL_TFCODER = DIR_DATASET + 'tfcoder.pkl'
 PKL_TFDATA = DIR_DATASET + 'tfdata.pkl'

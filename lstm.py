@@ -501,7 +501,7 @@ class LstmClassifier:
 
 		logger.info('totally %d epoches in %.1f sec'%(eidx + 1, end_time - start_time))
 
-		return train_err, valid_err, test_err, end_time - start_time
+		return train_err, valid_err, test_err
 
 from tfcoder import TfCoder
 
