@@ -26,6 +26,7 @@ DIR_OUTPUT = 'output/'
 DIR_DATASET = DIR_DATA + 'dataset/'
 DIR_TEXT = DIR_DATASET + 'text/'
 DIR_MUID = DIR_DATASET + 'muid/'
+DIR_UNIGRAM = DIR_DATASET + 'unigram/'
 DIR_TOKEN = DIR_DATASET + 'token/'
 
 PKL_TFCODER = DIR_DATASET + 'tfcoder.pkl'
