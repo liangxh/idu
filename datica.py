@@ -15,6 +15,10 @@ import blogger
 from const import N_EMO, DIR_TEXT, DIR_UNIGRAM, DIR_TOKEN
 
 def prepare(n_emo = N_EMO):
+	'''
+	tokenize and unigramize the text under data/dataset/text
+	'''
+
 	import blogger
 	import zhtokenizer
 	from utils import progbar, zhprocessor
@@ -54,6 +58,10 @@ def prepare(n_emo = N_EMO):
 		cPickle.dump(token_list, open(DIR_TOKEN + '%d.pkl'%(eid), 'w'))
 
 def load_data(dirname, n_emo, datalen = None, valid_rate = 0.2, test_rate = 0.1):
+	'''
+	load the dataset of EID in [0, emo) with datalen for each under dirname
+	'''
+
 	datalist = []
 
 	for eid in range(n_emo):
@@ -84,9 +92,15 @@ def load_data(dirname, n_emo, datalen = None, valid_rate = 0.2, test_rate = 0.1)
 	return train, valid, test
 
 def load_unigram(n_emo = N_EMO, datalen = None):
+	'''
+	load dataset under data/dataset/unigram
+	'''
 	return load_data(DIR_UNIGRAM, n_emo, datalen)
 
 def load_token(n_emo = N_EMO, datalen = None):
+	'''
+	load dataset under data/dataset/token
+	'''
 	return load_data(DIR_TOKEN, n_emo, datalen)
 
 if __name__ == '__main__':

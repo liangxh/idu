@@ -3,6 +3,7 @@
 '''
 Author: Xihao Liang
 Created: 2016.03.14
+Description: analyse the sample comments
 '''
 
 import numpy as np

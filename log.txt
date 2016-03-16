@@ -29,12 +29,16 @@ Xihao Liang, 2016.02.15
 18. lstm測試結果生成 (lstm.valid > output/lstm_result.pkl)
 19. lstm測試結果分析 (lstmreporter.test)
 
-20. 選擇詞表示方法
-	1) 字符編碼 (id_embedder.py)
-	2) 隨機詞向量 (原lstm.py中param['Wemb']) (rand_embedder.py)
-	3) matrix factorization (SVD)
-	4) denoise autocoder
-	5) word2vec (gensimtest.py) (word2vec.py)
+20. 實現詞表示方法
+	1) 字符編碼 (id_embedder.test)
+	2) 隨機詞向量 (原lstm.py中param['Wemb']) (rand_embedder.test)
+	3) matrix factorization (dimreducer.svd, custom_embedder.test)
+	4) denoise autocoder (dimreducer.dA, custom_embedder.test)
+	5) word2vec (word2vec.py, gensimtest.py)
+
+21. 數據字詞預處理 (datica.prepare)
+22. 讀取指定已分詞數據集 (datica.load_unigram or datica.load_token)
+23. 
 
 ## NEXT
 

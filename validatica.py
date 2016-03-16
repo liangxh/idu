@@ -15,8 +15,12 @@ import matplotlib.pyplot as plt
 
 from utils import progbar
 
-def analyse_result(ys, pred_probs, ofname = 'output/new_precision.png'):
-	n_test = len(ys)	
+def analyse_result(ys, pred_probs, ofname = 'output/precision.png'):
+	'''
+	analyse the result of test set after model training
+	'''
+
+	n_test = len(ys)
 	y_dim = len(pred_probs[0])
 	hit = [0 for i in range(y_dim)]
 
@@ -46,6 +50,10 @@ def analyse_result(ys, pred_probs, ofname = 'output/new_precision.png'):
 	plt.savefig(ofname)
 
 def test(ifname = 'output/lstm_result.pkl', ofname = 'output/precision.png'):
+	'''
+	demo
+	'''
+
 	import cPickle
 	test_y, pred_probs = cPickle.load(open(ifname, 'r'))
 	
