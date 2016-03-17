@@ -10,6 +10,15 @@ import numpy as np
 import weiboloader
 import blogger
 
+def tohist(ls):
+	hist = {}
+	for l in ls:
+		if hist.has_key(l):
+			hist[l] += 1
+		else:
+			hist[l] = 1
+	return hist
+
 def main():
 	blogs_yes = weiboloader.load('output/comm_yes_emo.txt')[:500]
 	blogs_no = weiboloader.load('output/comm_no_emo.txt')[:500]
@@ -25,6 +34,7 @@ def main():
 		total = 0
 
 		tlen = []
+		emolist = []
 
 		for blog in blogs:
 			total += blog['comments_count']
@@ -34,14 +44,26 @@ def main():
 					continue
 				count += 1
 				tlen.append(len(res[0]))
+				emolist.append(res[1])
+		emohist = tohist(emolist)
 
-		return 100. * count / total, np.mean(tlen)
+		return 100. * count / total, np.mean(tlen), emohist
+
+	def write_emo(fname, emohist):
+		fobj = open(fname, 'w')
+		emohist = sorted(emohist.items(), key = lambda k:-k[1])
+		for i, item in enumerate(emohist):
+			k, v = item
+			fobj.write('%d. %s (%d)\n'%(i + 1, k, v))
+		fobj.close()
 
 	ryes = emo_rate(blogs_yes)
-	print 'emo_rate_yes: ', ryes[0], '%, len: ', ryes[1]
+	print 'emo_rate_yes: %.2f%%, len: %.2f, total_emo: %d'%(ryes[0], ryes[1], np.sum(ryes[2].values()))
+	write_emo('output/emo_yes.txt', ryes[2])
 
 	rno = emo_rate(blogs_no)
-	print 'emo_rate_no: ', rno[0], '%, len: ', rno[1]
+	print 'emo_rate_no: %.2f%%, len: %.2f, total_emo: %d'%(rno[0], rno[1], np.sum(rno[2].values()))
+	write_emo('output/emo_no.txt', rno[2])
 
 if __name__ == '__main__':
 	main()

@@ -3,6 +3,7 @@
 '''
 Author: Xihao Liang
 Created: 2016.03.17
+Description: a script to test jieba for knowing which word has the flag 'x' or 'm'
 '''
 
 import sys
@@ -52,7 +53,6 @@ def main():
 	for k, v in m_set:
 		fobj.write('%s (%d)\n'%(k, v))
 	fobj.close()
-
 
 if __name__ == '__main__':
 	main()

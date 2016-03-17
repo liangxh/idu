@@ -110,7 +110,35 @@ def sample():
 	bs = commdatica.load('output/umtc_yes_emo.txt')
 	print len(bs)
 
+def main():
+	blogs = commdatica.load('output/umtc.txt')
+	print '%d in total'%(len(blogs))
+
+	has_emo = []
+	no_emo = []
+
+	target = len(blogs)
+	pbar = progbar.start(target)
+	i = 0
+	j = 0
+	l = 0
+	for blog in blogs:
+		if blogger.is_valid(blog.text):
+			i += 1
+			l += 1
+		elif blogger.is_valid(blog.text, check_emo = False):
+			j += 1
+			l += 1
+		
+		pbar.update(l)
+		if i + j == target:
+			break
+	pbar.finish()
+
+	print '%.2f%%'%(100. * float(i) / (i + j))
+
 if __name__ == '__main__':
 	#export_unmv()
 	#select()
-	sample()
+	#sample()
+	main()

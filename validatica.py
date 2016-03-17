@@ -56,7 +56,7 @@ def report_from_file(ifname = 'output/lstm_result.pkl', prefix = 'test'):
 	import cPickle
 	test_y, pred_probs = cPickle.load(open(ifname, 'r'))
 	
-	analyse_result(test_y, pred_probs, prefix)
+	report(test_y, pred_probs, prefix)
 
 if __name__ == '__main__':
 	report_from_file

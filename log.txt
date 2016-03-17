@@ -1,5 +1,5 @@
 # Research Log
-Xihao Liang, 2016.02.15
+Xihao Liang, 2016.03.17
 
 ---
 
@@ -38,7 +38,30 @@ Xihao Liang, 2016.02.15
 
 21. 數據字詞預處理 (datica.prepare)
 22. 讀取指定已分詞數據集 (datica.load_unigram or datica.load_token)
-23. 
+
+23. blogselector思路
+	1) 统计每個用戶每條微博的回覆量, 計算均值(m)與標準差(v) (blogselector.export_unmv > unmv)
+	2) 篩選出均值<=50, 標準差<=100的用戶, 對這些用戶提取回复量 in [5, m + v]的微博, 每人最多100條 (blogselector.select)
+	3) 測試首條微博帶單個表情對應回复的情況　(以500+500為樣本),　發現
+		i) 帶表情符的微博平均有較多回复
+		ii) 帶表情符的微博的回复中帶表情符的比例較高
+
+	#########################################################
+	# mean_cc_yes:  9.728					#
+	# mean_cc_no:  6.556					#
+	# emo_rate_yes: 25.53%, len: 10.68, total_emo: 1242	#
+	# emo_rate_no: 11.90%, len: 12.00, total_emo: 390	#
+	#########################################################
+
+24. 5種方法對應腳本的編寫 (script_id, script_rand, script_word2vec, script_svd, script_dA)
+25. jieba的詞性標注功能中'x', 'm'不單指標點符號, 導致部分分詞結果為空列表, lstm中出現bug
+	* 導出x, m字符, 經過分析建立過濾字符集 (jiebatest.py)
+
+26. id_embedder failed (全都預測為同一個eid, 顯示無建模能力) 
+
+## BUG
+
+1. matplotlib.pyplot在ssh下不支持 '''no display name and no $DISPLAY environment variable'''
 
 ## NEXT
 
@@ -48,21 +71,11 @@ Xihao Liang, 2016.02.15
 	3) 分析數據質量
 	4) 決定下載更多或開始整理
 
-2. 特征提取
-	1) 基於第一批數據完成 20. 中5種詞表示方法的代碼
-	2) 編寫腳本結合lstm 和特征提取的代碼
-	3) 運行4個程式
 
 ## LATER
 
-*. 各腳本的數據讀取函數load將统一移至datica.py
 *. 修改commdatica.py作為流程腳本或測試腳本
 *. 人工標注工具開發
-
-## Extra
-
-1. 對樣本集進行分詞 (zhprocessor.segment)
-2. 實現基於occurrence matrix的詞向量訓練器 (concept.ConceptClassifier)
 
 ---
 
