@@ -40,7 +40,6 @@ def main():
 						m_set[w.word] = 1
 			pbar.update(j + 1)
 		pbar.finish()
-		break
 
 	fobj = open('output/set_x.txt', 'w')
 	x_set = sorted(x_set.items(), key = lambda k: -k[1])
