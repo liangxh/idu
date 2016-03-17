@@ -56,8 +56,10 @@ Xihao Liang, 2016.03.17
 24. 5種方法對應腳本的編寫 (script_id, script_rand, script_word2vec, script_svd, script_dA)
 25. jieba的詞性標注功能中'x', 'm'不單指標點符號, 導致部分分詞結果為空列表, lstm中出現bug
 	* 導出x, m字符, 經過分析建立過濾字符集 (jiebatest.py)
+	* x, m字符過多, 夾雜中文字符, 目前僅考慮刪去x字符, 對空列表不加入dataset (datica.load_data)
 
-26. id_embedder failed (全都預測為同一個eid, 顯示無建模能力) 
+26. id_embedder failed (全都預測為同一個eid, 顯示無建模能力)
+	* 已解決: matplotlib.use('Agg')
 
 ## BUG
 

@@ -46,7 +46,7 @@ def prepare(n_emo = N_EMO):
 			text = zhprocessor.simplify(text)
 
 			unigrams = zhtokenizer.unigramize(text)	
-			tokens = zhtokenizer.tokenize(text)			
+			tokens = zhtokenizer.tokenize(text)
 			
 			unigram_list.append(unigrams)
 			token_list.append(tokens)
@@ -81,6 +81,10 @@ def load_data(dirname, n_emo, datalen = None, valid_rate = 0.2, test_rate = 0.1)
 		y = []
 		for i in idx_range:
 			for eid in range(n_emo):
+				if len(datalist[eid][i]) == 0:
+					# this is a bug from zhtokenizer, not solved now 
+					continue
+
 				x.append(datalist[eid][i])
 				y.append(eid)
 		return x, y
