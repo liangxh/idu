@@ -58,12 +58,20 @@ Xihao Liang, 2016.03.17
 	* 導出x, m字符, 經過分析建立過濾字符集 (jiebatest.py)
 	* x, m字符過多, 夾雜中文字符, 目前僅考慮刪去x字符, 對空列表不加入dataset (datica.load_data)
 
-26. id_embedder failed (全都預測為同一個eid, 顯示無建模能力)
-	* 已解決: matplotlib.use('Agg')
+26. id_embedder failed (全都預雜測為同一個eid, 顯示無建模能力)
+
+27. 樣本預處理能力未如理想, 待優化
+	* 夾雜非中文字符
+	* 未能透過利用jieba詞性標注對標點符號進行識別
+	* 是否篩去數字
+
+28. 鑒於期中答辯, 優先得出4 x 2種算法的分類效果
+29. blogselector重新編寫sample / main, 運行並等候周末完成爬蟲, 單機線程數量調整
 
 ## BUG
 
 1. matplotlib.pyplot在ssh下不支持 '''no display name and no $DISPLAY environment variable'''
+	* 已解決: matplotlib.use('Agg')
 
 ## NEXT
 
