@@ -10,6 +10,9 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 import cPickle
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 
 from utils import progbar
