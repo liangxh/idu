@@ -206,7 +206,7 @@ class WeiboLauncher:
 		threads = []
 
 		for i in range(n_instance):
-			thread = threading.Thread(target = self.thread_parse, args = (5, i, ))
+			thread = threading.Thread(target = self.thread_parse, args = (3, i, ))
 			thread.start()
 
 			threads.append(thread)
