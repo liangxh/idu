@@ -80,7 +80,7 @@ class ListIterator:
 		if self.idx == self.datalen:
 			if not self.iter_round:
 				self.lock.release()
-				return None
+				return None, None
 			else:
 				self.idx = 0
 
@@ -161,7 +161,7 @@ class WeiboLauncher:
 
 		while flag and not self.thread_interrupt:
 			#weibolauncher.thread_parse: 
-			logger.info('< BLOG %d >: thread_%s downloading (%s %s)'%(
+			logger.info('<BLOG %d>: thread_%s downloading (%s %s)'%(
 					bidx, thread_name, bloginfo.uid, bloginfo.mid))
 
 			wbparser.set_account(account)
@@ -171,6 +171,8 @@ class WeiboLauncher:
 				fail_count += 1
 				if fail_count > 5:
 					print 'fail > 5'
+
+				logger.info('<BLOG %d>: thread_%s failed'%(bidx, thread_name))
 			else:
 				comm, ids = ret
 				blog = {}
@@ -178,12 +180,12 @@ class WeiboLauncher:
 				blog['comments_count'] = len(comm)
 				blog['comments'] = comm
 				blog['ids'] = ids
+							
+				self.outfile.write(json.dumps(blog) + '\n')
 			
 			if self.thread_interrupt:
 				logger.info('thread_%s interrupted'%(thread_name))
 				break
-			
-			self.outfile.write(json.dumps(blog) + '\n')
 
 			bloginfo, bidx = self.iter_bloginfo.next()
 			account, _ = self.iter_account.next()
@@ -239,7 +241,7 @@ def launch(outfile, accounts, bloginfo, n_instance):
 	launcher = WeiboLauncher()
 	launcher.load_accounts(accounts)
 	launcher.load_bloginfo(bloginfo)
-	launcher.init_outfile(outfile, 'a')
+	launcher.init_outfile(outfile, 'w')
 	launcher.launch(n_instance)
 	launcher.close_outfile()
 
