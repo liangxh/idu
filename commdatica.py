@@ -15,7 +15,6 @@ from utils import progbar
 
 FNAME_BLOGS_RAW = 'data/blogs/blogs_400000.txt'
 FNAME_BLOGS_FILTERED = 'data/blogs/blogs_filtered.txt'
-FNAME_BLOGS_SUBSET = 'data/blogs/blogs_subset_%d.txt'
 
 def tohist(ls):
 	hist = {}
@@ -103,10 +102,13 @@ def load(fname_blogs = FNAME_BLOGS_FILTERED):
 
 	return blogs
 
-def split(fname = FNAME_BLOGS_FILTERED, n_part):
+def split(fname, n_part):
 	'''
-	split data/blogs_filtered.txt into data/blogs_subset_ID.txt
+	split $fname into data/blogs_subset_ID.txt
 	'''
+
+	m = re.match('([^\.]+)\.().+$', fname, re.DOTALL)
+	
 
 	lines = open(fname, 'r').readlines()
 	n_lines = len(lines)
@@ -115,10 +117,12 @@ def split(fname = FNAME_BLOGS_FILTERED, n_part):
 	count_lines = 0
 
 	for i in range(n_part):
-		fname = FNAME_BLOGS_SUBSET % (i)
+		fname = '%s_subset_%d.%s'%(m.group(1), i, m.group(2))
 		fobj = open(fname, 'w')
 		fobj.write(''.join(lines[count_lines:min(count_lines + batch_size, n_lines)]))
 		fobj.close()
+
+		print '[info]: export to %s'%(fname)
 
 		count_lines += batch_size
 
