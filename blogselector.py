@@ -12,8 +12,11 @@ sys.setdefaultencoding('utf8')
 import cPickle
 import numpy as np
 
-import commdatica
 import blogger
+
+import commdatica
+from commdatica import BlogInfo
+
 from utils import progbar
 
 def pkl_dump(d, fname):
@@ -59,7 +62,8 @@ def select():
 
 		tmp_umtc = []
 		for m, t, c in cur:
-			tmp_umtc.append((u, m, t, c))
+			if blogger.is_valid(t, check_emo = False):
+				tmp_umtc.append((u, m, t, c))
 
 		tmp_umtc = sorted(tmp_umtc, key = lambda k: -k[3])
 		if len(tmp_umtc) > 100:
@@ -71,7 +75,7 @@ def select():
 
 	fobj = open('output/umtc.txt', 'w')
 	for u, m, t, c in umtc:
-		fobj.write('%s\t%s\t%s\t%d\n'%(u, m, t, c))
+		fobj.write(repr(BlogInfo(u, m, t, c)) + '\n')
 	fobj.close()
 
 def sample():
@@ -114,28 +118,16 @@ def main():
 	blogs = commdatica.load('output/umtc.txt')
 	print '%d in total'%(len(blogs))
 
-	has_emo = []
-	no_emo = []
+	pbar = progbar.start(len(blogs))
+	c = 0
+	for i, blog in enumerate(blogs):
+		if blogger.is_valid(blog.text, check_emo = False):
+			c += 1
 
-	target = len(blogs)
-	pbar = progbar.start(target)
-	i = 0
-	j = 0
-	l = 0
-	for blog in blogs:
-		if blogger.is_valid(blog.text):
-			i += 1
-			l += 1
-		elif blogger.is_valid(blog.text, check_emo = False):
-			j += 1
-			l += 1
-		
-		pbar.update(l)
-		if i + j == target:
-			break
+		pbar.update(i + 1)
 	pbar.finish()
 
-	print '%.2f%%'%(100. * float(i) / (i + j))
+	print '%.2f%%'%(100. * c / len(blogs))
 
 if __name__ == '__main__':
 	#export_unmv()
