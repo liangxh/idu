@@ -10,6 +10,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 import math
+import re
 
 from utils import progbar
 
