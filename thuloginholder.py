@@ -24,6 +24,7 @@ def main():
 			time.sleep(opts.interval)
 		except KeyboardInterrupt:
 			thulogin.logout()
+			break
 
 if __name__ == '__main__':
 	main()
