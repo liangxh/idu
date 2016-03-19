@@ -291,6 +291,7 @@ def main():
 		mids = set()
 	else:
 		mids = set(downloaded_mids(opts.outfile))
+		logger.info('%d downloaded in %s'%(len(mids), opts.outfile))
 
 	bloginfos = [bloginfo for bloginfo in all_bloginfo if not bloginfo.mid in mids]
 
