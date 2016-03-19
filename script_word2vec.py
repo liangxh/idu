@@ -53,7 +53,7 @@ def main():
 
 		if os.path.exists(fname):
 			print >> sys.stderr, 'embedding model %s found and loaded'%(fname)
-			return IdEmbedder.load(fname)
+			return Word2Vec.load(fname)
 		else:
 			class x_iterator:
 				def __init__(self, dataset):	
