@@ -142,7 +142,7 @@ class WeiboLauncher:
 		if self.outfile is not None:
 			self.outfile.close()
 
-	def thread_parse(self, interval = 10, thread_name = None):
+	def thread_parse(self, interval, thread_name = None):
 		'''
 		an instance for parseing weibo comments
 		which sleep for $interval seconds between every loop
@@ -196,7 +196,7 @@ class WeiboLauncher:
 			if flag:
 				time.sleep(interval)
 
-	def launch(self, n_instance):
+	def launch(self, n_instance, interval):
 		'''
 		parse weibo comments by $n_instance threads
 		accounts and bloginfo must be initialized by init_account and init_bloginfo in advance
@@ -207,7 +207,7 @@ class WeiboLauncher:
 		threads = []
 
 		for i in range(n_instance):
-			thread = threading.Thread(target = self.thread_parse, args = (3, i, ))
+			thread = threading.Thread(target = self.thread_parse, args = (interval, i, ))
 			thread.start()
 
 			threads.append(thread)
@@ -238,12 +238,12 @@ def test():
 	launch(JSONS_COMMENT, accounts, bloginfo, 4, 'w')
 
 
-def launch(outfile, accounts, bloginfo, n_instance, ftype):
+def launch(outfile, accounts, bloginfo, ftype, n_instance, interval):
 	launcher = WeiboLauncher()
 	launcher.load_accounts(accounts)
 	launcher.load_bloginfo(bloginfo)
 	launcher.init_outfile(outfile, ftype)
-	launcher.launch(n_instance)
+	launcher.launch(n_instance, interval)
 	launcher.close_outfile()
 
 def main():
@@ -254,6 +254,7 @@ def main():
 	optparser.add_option('-a', '--account', action = 'store', type = 'string', dest = 'acc_range')
 	optparser.add_option('-n', '--instance', action = 'store', type = 'int', dest = 'n_instance', default = 5)
 	optparser.add_option('-r', '--restart', action = 'store_true', dest = 'restart', default = False)
+	optparser.add_option('-t', '--interval', action = 'store', type = 'int', dest = 'interval', default = 3)
 
 	opts, args = optparser.parse_args()
 
@@ -298,7 +299,7 @@ def main():
 	# for test
 	# bloginfos = bloginfos[:20]
 
-	launch(opts.outfile, accounts, bloginfos, opts.n_instance, ftype)
+	launch(opts.outfile, accounts, bloginfos, ftype, opts.n_instance, opts.interval)
 
 if __name__ == '__main__':
 	#test()
