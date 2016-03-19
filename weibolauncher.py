@@ -253,7 +253,7 @@ def main():
 	optparser.add_option('-o', '--output', action = 'store', type = 'string', dest = 'outfile')
 	optparser.add_option('-a', '--account', action = 'store', type = 'string', dest = 'acc_range')
 	optparser.add_option('-n', '--instance', action = 'store', type = 'int', dest = 'n_instance', default = 5)
-	optparser.add_option('-r', '--restart', action = 'store', type = 'store_true', dest = 'restart', default = False)
+	optparser.add_option('-r', '--restart', action = 'store_true', dest = 'restart', default = False)
 
 	opts, args = optparser.parse_args()
 

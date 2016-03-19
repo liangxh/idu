@@ -40,8 +40,8 @@ def clean(ifname, ofname):
 
 def main():
 	parser = OptionParser()
-	parser.add_option('-i', '--input', type='str', dest='ifile')
-	parser.add_option('-o', '--output', type='str', dest='ofile')
+	parser.add_option('-i', '--input', action = 'store', type='str', dest='ifile')
+	parser.add_option('-o', '--output', action = 'store', type='str', dest='ofile')
 
 	opts, args = parser.parse_args()
 
