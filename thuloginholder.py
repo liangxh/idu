@@ -21,7 +21,7 @@ def main():
 	while True:
 		try:
 			thulogin.login(opts.user, opts.password)
-			time.time(opts.interval)
+			time.sleep(opts.interval)
 		except KeyboardInterrupt:
 			thulogin.logout()
 
