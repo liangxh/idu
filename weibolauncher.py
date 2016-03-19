@@ -171,8 +171,8 @@ class WeiboLauncher:
 				logger.info('<BLOG %d>: thread_%s failed'%(bidx, thread_name))
 				
 				fail_count += 1
-				if fail_count > 3:
-					print 'fail > 3'
+				if fail_count > 10:
+					print 'fail > 10'
 					break
 			else:
 				comm, ids = ret
@@ -184,6 +184,9 @@ class WeiboLauncher:
 							
 				self.outfile.write(json.dumps(blog).replace('\n', ' ') + '\n')
 			
+				if fail_count > 0:
+					fail_count -= 1
+
 			if self.thread_interrupt:
 				logger.info('thread_%s interrupted'%(thread_name))
 				break
