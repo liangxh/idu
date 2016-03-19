@@ -14,7 +14,7 @@ def main():
 	optparser = OptionParser()
 	optparser.add_option('-u', '--user', action='store', type='string', dest='user')
 	optparser.add_option('-p', '--password', action='store', type='string', dest='password')
-	optparser.add_option('-i', '--interval', action='store', type='int', dest='interval', default = 15 * 60)
+	optparser.add_option('-i', '--interval', action='store', type='int', dest='interval', default = 20 * 60)
 
 	opts, args = optparser.parse_args()
 	
