@@ -20,6 +20,7 @@ def main():
 	
 	while True:
 		try:
+			print time.strftime('%H:%M:%S', time.localtime(time.time())), 
 			thulogin.login(opts.user, opts.password)
 			time.sleep(opts.interval)
 		except KeyboardInterrupt:
