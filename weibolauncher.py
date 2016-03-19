@@ -27,7 +27,7 @@ logger = Logger(sys.stderr)
 
 JSONS_COMMENT = 'data/comments.txt'
 
-def load(fname = JSONS_COMMENT):
+def load(fname):
 	'''
 	load all the comments downloaded and saved in JSONS_COMMENT
 	'''
@@ -44,13 +44,13 @@ def load(fname = JSONS_COMMENT):
 
 	return comments
 
-def downloaded_mids():
+def downloaded_mids(fname):
 	'''
 	get the list of mids from JSONS_COMMENT
 	which are the mids of the blogs whose comments have been downloaded
 	'''
 
-	comments = load()
+	comments = load(fname)
 
 	mids = [] if comments == [] else [comm['mid'] for comm in comments]
 
@@ -168,11 +168,12 @@ class WeiboLauncher:
 			ret = wbparser.parse(bloginfo.uid, bloginfo.mid)
 			
 			if ret == None:
-				fail_count += 1
-				if fail_count > 5:
-					print 'fail > 5'
-
 				logger.info('<BLOG %d>: thread_%s failed'%(bidx, thread_name))
+				
+				fail_count += 1
+				if fail_count > 3:
+					print 'fail > 3'
+					break
 			else:
 				comm, ids = ret
 				blog = {}
@@ -181,7 +182,7 @@ class WeiboLauncher:
 				blog['comments'] = comm
 				blog['ids'] = ids
 							
-				self.outfile.write(json.dumps(blog) + '\n')
+				self.outfile.write(json.dumps(blog).replace('\n', ' ') + '\n')
 			
 			if self.thread_interrupt:
 				logger.info('thread_%s interrupted'%(thread_name))
@@ -234,14 +235,14 @@ def test():
 
 	bloginfo = filtered_bloginfo[:8]
 
-	launch(JSONS_COMMENT, accounts, bloginfo, 4)
+	launch(JSONS_COMMENT, accounts, bloginfo, 4, 'w')
 
 
-def launch(outfile, accounts, bloginfo, n_instance):
+def launch(outfile, accounts, bloginfo, n_instance, ftype):
 	launcher = WeiboLauncher()
 	launcher.load_accounts(accounts)
 	launcher.load_bloginfo(bloginfo)
-	launcher.init_outfile(outfile, 'w')
+	launcher.init_outfile(outfile, ftype)
 	launcher.launch(n_instance)
 	launcher.close_outfile()
 
@@ -252,6 +253,7 @@ def main():
 	optparser.add_option('-o', '--output', action = 'store', type = 'string', dest = 'outfile')
 	optparser.add_option('-a', '--account', action = 'store', type = 'string', dest = 'acc_range')
 	optparser.add_option('-n', '--instance', action = 'store', type = 'int', dest = 'n_instance', default = 5)
+	optparser.add_option('-r', '--restart', action = 'store_true', dest = 'restart', default = False)
 
 	opts, args = optparser.parse_args()
 
@@ -274,6 +276,8 @@ def main():
 		else:
 			opts.acc_range = (int(m.group(1)), int(m.group(2)))
 
+	ftype = 'w' if opts.restart else 'a'
+
 	# prepare the accounts
 	all_accounts = weiboparser.load_accounts()
 	accounts = all_accounts[opts.acc_range[0]:opts.acc_range[1] + 1]
@@ -282,13 +286,19 @@ def main():
 	all_bloginfo = commdatica.load(opts.infile)
 
 	# filter the blogs whose comments have been downloaded
-	mids = set(downloaded_mids())
+
+	if opts.restart:
+		mids = set()
+	else:
+		mids = set(downloaded_mids(opts.outfile))
+		logger.info('%d downloaded in %s'%(len(mids), opts.outfile))
+
 	bloginfos = [bloginfo for bloginfo in all_bloginfo if not bloginfo.mid in mids]
 
 	# for test
 	# bloginfos = bloginfos[:20]
 
-	launch(opts.outfile, accounts, bloginfos, opts.n_instance)
+	launch(opts.outfile, accounts, bloginfos, opts.n_instance, ftype)
 
 if __name__ == '__main__':
 	#test()
