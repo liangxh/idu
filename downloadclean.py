@@ -17,7 +17,7 @@ def clean(ifname, ofname):
 	lines = open(ifname, 'r').readlines()
 	new_lines = []
 
-	progbar.start(len(lines))
+	pbar = progbar.start(len(lines))
 	for i, l in enumerate(lines):
 		try:
 			j = json.loads(l)
@@ -25,8 +25,8 @@ def clean(ifname, ofname):
 		except ValueError:
 			pass
 		finally:
-			progbar.update(i + 1)
-	progbar.finish()
+			pbar.update(i + 1)
+	pbar.finish()
 
 	fobj = open(ofname, 'w')
 	fobj.write(''.join(new_lines))

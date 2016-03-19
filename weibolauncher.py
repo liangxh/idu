@@ -168,11 +168,12 @@ class WeiboLauncher:
 			ret = wbparser.parse(bloginfo.uid, bloginfo.mid)
 			
 			if ret == None:
-				fail_count += 1
-				if fail_count > 5:
-					print 'fail > 5'
-
 				logger.info('<BLOG %d>: thread_%s failed'%(bidx, thread_name))
+				
+				fail_count += 1
+				if fail_count > 3:
+					print 'fail > 3'
+					break
 			else:
 				comm, ids = ret
 				blog = {}
