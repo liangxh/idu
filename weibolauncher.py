@@ -142,7 +142,7 @@ class WeiboLauncher:
 		if self.outfile is not None:
 			self.outfile.close()
 
-	def thread_parse(self, interval = 5, thread_name = None):
+	def thread_parse(self, interval = 10, thread_name = None):
 		'''
 		an instance for parseing weibo comments
 		which sleep for $interval seconds between every loop

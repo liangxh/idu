@@ -66,9 +66,7 @@ class UrlOpener:
 		req = urllib2.Request(url, headers = self.header)
 
 		try:
-			print 'urlopening... ',
 			resp = self.opener.open(req, data = data, timeout = self.timeout)
-			print 'OK'
 			content = resp.read()
 
 			is_gzip = resp.headers.dict.get('content-encoding') == 'gzip'
@@ -78,11 +76,12 @@ class UrlOpener:
 			return content
 		except urllib2.URLError, e:
 			print e.reason
+			return None
 		except urllib2.HTTPError, e:
 			print '[ERRNO %d] %s'%(e.code, e.reason)
+			return None
 		except socket.timeout, e:
 			print '[Timeout] ', e
-		finally:
 			return None
 
 def test():
