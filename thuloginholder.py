@@ -24,7 +24,7 @@ def main():
 			thulogin.login(opts.user, opts.password)
 			time.sleep(opts.interval)
 		except KeyboardInterrupt:
-			thulogin.logout()
+			#thulogin.logout()
 			break
 
 if __name__ == '__main__':
