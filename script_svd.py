@@ -28,6 +28,7 @@ def main():
 	# necessary
 	parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	parser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
+	parser.add_option('-r', '--resume', action='store_true', dest='resume', default = False)
 
 	# optional
 	parser.add_option('-u', '--unigram', action='store_true', dest='unigram', default = False)
@@ -107,8 +108,14 @@ def main():
 		res = classifier.train(
 			dataset = dataset,
 			ydim = n_emo,
-			#max_epochs = 100,
+			fname_model = fname_model
+		)
+	elif opts.resume:
+		res = classifier.train(
+			dataset = dataset,
+			ydim = n_emo,
 			fname_model = fname_model,
+			reload_model = True,
 		)
 	else:
 		print >> sys.stderr, 'lstm model %s found and loaded'%(fname_model)
