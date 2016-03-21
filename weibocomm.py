@@ -148,7 +148,7 @@ def get(urlopener, uid, mid, show_result = False, show_max = 10):
 			print url
 			return None
 
-	comments_count = res['data']['count']
+	#comments_count = res['data']['count']
 
 	html = res['data']['html']
 	html = add_emoticons_text(html)
@@ -179,7 +179,7 @@ def get(urlopener, uid, mid, show_result = False, show_max = 10):
 		max_id = first_comment.get('comment_id')
 
 		page = 0
-		while (len(comments) < comments_count):
+		while True: #(len(comments) < comments_count):
 			#print page, len(comments)
 			page += 1
 			url = url_comment_page(page, comm_id, max_id)
