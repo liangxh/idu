@@ -72,6 +72,7 @@ Xihao Liang, 2016.03.17
 28. 鑒於期中答辯, 優先得出4 x 2種算法的分類效果
 29. blogselector重新編寫sample / main, 運行並等候周末完成爬蟲, 單機線程數量調整
 30. 使用GPU http://deeplearning.net/software/theano/install.html#gpu-linux
+31. 經dA降維后向量為全1., 待調整
 
 ## BUG
 
