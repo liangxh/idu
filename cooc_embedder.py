@@ -65,8 +65,8 @@ class CooccurrenceEmbedder(AbstractEmbedder):
 					if info1[0] == info2[0]:
 						continue
 					elif info1[2] and info2[2]:
-						mat_R[info2[0]][info1[0]] += 1
-						mat_R[info1[0]][info2[0]] += 1
+						mat_R[info2[0]][info1[0]] += 1.
+						mat_R[info1[0]][info2[0]] += 1.
 		
 		# initialization of matrix M
 		vec_tf = np.asmatrix([f for t, f in sorted_tf[:n_repr]])
