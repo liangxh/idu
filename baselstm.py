@@ -302,7 +302,7 @@ def main():
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
 	n_emo = N_EMO # 2
 
-	import unidatica
+	import baseunidatica as unidatica
 	dataset = unidatica.load(n_emo) #, 1000
 
 	lstm = LstmClassifier()
