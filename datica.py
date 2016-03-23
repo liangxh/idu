@@ -82,7 +82,7 @@ def load_data(dirname, n_emo, datalen = None, valid_rate = 0.2, test_rate = 0.1)
 		for i in idx_range:
 			for eid in range(n_emo):
 				if len(datalist[eid][i]) == 0:
-					# this is a bug from zhtokenizer, not solved now 
+					# this is a bug from zhtokenizer.tokenize, not solved now 
 					continue
 
 				x.append(datalist[eid][i])

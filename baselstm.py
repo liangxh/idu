@@ -18,6 +18,8 @@ import numpy as np
 from utils import baselstmtool as lstmtool
 from utils.logger import Logger
 
+from optparse import OptionParser
+
 logger = Logger()
 
 FNAME_MODEL = 'data/lstm_model.npz'
@@ -290,6 +292,9 @@ class LstmClassifier:
 
 		logger.info('totally %d epoches in %.1f sec'%(eidx + 1, end_time - start_time))
 
+		#self.f_pred_prob = f_pred_prob
+		#self.f_pred = f_pred
+
 		return train_err, valid_err, test_err, end_time - start_time
 
 from tfcoder import TfCoder
@@ -299,11 +304,17 @@ def main():
 	import tfcoder	
 	from const import PKL_TFCODER, N_EMO
 
+	optparser = OptionParser()
+	optparser.add_option('y', 'ydim', action='store', type='int', dest='ydim') #, default=N_EMO
+	optparser.add_option('n', 'n_samples', action='store', type='int', dest='n_samples') #, default=None
+	opts, args = optparser.parse_args()
+
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
-	n_emo = N_EMO # 2
+	n_emo = opts.ydim
+	datalen = opts.n_samples
 
 	import baseunidatica as unidatica
-	dataset = unidatica.load(n_emo) #, 1000
+	dataset = unidatica.load(n_emo, datalen)
 
 	lstm = LstmClassifier()
 	res = lstm.train(
@@ -314,7 +325,7 @@ def main():
 			reload_model = False,
 		)
 
-def valid():
+def valid(fname_result = 'output/base_result.pkl'):
 	import cPickle
 	import tfcoder	
 	from const import PKL_TFCODER, N_EMO
@@ -332,7 +343,7 @@ def valid():
 
 	test_x, test_y = dataset[2]
 	preds_prob = lstm.classify(test_x)
-	cPickle.dump((test_y, preds_prob), open('output/lstm_result.pkl', 'w'))
+	cPickle.dump((test_y, preds_prob), open(fname_result, 'w'))
 
 if __name__ == '__main__':
 	main()

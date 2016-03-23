@@ -274,7 +274,7 @@ class LstmClassifier:
 		n_samples = len(seqs)
 		maxlen = np.max(lengths)
 
-		x = np.zeros((maxlen, n_samples, xdim)).astype('int64')
+		x = np.zeros((maxlen, n_samples, xdim)).astype(theano.config.floatX)
 		x_mask = np.zeros((maxlen, n_samples)).astype(theano.config.floatX)
 
 		for idx, s in enumerate(seqs):
