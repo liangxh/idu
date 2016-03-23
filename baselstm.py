@@ -23,6 +23,7 @@ from optparse import OptionParser
 logger = Logger()
 
 FNAME_MODEL = 'data/lstm_model.npz'
+FNAME_TEST = None
 
 class LstmClassifier:
 	def __init__(self):
@@ -31,10 +32,10 @@ class LstmClassifier:
 	########################## Classification ###################################
 	def load(self, 
 		ydim, n_words,
+		fname_model,
 		dim_proj = 128,
 		encoder = 'lstm',
 		use_dropout = True,
-		fname_model = FNAME_MODEL, 
 	):
 		model_options = locals().copy()
 		params = lstmtool.init_params(model_options)
@@ -108,7 +109,7 @@ class LstmClassifier:
 		encoder = 'lstm',
 		use_dropout = True,
 		reload_model = False,
-		fname_model = FNAME_MODEL,
+		fname_model = None,
 		
 		# training params
 		validFreq = 1000,
@@ -305,13 +306,21 @@ def main():
 	from const import PKL_TFCODER, N_EMO
 
 	optparser = OptionParser()
-	optparser.add_option('y', 'ydim', action='store', type='int', dest='ydim') #, default=N_EMO
-	optparser.add_option('n', 'n_samples', action='store', type='int', dest='n_samples') #, default=None
+	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim') #, default=N_EMO
+	optparser.add_option('-n', '--n_samples', action='store', type='int', dest='n_samples', default = None)
+	optparser.add_option('-d', '--dim_proj', action='store', type='int', dest='dim_proj') #, default = 128
+	optparser.add_option('-p', '--prefix', action='store', type='str', dest='prefix') #, default = 128
 	opts, args = optparser.parse_args()
 
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
 	n_emo = opts.ydim
 	datalen = opts.n_samples
+	dim_proj = opts.dim_proj
+
+	fname_model = 'output/%s_model.npz'%(opts.prefix)
+	fname_result = 'output/%s_test.pkl'%(opts.prefix)
+	fname_precision = 'output/%s_precisoin.png'%(opts.prefix)
+	
 
 	import baseunidatica as unidatica
 	dataset = unidatica.load(n_emo, datalen)
@@ -320,12 +329,20 @@ def main():
 	res = lstm.train(
 			dataset = dataset,
 			ydim = n_emo,
+			dim_proj = dim_proj,
 			n_words = coder.n_code(),
-			fname_model = FNAME_MODEL,
+			fname_model = fname_model,
 			reload_model = False,
 		)
 
-def valid(fname_result = 'output/base_result.pkl'):
+	test_x, test_y = dataset[2]
+	preds_prob = lstm.classify(test_x)
+	cPickle.dump((test_y, preds_prob), open(fname_result, 'w'))
+
+	import validatica
+	validatica.report(test_y, preds_prob, fname_precision)
+
+def valid(fname_model, fname_result):
 	import cPickle
 	import tfcoder	
 	from const import PKL_TFCODER, N_EMO
@@ -339,6 +356,7 @@ def valid(fname_result = 'output/base_result.pkl'):
 	lstm.load(
 			ydim = n_emo,
 			n_words = coder.n_code(),
+			fname_model = fname_model,
 		)
 
 	test_x, test_y = dataset[2]
@@ -347,5 +365,5 @@ def valid(fname_result = 'output/base_result.pkl'):
 
 if __name__ == '__main__':
 	main()
-	valid()
+	#valid()
 
