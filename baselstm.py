@@ -293,8 +293,8 @@ class LstmClassifier:
 
 		logger.info('totally %d epoches in %.1f sec'%(eidx + 1, end_time - start_time))
 
-		#self.f_pred_prob = f_pred_prob
-		#self.f_pred = f_pred
+		self.f_pred_prob = f_pred_prob
+		self.f_pred = f_pred
 
 		return train_err, valid_err, test_err, end_time - start_time
 
@@ -348,7 +348,7 @@ def valid(fname_model, fname_result):
 	from const import PKL_TFCODER, N_EMO
 
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
-	n_emo = N_EMO
+	n_emo = 2 #N_EMO
 
 	import baseunidatica as unidatica
 	dataset = unidatica.load(n_emo)
@@ -363,7 +363,10 @@ def valid(fname_model, fname_result):
 	preds_prob = lstm.classify(test_x)
 	cPickle.dump((test_y, preds_prob), open(fname_result, 'w'))
 
+	import validatica
+	validatica.report(test_y, preds_prob, 'output/base4128')
+
 if __name__ == '__main__':
-	main()
-	#valid()
+	#main()
+	valid()
 
