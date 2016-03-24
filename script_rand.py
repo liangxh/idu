@@ -106,7 +106,7 @@ def main():
 	
 	classifier = LstmClassifier()
 
-	if not os.path.exists(fname_model):
+	if not opts.resume:
 		res = classifier.train(
 			dataset = dataset,
 			Wemb = Wemb,
@@ -117,7 +117,10 @@ def main():
 			batch_size = opts.batch_size,
 			valid_batch_size = opts.batch_size,
 		)
-	elif opts.resume:
+	elif not os.path.exists(fname_model):
+		print >> sys.stderr, 'model %s not found'%(fname_model)
+		return
+	else:
 		res = classifier.train(
 			dataset = dataset,
 			Wemb = Wemb,
@@ -129,9 +132,9 @@ def main():
 			batch_size = opts.batch_size,
 			valid_batch_size = opts.batch_size,
 		)
-	else:
-		print >> sys.stderr, 'lstm model %s found and loaded'%(fname_model)
-		classifier.load(fname_model)
+	#else:
+	#	print >> sys.stderr, 'lstm model %s found and loaded'%(fname_model)
+	#	classifier.load(fname_model)
 
 	test_x, test_y = dataset[2]
 
