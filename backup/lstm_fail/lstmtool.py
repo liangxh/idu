@@ -83,7 +83,7 @@ def _p(pp, name):
     return '%s_%s' % (pp, name)
 
 
-def init_params(options, Wemb = None):
+def init_params(options):
     """
     Global (not LSTM) parameter. For the embeding and the classifier.
     """
@@ -92,11 +92,10 @@ def init_params(options, Wemb = None):
     #randn = numpy.random.rand(options['n_words'],
     #                          options['dim_proj'])
     #params['Wemb'] = (0.01 * randn).astype(config.floatX)
-
-    params['Wemb'] = Wemb
+    params['Wemb'] = numpy.asarray([[i, 0] for i in range(options['n_words'])]).astype(config.floatX)
     params = get_layer(options['encoder'])[0](options,
                                               params,
-                                              prefix = options['encoder'])
+                                              prefix=options['encoder'])
     # classifier
     params['U'] = 0.01 * numpy.random.randn(options['dim_proj'],
                                             options['ydim']).astype(config.floatX)
@@ -444,12 +443,4 @@ def pred_error(f_pred, prepare_data, data, iterator, verbose=False):
 
 if __name__ == '__main__':
     None
-
-
-
-
-
-
-
-
 
