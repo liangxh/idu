@@ -324,7 +324,7 @@ def main():
 	optparser.add_option('-p', '--prefix', action='store', type='str', dest='prefix') #, default = 128
 
 	optparser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
-	optparser.add_option('-v', '--valid_batch_size', action='store', type='int', dest='valid_batch_size', default = 64)
+	optparser.add_option('-v', '--valid_freq', action='store', type='int', dest='valid_freq', default = 10000)
 	opts, args = optparser.parse_args()
 
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
@@ -353,7 +353,8 @@ def main():
 			reload_model = False,
 
 			batch_size = opts.batch_size,
-			valid_batch_size = opts.valid_batch_size,
+			valid_batch_size = opts.batch_size,
+			validFreq = opts.validFreq,
 		)
 
 	test_x, test_y = dataset[2]
@@ -398,7 +399,7 @@ def main_valid():
 
 	optparser.add_option('-d', '--dim_proj', action='store', type='int', dest=None) #, default = 128
 	optparser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
-	optparser.add_option('-v', '--valid_batch_size', action='store', type='int', dest='valid_batch_size', default = 64)
+	optparser.add_option('-v', '--valid_freq', action='store', type='int', dest='valid_freq', default = 10000)
 	opts, args = optparser.parse_args()
 
 	prefix = opts.prefix
