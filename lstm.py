@@ -46,7 +46,7 @@ class LstmClassifier:
 		model_options.update(train_params)
 
 		params = lstmtool.init_params(model_options, None)
-		lstmtool.load_params(fname_model, params)	
+		lstmtool.load_params(fname_model, params)
 		tparams = lstmtool.init_tparams(params)
 
 		use_noise, x, mask, y, f_pred_prob, f_pred, cost = lstmtool.build_model(tparams, model_options)

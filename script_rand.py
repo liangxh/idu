@@ -12,19 +12,19 @@ sys.setdefaultencoding('utf8')
 import cPickle
 from optparse import OptionParser
 
-import lstm
 import datica
 import validatica
 from const import N_EMO, DIR_MODEL, DIR_TEST
 from rand_embedder import RandEmbedder
+from inputadapter import InputAdapter
 from lstm import LstmClassifier
 
 def main():
 	parser = OptionParser()
 
 	# necessary
-	parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	parser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
+	parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	parser.add_option('-r', '--resume', action='store_true', dest='resume', default = False)
 
 	# optional
@@ -33,6 +33,9 @@ def main():
 	# debug
 	parser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
 	parser.add_option('-n', '--n_samples', action='store', dest='n_samples', default = None)
+
+	# especially for gpu
+	parser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
 
 	opts, args = parser.parse_args()
 
@@ -67,19 +70,24 @@ def main():
 	
 		return embedder
 
-	def embed_dataset(embedder, dataset):
+	def prepare_input(dataset, embedder):
 		'''
 		turn sequences of string into list of vectors
 		'''
+		
+		adapter = InputAdapter()
+		adapter.build(embedder)
 
-		def embed_set(set_x_y):
+		def represent_set(set_x_y):
 			x, y = set_x_y
-			new_x = [embedder.embed(xi) for xi in x]
-			return (new_x, y)	
+			new_x = adapter.represent(x)
+			print len(new_x)
+			return (new_x, y)
 
 		train, test, valid = dataset
+		new_dataset = (represent_set(train), represent_set(test), represent_set(valid))
 
-		return (embed_set(train), embed_set(test), embed_set(valid))
+		return new_dataset, adapter.get_Wemb()
 
 	if not os.path.isdir(DIR_MODEL):
 		os.mkdir(DIR_MODEL)
@@ -93,22 +101,33 @@ def main():
 		dataset = datica.load_token(n_emo, datalen)
 
 	embedder = init_embedder(dataset)
-	dataset = embed_dataset(embedder, dataset)
 
+	dataset, Wemb = prepare_input(dataset, embedder)
+	
 	classifier = LstmClassifier()
 
 	if not os.path.exists(fname_model):
 		res = classifier.train(
 			dataset = dataset,
+			Wemb = Wemb,
 			ydim = n_emo,
-			fname_model = fname_model
+
+			fname_model = fname_model,
+
+			batch_size = opts.batch_size,
+			valid_batch_size = opts.batch_size,
 		)
 	elif opts.resume:
 		res = classifier.train(
 			dataset = dataset,
+			Wemb = Wemb,
 			ydim = n_emo,
+
 			fname_model = fname_model,
 			reload_model = True,
+
+			batch_size = opts.batch_size,
+			valid_batch_size = opts.batch_size,
 		)
 	else:
 		print >> sys.stderr, 'lstm model %s found and loaded'%(fname_model)
