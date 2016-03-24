@@ -83,18 +83,20 @@ def _p(pp, name):
     return '%s_%s' % (pp, name)
 
 
-def init_params(options):
+def init_params(options, Wemb):
     """
     Global (not LSTM) parameter. For the embeding and the classifier.
     """
     params = OrderedDict()
     # embedding
-    randn = numpy.random.rand(options['n_words'],
-                              options['dim_proj'])
-    params['Wemb'] = (0.01 * randn).astype(config.floatX)
+    #randn = numpy.random.rand(options['n_words'],
+    #                          options['dim_proj'])
+    #params['Wemb'] = (0.01 * randn).astype(config.floatX)
+
+    params['Wemb'] = Wemb
     params = get_layer(options['encoder'])[0](options,
                                               params,
-                                              prefix=options['encoder'])
+                                              prefix = options['encoder'])
     # classifier
     params['U'] = 0.01 * numpy.random.randn(options['dim_proj'],
                                             options['ydim']).astype(config.floatX)
