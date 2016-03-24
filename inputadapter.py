@@ -10,6 +10,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import theano
 import numpy as np
 import cPickle
 
@@ -29,7 +30,7 @@ class InputAdapter:
 			Widx[k] = i + 1			
 			Wemb.append(v)
 
-		self.Wemb = np.asarray(Wemb)
+		self.Wemb = np.asarray(Wemb).astype(theano.config.floatX)
 		self.Widx = Widx
 
 	def represent_one(self, token_seq):
