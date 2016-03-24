@@ -31,14 +31,20 @@ class LstmClassifier:
 
 	########################## Classification ###################################
 	def load(self, 
-		ydim, n_words,
 		fname_model,
-		dim_proj = 128,
 		encoder = 'lstm',
-		use_dropout = True,
+	
+		#ydim, n_words,
+		#dim_proj = 128,
+		#use_dropout = True,	
 	):
+
 		model_options = locals().copy()
-		params = lstmtool.init_params(model_options)
+
+		train_params = cPickle.load(open('%s.pkl'%(fname_model), 'r')) # why -1??
+		model_options.update(train_params)
+
+		params = lstmtool.init_params(model_options, None)
 		lstmtool.load_params(fname_model, params)	
 		tparams = lstmtool.init_tparams(params)
 
@@ -101,7 +107,7 @@ class LstmClassifier:
 		return x, x_mask, labels
 	
 	def train(self,
-		dataset,
+		dataset, Wemb,
 
 		# model params		
 		ydim, n_words,
@@ -132,7 +138,9 @@ class LstmClassifier:
 		logger.info('building model...')
 
 		model_options = locals().copy()
-		params = lstmtool.init_params(model_options)
+		cPickle.dump(model_options, open('%s.pkl'%(fname_model), 'wb'), -1) # why -1??
+
+		params = lstmtool.init_params(model_options, Wemb)
 
 		if reload_model:
 			if os.path.exists(fname_model):
@@ -142,7 +150,6 @@ class LstmClassifier:
 				return None
 		
 		tparams = lstmtool.init_tparams(params)
-		print ', '.join(tparams.keys())
 		use_noise, x, mask, y, f_pred_prob, f_pred, cost = lstmtool.build_model(tparams, model_options)
 
 		# preparing functions for training
@@ -228,7 +235,6 @@ class LstmClassifier:
 							params = lstmtool.unzip(tparams)
 					
 						np.savez(fname_model, history_errs = history_errs, **params)
-						cPickle.dump(model_options, open('%s.pkl'%(fname_model), 'wb'), -1) # why -1??
 
 					if np.mod(uidx, validFreq) == 0:
 						'''
@@ -236,6 +242,8 @@ class LstmClassifier:
 						'''
 						use_noise.set_value(0.)
 						
+						logger.info('Validation ....')
+
 						# not necessary	
 						train_err = lstmtool.pred_error(f_pred, self.prepare_data, train, kf)
 						
@@ -300,6 +308,10 @@ class LstmClassifier:
 
 from tfcoder import TfCoder
 
+def randWemb(n_words, dim_proj):
+	randn = np.random.rand(n_words, dim_proj)
+	return (0.01 * randn).astype(theano.config.floatX)
+
 def main():
 	import cPickle
 	import tfcoder	
@@ -319,15 +331,18 @@ def main():
 
 	fname_model = 'output/%s_model.npz'%(opts.prefix)
 	fname_result = 'output/%s_test.pkl'%(opts.prefix)
-	fname_precision = 'output/%s_precisoin.png'%(opts.prefix)
-	
+	fname_valid_prefix = 'output/%s'%(opts.prefix)
 
 	import baseunidatica as unidatica
 	dataset = unidatica.load(n_emo, datalen)
 
+	Wemb = randWemb(coder.n_code(), dim_proj)
+
 	lstm = LstmClassifier()
 	res = lstm.train(
 			dataset = dataset,
+			Wemb = Wemb,
+
 			ydim = n_emo,
 			dim_proj = dim_proj,
 			n_words = coder.n_code(),
@@ -340,33 +355,55 @@ def main():
 	cPickle.dump((test_y, preds_prob), open(fname_result, 'w'))
 
 	import validatica
-	validatica.report(test_y, preds_prob, fname_precision)
+	validatica.report(test_y, preds_prob, fname_valid_prefix)
 
-def valid(fname_model, fname_result):
+
+def valid(n_emo, datalen, fname_model, fname_result, fname_valid_prefix):
 	import cPickle
 	import tfcoder	
 	from const import PKL_TFCODER, N_EMO
 
-	coder = cPickle.load(open(PKL_TFCODER, 'r'))
-	n_emo = 2 #N_EMO
+	#coder = cPickle.load(open(PKL_TFCODER, 'r'))
+	#n_emo = 2 #N_EMO
 
-	import baseunidatica as unidatica
-	dataset = unidatica.load(n_emo)
 	lstm = LstmClassifier()
 	lstm.load(
-			ydim = n_emo,
-			n_words = coder.n_code(),
+			#ydim = n_emo,
+			#n_words = coder.n_code(),
 			fname_model = fname_model,
 		)
 
+
+	import baseunidatica as unidatica
+	dataset = unidatica.load(n_emo, datalen)
 	test_x, test_y = dataset[2]
+
 	preds_prob = lstm.classify(test_x)
 	cPickle.dump((test_y, preds_prob), open(fname_result, 'w'))
 
 	import validatica
-	validatica.report(test_y, preds_prob, 'output/base4128')
+	validatica.report(test_y, preds_prob, fname_valid_prefix)
+
+def main_valid():
+	optparser = OptionParser()
+	optparser.add_option('-p', '--prefix', action='store', type='str', dest='prefix')
+	optparser.add_option('-n', '--n_samples', action='store', type='int', dest='n_samples', default = None)
+	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim') #, default=N_EMO
+
+	optparser.add_option('-d', '--dim_proj', action='store', type='int', dest=None) #, default = 128
+	opts, args = optparser.parse_args()
+
+	prefix = opts.prefix
+	n_emo = opts.ydim
+	datalen = opts.n_samples
+
+	fname_model = 'output/%s_model.npz'%(prefix)
+	fname_result = 'output/%s_test.pkl'%(prefix + '_valid')
+	fname_valid_prefix = 'output/%s'%(prefix + '_valid')
+
+	valid(n_emo, datalen, fname_model, fname_result, fname_valid_prefix)
 
 if __name__ == '__main__':
-	#main()
-	valid()
+	main()
+	main_valid()
 
