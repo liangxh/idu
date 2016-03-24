@@ -5,7 +5,7 @@ import numpy as np
 import theano
 
 def main():
-	a = np.zeros((54912, 128)).astype(theano.config.floatX)
+	a = np.zeros((104912, 128)).astype(theano.config.floatX)
 	ta = theano.shared(a, borrow=True)
 	
 	return ta
