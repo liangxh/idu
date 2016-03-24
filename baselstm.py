@@ -354,7 +354,7 @@ def main():
 
 			batch_size = opts.batch_size,
 			valid_batch_size = opts.batch_size,
-			validFreq = opts.validFreq,
+			validFreq = opts.valid_freq,
 		)
 
 	test_x, test_y = dataset[2]
