@@ -303,6 +303,7 @@ class LstmClassifier:
 
 		self.f_pred_prob = f_pred_prob
 		self.f_pred = f_pred
+		self.tparams = tparams
 
 		return train_err, valid_err, test_err, end_time - start_time
 
@@ -322,9 +323,6 @@ def main():
 	optparser.add_option('-n', '--n_samples', action='store', type='int', dest='n_samples', default = None)
 	optparser.add_option('-d', '--dim_proj', action='store', type='int', dest='dim_proj') #, default = 128
 	optparser.add_option('-p', '--prefix', action='store', type='str', dest='prefix') #, default = 128
-
-	optparser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
-	optparser.add_option('-v', '--valid_batch_size', action='store', type='int', dest='valid_batch_size', default = 64)
 	opts, args = optparser.parse_args()
 
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
@@ -340,6 +338,7 @@ def main():
 	dataset = unidatica.load(n_emo, datalen)
 
 	Wemb = randWemb(coder.n_code(), dim_proj)
+	cPickle.dump(Wemb, open('output/%s_wemb_before_train.pkl'%(opts.prefix), 'w'))
 
 	lstm = LstmClassifier()
 	res = lstm.train(
@@ -351,10 +350,9 @@ def main():
 			n_words = coder.n_code(),
 			fname_model = fname_model,
 			reload_model = False,
-
-			batch_size = opts.batch_size,
-			valid_batch_size = opts.valid_batch_size,
 		)
+
+	cPickle.dump(lstm.tparams['Wemb'], open('output/%s_wemb_after_train.pkl'%(opts.prefix), 'w'))
 
 	test_x, test_y = dataset[2]
 	preds_prob = lstm.classify(test_x)
@@ -379,7 +377,6 @@ def valid(n_emo, datalen, fname_model, fname_result, fname_valid_prefix):
 			fname_model = fname_model,
 		)
 
-
 	import baseunidatica as unidatica
 	dataset = unidatica.load(n_emo, datalen)
 	test_x, test_y = dataset[2]
@@ -397,8 +394,6 @@ def main_valid():
 	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim') #, default=N_EMO
 
 	optparser.add_option('-d', '--dim_proj', action='store', type='int', dest=None) #, default = 128
-	optparser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
-	optparser.add_option('-v', '--valid_batch_size', action='store', type='int', dest='valid_batch_size', default = 64)
 	opts, args = optparser.parse_args()
 
 	prefix = opts.prefix
