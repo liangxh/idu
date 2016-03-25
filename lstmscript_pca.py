@@ -36,7 +36,10 @@ class LstmScriptPCA(LstmScript):
 					all_x.extend(set_x)
 				return all_x
 
+			print >> sys.stderr, 'initialization of wordembedder'
 			embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset)))
+
+			print >> sys.stderr, 'performing dimension reduction (pca)'
 			embedder.dimreduce_fn(dimreducer.pca, self.opts.dim_proj)
 			embedder.dump(fname_embedder)
 		
