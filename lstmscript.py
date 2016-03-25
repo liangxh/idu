@@ -104,7 +104,7 @@ class LstmScript:
 		'''
 
 		################### Preparation of Variables #######################
-		print >> sys.stderr, 'lstmscript.run: [info] preparing variables', 
+		print >> sys.stderr, 'lstmscript.run: [info] preparing variables ... ', 
 
 		opts, args = self.optparser.parse_args() # initialized in init_default_options
 		self.opts = opts                         # shared by self. for customized function
@@ -121,7 +121,7 @@ class LstmScript:
 		print >> sys.stderr, 'Done'
 
 		#################### Preparation of Input ##############
-		print >> sys.stderr, 'lstmscript.run: [info] loading dataset', 
+		print >> sys.stderr, 'lstmscript.run: [info] loading dataset ... ', 
 
 		if opts.unigram:
 			dataset = datica.load_unigram(n_emo, datalen) 

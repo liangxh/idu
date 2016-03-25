@@ -45,10 +45,12 @@ class LstmScriptPCA(LstmScript):
 				print >> sys.stderr, 'lstmscript_pca.init_embedder: [info] CoocEmbedder found at %s'%(fname_cooc_embedder)
 				embedder = WordEmbedder.load(fname_cooc_embedder)
 			else:
-				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] CoocEmbedder not found (expected %s)'%(fname_cooc_embedder)
+				print >> sys.stderr, 'lstmscript_pca.init_embedder: [info] CoocEmbedder not found (expected %s)'%(fname_cooc_embedder)
 
 				embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset)))
+				print >> sys.stderr, 'lstmscript_pca.init_embedder: [info] saving CoocEmbedder...', 
 				embedder.dump(fname_cooc_embedder)
+				print >> sys.stderr, 'Done'
 
 
 			print >> sys.stderr, 'performing dimension reduction (pca)'
