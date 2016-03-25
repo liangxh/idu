@@ -12,13 +12,10 @@ sys.setdefaultencoding('utf8')
 
 from lstmscript import LstmScript
 
-import wemb_cooc
-import dimreducer
+import wemb_word2vec
 from wordembedder import WordEmbedder
 
-from const import DIR_MODEL
-
-class LstmScriptSVD(LstmScript):
+class LstmScriptRand(LstmScript):
 	def add_extra_options(self):
 		self.optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
 		self.optparser.add_option('-m', '--min_count', action='store', type = 'int', dest='min_count', default=360)
@@ -39,29 +36,14 @@ class LstmScriptSVD(LstmScript):
 					all_x.extend(set_x)
 				return all_x
 
-			print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] initialization of wordembedder'
-			fname_cooc_embedder = DIR_MODEL + 'cooc%d_embedder.pkl'%(self.opts.min_count)
-
-			if os.path.exists(fname_cooc_embedder):
-				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] CoocEmbedder found at %s'%(fname_cooc_embedder)
-				embedder = WordEmbedder.load(fname_cooc_embedder)
-			else:
-				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] CoocEmbedder not found (expected %s)'%(fname_cooc_embedder)
-
-				embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset), self.opts.min_count))
-				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] saving CoocEmbedder...',
- 
-				embedder.dump(fname_cooc_embedder)
-				print >> sys.stderr, 'Done'
-
-			print >> sys.stderr, 'performing dimension reduction (svd)'
-			embedder.dimreduce_fn(dimreducer.svd, self.opts.dim_proj)
+			embedder = WordEmbedder(*wemb_word2vec.build(x_iterator(dataset),
+									self.opts.dim_proj, self.opts.min_count))
 			embedder.dump(fname_embedder)
 		
 			return embedder
 
 def main():
-	script = LstmScriptSVD()
+	script = LstmScriptRand()
 	script.run()
 
 if __name__ == '__main__':

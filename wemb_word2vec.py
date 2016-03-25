@@ -10,21 +10,35 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import cPickle
 
-import numpy as np
 import theano
+import numpy as np
+import gensim
 
-def build(seqs, dim):
+def build(seqs, dim, min_count = 0, workers = 1):
 	tokens = set()
 	for seq in seqs:
 		tokens |= set(seq)
 
-	n_word = len(tokens)	
+	model = gensim.models.Word2Vec(seqs,
+			size = dim,
+			min_count = min_count,
+			workers = workers
+		)
 	
+	c = 0
 	Widx = {}
-	for i, token in enumerate(tokens):
-		Widx[token] = i + 1
-	
-	Wemb = np.concatenate([np.zeros((1, dim)), 0.01 * np.random.rand(n_word, dim)], axis = 0).astype(theano.config.floatX)
+	vecs = [[0. for i in range(dim)]]
+	for token in tokens:
+		try:
+			vec = model[token]
+		except KeyError:
+			continue
+
+		c += 1
+		Widx[token] = c
+		vecs.append(vec)
+
+	Wemb = np.asarray(vecs).astype(theano.config.floatX)
 	return Widx, Wemb
 
 def test():
