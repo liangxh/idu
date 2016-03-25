@@ -41,7 +41,7 @@ class LstmScriptSVD(LstmScript):
 				return all_x
 
 			print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] initialization of wordembedder'
-			fname_cooc_embedder = DIR_MODEL + 'cooc_embedder.pkl'
+			fname_cooc_embedder = DIR_MODEL + 'cooc%d_embedder.pkl'%(self.opts.min_count)
 
 			if os.path.exists(fname_cooc_embedder):
 				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] CoocEmbedder found at %s'%(fname_cooc_embedder)
