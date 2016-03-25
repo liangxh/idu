@@ -22,6 +22,7 @@ from const import DIR_MODEL
 class LstmScriptSVD(LstmScript):
 	def add_extra_options(self):
 		self.optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
+		self.optparser.add_option('-m', '--min_count', action='store', type = 'int', dest='min_count', default=360)
 
 	def init_embedder(self, dataset, fname_embedder):
 		'''
@@ -48,7 +49,7 @@ class LstmScriptSVD(LstmScript):
 			else:
 				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] CoocEmbedder not found (expected %s)'%(fname_cooc_embedder)
 
-				embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset)))
+				embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset), self.opts.min_count))
 				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] saving CoocEmbedder...',
  
 				embedder.dump(fname_cooc_embedder)

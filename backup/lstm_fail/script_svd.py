@@ -29,6 +29,8 @@ def main():
 	parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	parser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
 	parser.add_option('-r', '--resume', action='store_true', dest='resume', default = False)
+	parser.add_option('-r', '--resume', action='store_true', dest='resume', default = 360)
+
 
 	# optional
 	parser.add_option('-u', '--unigram', action='store_true', dest='unigram', default = False)
