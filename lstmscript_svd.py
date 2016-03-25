@@ -36,7 +36,10 @@ class LstmScriptSVD(LstmScript):
 					all_x.extend(set_x)
 				return all_x
 
+			print >> sys.stderr, 'initialization of wordembedder'
 			embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset)))
+
+			print >> sys.stderr, 'performing dimension reduction (svd)'
 			embedder.dimreduce_fn(dimreducer.svd, self.opts.dim_proj)
 			embedder.dump(fname_embedder)
 		
