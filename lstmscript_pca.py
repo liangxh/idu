@@ -16,6 +16,8 @@ import wemb_cooc
 import dimreducer
 from wordembedder import WordEmbedder
 
+from const import DIR_MODEL
+
 class LstmScriptPCA(LstmScript):
 	def add_extra_options(self):
 		self.optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
@@ -36,8 +38,18 @@ class LstmScriptPCA(LstmScript):
 					all_x.extend(set_x)
 				return all_x
 
-			print >> sys.stderr, 'initialization of wordembedder'
-			embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset)))
+			print >> sys.stderr, 'lstmscript_pca.init_embedder: [info] initialization of wordembedder'
+			fname_cooc_embedder = DIR_MODEL + 'cooc_embedder.pkl'
+
+			if os.path.exists(fname_cooc_embedder):
+				print >> sys.stderr, 'lstmscript_pca.init_embedder: [info] CoocEmbedder found at %s'%(fname_cooc_embedder)
+				embedder = WordEmbedder.load(fname_cooc_embedder)
+			else:
+				print >> sys.stderr, 'lstmscript_svd.init_embedder: [info] CoocEmbedder not found (expected %s)'%(fname_cooc_embedder)
+
+				embedder = WordEmbedder(*wemb_cooc.build(x_iterator(dataset)))
+				embedder.dump(fname_cooc_embedder)
+
 
 			print >> sys.stderr, 'performing dimension reduction (pca)'
 			embedder.dimreduce_fn(dimreducer.pca, self.opts.dim_proj)

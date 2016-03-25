@@ -12,6 +12,7 @@ import cPickle
 
 import math
 import numpy as np
+from utils import progbar
 
 def get_tf(seqs):
 	token_tf = {}
@@ -47,10 +48,14 @@ def build(seqs, min_count = 0, window_size = 20):
 	n_repr = len([None for k, v in tinfo.items() if v[2]])
 
 	# initialization of matrix R
+	print >> sys.stderr, 'wemb_cooc.build: [info] initialization of matrix R'
 	mat_R = np.zeros((n_repr, n_repr), dtype = float)
 
 	a_half = a / 2
-	for seq in seqs:
+	
+	pbar = progbar.start(len(seqs))
+
+	for l, seq in enumerate(seqs):
 		for i, t1 in enumerate(seq):
 			n_seq = len(seq)
 			for t2 in seq[i + 1: min(i + a, n_seq)]:
@@ -62,12 +67,19 @@ def build(seqs, min_count = 0, window_size = 20):
 				elif info1[2] and info2[2]:
 					mat_R[info2[0]][info1[0]] += 1.
 					mat_R[info1[0]][info2[0]] += 1.
+
+		pbar.update(l + 1)
+	pbar.finish()
 		
 	# initialization of matrix M
+	print >> sys.stderr, 'wemb_cooc.build: [info] initialization of matrix M'
+	
 	vec_tf = np.asmatrix([f for t, f in tf[:n_repr]])
 	mat_M = float(a) * vec_tf.T * vec_tf / L
 	
 	# initialization of matrix N
+	print >> sys.stderr, 'wemb_cooc.build: [info] initialization of matrix N'
+
 	mat_N = np.divide(mat_M - mat_R, mat_R)
 	mat_N[mat_N == np.inf] = 0.
 	
