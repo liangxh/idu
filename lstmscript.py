@@ -104,6 +104,8 @@ class LstmScript:
 		'''
 
 		################### Preparation of Variables #######################
+		print >> sys.stderr, 'lstmscript.run: [info] preparing variables', 
+
 		opts, args = self.optparser.parse_args() # initialized in init_default_options
 		self.opts = opts                         # shared by self. for customized function
 
@@ -116,19 +118,30 @@ class LstmScript:
 		fname_model = DIR_MODEL + '%s_model.npz'%(prefix)
 		fname_embedder = DIR_MODEL + '%s_embedder.pkl'%(prefix)
 
+		print >> sys.stderr, 'Done'
+
 		#################### Preparation of Input ##############
+		print >> sys.stderr, 'lstmscript.run: [info] loading dataset', 
+
 		if opts.unigram:
 			dataset = datica.load_unigram(n_emo, datalen) 
 		else:
 			datica.load_token(n_emo, datalen)
 
+		print >> sys.stderr, 'Done'
+
+		print >> sys.stderr, 'lstmscript.run: [info] initialization of embedder'
 		embedder = self.init_embedder(dataset, fname_embedder)
+
+		print >> sys.stderr, 'lstmscript.run: [info] preparing input'
 		dataset, Wemb = self.prepare_input(dataset, embedder)
 
 		#################### Preparation for Output ############
 		self.init_folder()
 	
 		#################### Training ##########################
+		print >> sys.stderr, 'lstmscript.run: [info] start training'
+	
 		classifier = LstmClassifier()
 
 		if not opts.resume:
