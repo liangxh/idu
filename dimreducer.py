@@ -14,51 +14,47 @@ import numpy as np
 
 from utils import dAtool
 
-def unzip(code):
-	tokens = []
-	vecs = []
-	for token, vec in code.items():
-		tokens.append(token)
-		vecs.append(vec)
-
-	return tokens, vecs
-
-def svd(code, dim):
-	tokens, vecs = unzip(code)
-
-	W = np.asmatrix(vecs)
+def svd(Wemb, dim):
+	W = np.asmatrix(Wemb)
 	u, s, v = np.linalg.svd(W)
 	
+	return np.asarray(u[:, :dim]).astype(theano.config.floatX)
 
-	new_code = {}
-	for i, token in enumerate(tokens):
-		new_code[token] = np.asarray(u[i, :dim])[0].tolist()
+def pca(Wemb, dim):
+	# Reference http://blog.csdn.net/rav009/article/details/13170725
 
-	return new_code
+	meanVals = np.mean(Wemb, axis=0)  
+	meanRemoved = Wemb - meanVals #减去均值  
+	stded = meanRemoved / np.std(Wemb) #用标准差归一化  
+	covMat = np.cov(stded, rowvar=0) #求协方差方阵  
+	eigVals, eigVects = np.linalg.eig(np.mat(covMat)) #求特征值和特征向量  
+	eigValInd = np.argsort(eigVals)  #对特征值进行排序  
+	eigValInd = eigValInd[:-(dim + 1):-1]   
+	redEigVects = eigVects[:, eigValInd]       # 除去不需要的特征向量
+
+	lowDDataMat = stded * redEigVects    #求新的数据矩阵
+	#reconMat = (lowDDataMat * redEigVects.T) * np.std(Wemb) + meanVals  
+	
+	return lowDDataMat #, reconMat  
 
 def dA(
-	code,
+	Wemb,
 	dim,
 
 	# changed recommended
-	corruption_level = 0.,
+	corruption_level = 0.3,
 	training_epochs = 1000,
 
 	# params for training
 	batch_size = 64,
 	learning_rate = 0.1,
-
-	# save
-	saveto = None,
 	):
-
-	tokens, vecs = unzip(code)
 
 	def shared_dataset(data_x, borrow=True):
 		return theano.shared(np.asarray(data_x, dtype=theano.config.floatX), borrow=borrow)
 
-	n_visible = len(vecs[0])
-	train_set_x = shared_dataset(vecs)
+	n_visible = Wemb.shape[1]
+	train_set_x = shared_dataset(Wemb)
 
 	da = dAtool.train(
 		train_set_x = train_set_x, 
@@ -68,16 +64,25 @@ def dA(
 		corruption_level = corruption_level,
 	)
 
-	if saveto is not None:
-		da.dump(saveto)
+	new_Wemb = da.get_hidden_values(np.asarray(Wemb)).eval()
 
-	mat_code = da.get_hidden_values(np.asarray(vecs)).eval()
+	return new_Wemb
 
-	new_code = {}
-	for i, token in enumerate(tokens):
-		new_code[token] = mat_code[i, :dim].tolist()
+def test():
+	import datica
+	import wemb_cooc
+	from wordembedder import WordEmbedder
 
-	return new_code
+	dataset = datica.load_unigram(2, 100)
+	train_x = dataset[0][0]
+	wembedder = WordEmbedder(*wemb_cooc.build(train_x))	
+	#wembedder.dimreduce_load(dA(wembedder.dimreduce_prepare(), 5))
+	#wembedder.dimreduce_fn(svd, 5)
+	#wembedder.dimreduce_fn(dA, 500, training_epochs = 200)
+	wembedder.dimreduce_fn(pca, 10)
+
+	print wembedder.embed(train_x[0])
+	print wembedder.index(train_x[0])
 
 if __name__ == '__main__':
 	test()
