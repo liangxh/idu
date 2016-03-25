@@ -27,6 +27,9 @@ def get_tf(seqs):
 	return token_tf	
 
 def build(seqs, min_count = 0, window_size = 20):
+	# Magic threshold
+	magic_dim = 5000
+
 	lengths = [len(seq) for seq in seqs]
 	L = np.sum(lengths)  # length the dataset
 	mean_L = L / len(seqs)
@@ -50,7 +53,7 @@ def build(seqs, min_count = 0, window_size = 20):
 	# initialization of matrix R
 	print >> sys.stderr, 'wemb_cooc.build: [info] initialization of matrix R'
 	mat_R = np.zeros((n_repr, n_repr), dtype = float)
-
+	
 	a_half = a / 2
 	
 	pbar = progbar.start(len(seqs))
@@ -70,13 +73,15 @@ def build(seqs, min_count = 0, window_size = 20):
 
 		pbar.update(l + 1)
 	pbar.finish()
-		
+	mat_R = mat_R[:, :magic_dim]
+	
 	# initialization of matrix M
 	print >> sys.stderr, 'wemb_cooc.build: [info] initialization of matrix M'
 	
 	vec_tf = np.asmatrix([f for t, f in tf[:n_repr]])
 	mat_M = float(a) * vec_tf.T * vec_tf / L
-	
+	mat_M = mat_M[:, :magic_dim]	
+
 	# initialization of matrix N
 	print >> sys.stderr, 'wemb_cooc.build: [info] initialization of matrix N'
 
@@ -88,7 +93,7 @@ def build(seqs, min_count = 0, window_size = 20):
 		t, f = item
 		Widx[t] = i + 1
 	
-	Wemb = np.concatenate([np.zeros((1, n_repr)), mat_N], axis = 0)
+	Wemb = np.concatenate([np.zeros((1, mat_N.shape[1])), mat_N], axis = 0)
 	
 	print >> sys.stderr, 'wemb_cooc.build: [info] finish'
 	return Widx, Wemb
