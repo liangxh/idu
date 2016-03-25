@@ -89,6 +89,8 @@ def build(seqs, min_count = 0, window_size = 20):
 		Widx[t] = i + 1
 	
 	Wemb = np.concatenate([np.zeros((1, n_repr)), mat_N], axis = 0)
+	
+	print >> sys.stderr, 'wemb_cooc.build: [info] finish'
 	return Widx, Wemb
 
 def test():
