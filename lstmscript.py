@@ -126,7 +126,7 @@ class LstmScript:
 		if opts.unigram:
 			dataset = datica.load_unigram(n_emo, datalen) 
 		else:
-			datica.load_token(n_emo, datalen)
+			dataset = datica.load_token(n_emo, datalen)
 
 		print >> sys.stderr, 'Done'
 
