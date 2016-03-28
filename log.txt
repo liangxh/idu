@@ -79,6 +79,17 @@ Xihao Liang, 2016.03.17
 37. lstmscript作為運行抽象腳本流程,　lstmscript_xxx中的init_embedder和add_extra_options實珼對不同embedder的差异
 38.　wemb_xxx實現embedder,　wordembedder作為容器, dimreducer作為统一的降維工具接口
 
+39. 數據初步统计分析結果
+
+	#################################################################################
+	# number of blogs with emoticons: 134779 (33.69%)				#
+	# number of blogs without emoticons: 265246 (66.31%)				#
+	# average number of comments of blogs with emoticons: 6.65			#
+	# average number of comments of blogs without emoticons: 6.32			#
+	# average number of comments with emoticons of blogs with emoticons: 1.67	#
+	# average number of comments with emoticons of blogs without emoticons: 1.03	#
+	#################################################################################
+
 ## BUG
 
 1. matplotlib.pyplot在ssh下不支持 '''no display name and no $DISPLAY environment variable'''
