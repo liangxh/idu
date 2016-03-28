@@ -88,10 +88,10 @@ def main():
 	report = ''
 	report += 'number of blogs with emoticons: %d (%.2f%%)\n'%(yes_blog, 100. * yes_blog / (yes_blog + no_blog))
 	report += 'number of blogs without emoticons: %d (%.2f%%)\n'%(no_blog, 100. * no_blog / (yes_blog + no_blog))
-	report += 'average number of comments of blogs with emoticons: %d\n'%(np.mean(yes_comm))
-	report += 'average number of comments of blogs without emoticons: %d\n'%(np.mean(no_comm))
-	report += 'average number of comments with emoticons of blogs with emoticons: %d\n'%(np.mean(yes_emo_comm))
-	report += 'average number of comments with emoticons of blogs without emoticons: %d\n'%(np.mean(no_emo_comm))
+	report += 'average number of comments of blogs with emoticons: %.2f\n'%(np.mean(yes_comm))
+	report += 'average number of comments of blogs without emoticons: %.2f\n'%(np.mean(no_comm))
+	report += 'average number of comments with emoticons of blogs with emoticons: %.2f\n'%(np.mean(yes_emo_comm))
+	report += 'average number of comments with emoticons of blogs without emoticons: %.2f\n'%(np.mean(no_emo_comm))
 
 	print report 
 
