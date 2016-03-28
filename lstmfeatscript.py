@@ -16,6 +16,7 @@ import datica
 import validatica
 from const import N_EMO, DIR_MODEL, DIR_TEST
 from lstm import LstmClassifier
+from wordembedder import WordEmbedder
 
 class LstmFeatScript:
 	def __init__(self):
