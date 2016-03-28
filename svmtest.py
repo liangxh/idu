@@ -17,7 +17,7 @@ from optparse import OptionParser
 
 import validatica
 
-def test(dataset):
+def svctest(dataset):
 	train, test = dataset
 	train_x, train_y = train
 	test_x, test_y = test
@@ -56,7 +56,7 @@ def main():
 	print >> sys.stderr, 'done'
 
 	dataset = ((tx, ty), test)
-	ys, preds = test(dataset)
+	ys, preds = svctest(dataset)
 
 	validatica.report(ys, preds, 'output/%sfeat_svm'%(opts.prefix))
 
