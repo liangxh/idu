@@ -29,7 +29,7 @@ def test(dataset):
 	return test_y, preds
 
 def main():
-	optparser = OptionParser
+	optparser = OptionParser()
 	optparser.add_option('-p', '--prefix', action='store', dest='prefix', type='str')
 	opts, args = optparser.parse_args()
 
