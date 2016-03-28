@@ -57,7 +57,8 @@ def main():
 		for k in ks:
 			inc(d, k)
 
-	for blog in blogs:
+	pbar = progbar.start(len(blogs))
+	for i, blog in enumerate(blogs):
 		n_emo_comm = 0 # number of comments with emoticon
 
 		# comments
@@ -84,6 +85,9 @@ def main():
 			no_blog += 1
 			no_comm.append(blog['comments_count'])
 			no_emo_comm.append(n_emo_comm)
+
+		pbar.update(i + 1)
+	pbar.finish()
 
 	report = ''
 	report += 'number of blogs with emoticons: %d (%.2f%%)\n'%(yes_blog, 100. * yes_blog / (yes_blog + no_blog))
