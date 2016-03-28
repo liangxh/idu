@@ -156,7 +156,7 @@ def simple_extract(blog, check_emo = True):
 		else:
 			phrases = [emotica.remove_prefix(emo) for emo in emoticons]
 			phrases = set(phrases)
-			emos = [emotica.remove_prefix(pharse) for phrase in phrases]
+			emos = [emotica.remove_prefix(phrase) for phrase in phrases]
 	else:
 		emos = []
 	# extract and check the text
