@@ -17,7 +17,7 @@ from utils import progbar
 def load_blogs():
 	def load_blog_lines():
 		lines = []
-		for i in range(1):
+		for i in range(3):
 			fname = 'data/blogs/blogs_subset_%d.txt'%(i)
 			lines.extend(open(fname, 'r').readlines())
 		return lines
@@ -29,8 +29,6 @@ def load_blogs():
 	for i, line in enumerate(lines):
 		blogs.append(json.loads(line))
 		pbar.update(i + 1)
-		if i > 500:
-			break
 	pbar.finish()
 
 	return blogs
@@ -74,7 +72,7 @@ def main():
 				n_emo_comm += 1
 		
 		# text
-		res = blogger.simple_extract(text)
+		res = blogger.simple_extract(blog['texts'])
 		if res is not None:
 			yes_blog += 1
 			yes_comm.append(blog['comments_count'])	
