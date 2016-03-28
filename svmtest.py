@@ -12,7 +12,7 @@ sys.setdefaultencoding('utf8')
 
 import cPickle
 import numpy as np
-from skleanr.svm import SVC
+from sklearn.svm import SVC
 from optparse import OptionParser
 
 import validatica
