@@ -101,8 +101,8 @@ class LstmFeatScript:
 		datalen = opts.n_samples
 
 		prefix = opts.prefix
-		fname_test = DIR_TEST + '%s_test.pkl'%(prefix)
 		fname_model = DIR_MODEL + '%s_model.npz'%(prefix)
+		fname_embedder = DIR_MODEL + '%s_embedder.pkl'%(prefix)
 		fname_feat = DIR_MODEL + '%s_feat.pkl'%(prefix)
 
 		print >> sys.stderr, 'Done'
