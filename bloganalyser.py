@@ -17,8 +17,8 @@ from utils import progbar
 def load_blogs():
 	def load_blog_lines():
 		lines = []
-		for i in range(3):
-			fname = 'data/blogs/blogs_subset_%d'%(i)
+		for i in range(1):
+			fname = 'data/blogs/blogs_subset_%d.txt'%(i)
 			lines.extend(open(fname, 'r').readlines())
 		return lines
 
@@ -29,6 +29,8 @@ def load_blogs():
 	for i, line in enumerate(lines):
 		blogs.append(json.loads(line))
 		pbar.update(i + 1)
+		if i > 500:
+			break
 	pbar.finish()
 
 	return blogs
@@ -64,7 +66,7 @@ def main():
 		for comm in blog['comments']:
 			content = comm['text']
 	
-			res = blogger.simple_extract(text)
+			res = blogger.simple_extract(content)
 			if res is not None:
 				text, es = res
 				
