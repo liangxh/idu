@@ -133,6 +133,54 @@ def extract(blog, check_emo = True):
 	text = re.sub('\s+', ' ', text).strip()
 	return text, emo
 
+def simple_extract(blog, check_emo = True):
+	'''
+	analyse the blog, if it contains emoticon(s) and the text part is not empty,
+	return the text part and emoticons, otherwise None is returned.
+	'''
+
+	# extract the part created by user
+
+	blog = blog.decode('utf8')
+	main_blog = extract_main(blog)
+
+	# extract and check emoticons
+
+	emoticons = emotica.extract_emoticons(main_blog)
+	
+
+	if check_emo:
+		if len(emoticons) == 0:
+			#print 'No Emoticons'
+			return None
+		else:
+			phrases = [emotica.remove_prefix(emo) for emo in emoticons]
+			phrases = set(phrases)
+			emos = [emotica.remove_prefix(pharse) for phrase in phrases]
+	else:
+		emos = []
+	# extract and check the text
+
+	text = emotica.remove_emoticons(main_blog)
+	text = remove_korean(text)
+	text = remove_space(text)
+
+	if len(text) == 0:
+		'''
+		no text content
+		'''
+		#print 'No text'
+		return None
+
+	if not contain_zh(text):
+		'''
+		no chinese character
+		'''	
+		return None
+
+	text = re.sub('\s+', ' ', text).strip()
+	return text, emos
+
 if __name__ == '__main__':
 	blog = u'【重庆回应长江水变红：未测出有毒物质】核心提示：9月7日，重庆环保局回应长江变“红河”称，河水中未检测出有毒有害物质，河水变红系水中铁离子含量过高所致。... http://t.cn/zWDrb4x  [哈哈]富含铁离子，还富含各种矿物质和维生素，这不是高级纯天然矿泉水吗，环保菊长先来一口？'
 	print extract_main(blog)
