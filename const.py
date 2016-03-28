@@ -34,6 +34,7 @@ DIR_TOKEN = DIR_DATASET + 'token/'
 # created by script of training
 DIR_MODEL = DIR_DATASET + 'model/'
 DIR_TEST = DIR_DATASET + 'test/'
+DIR_FEAT = DIR_DATASET + 'feat/'
 
 PKL_TFCODER = DIR_DATASET + 'tfcoder.pkl'
 PKL_TFDATA = DIR_DATASET + 'tfdata.pkl'

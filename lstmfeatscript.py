@@ -14,7 +14,7 @@ from optparse import OptionParser
 
 import datica
 import validatica
-from const import N_EMO, DIR_MODEL, DIR_TEST
+from const import N_EMO, DIR_MODEL, DIR_TEST, DIR_FEAT
 from lstm import LstmClassifier
 from wordembedder import WordEmbedder
 
@@ -52,11 +52,10 @@ class LstmFeatScript:
 		'''
 		mkdir if the necessary folders do not exist
 		'''
-		if not os.path.isdir(DIR_MODEL):
-			os.mkdir(DIR_MODEL)
 
-		if not os.path.isdir(DIR_TEST):
-			os.mkdir(DIR_TEST)
+		for dirname in [DIR_MODEL, DIR_TEST, DIR_FEAT]:
+			if not os.path.isdir(dirname):
+				os.mkdir(dirname)
 
 	def init_embedder(self, dataset, fname_embedder):
 		'''
@@ -104,7 +103,7 @@ class LstmFeatScript:
 		prefix = opts.prefix
 		fname_model = DIR_MODEL + '%s_model.npz'%(prefix)
 		fname_embedder = DIR_MODEL + '%s_embedder.pkl'%(prefix)
-		fname_feat = DIR_MODEL + '%s_feat.pkl'%(prefix)
+		fname_feat = DIR_FEAT + '%s_feat.pkl'%(prefix)
 
 		print >> sys.stderr, 'Done'
 
