@@ -72,7 +72,7 @@ def main():
 				n_emo_comm += 1
 		
 		# text
-		res = blogger.simple_extract(blog['texts'])
+		res = blogger.simple_extract(blog['text'])
 		if res is not None:
 			yes_blog += 1
 			yes_comm.append(blog['comments_count'])	
