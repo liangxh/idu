@@ -51,5 +51,5 @@ def main():
 	validatica.report(ys, preds, 'output/%sfeat_svm'%(opts.prefix))
 
 if __name__ == '__main__':
-	test('wu')
+	main()
 
