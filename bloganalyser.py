@@ -97,7 +97,24 @@ def main():
 	report += 'average number of comments with emoticons of blogs with emoticons: %.2f\n'%(np.mean(yes_emo_comm))
 	report += 'average number of comments with emoticons of blogs without emoticons: %.2f\n'%(np.mean(no_emo_comm))
 
-	print report 
+	print report
+
+	def export_emo(emos, fname):
+		n_emos = sum(emos.values())
+		cum = 0		
+
+		fobj = open(fname, 'w')
+
+		emof = sorted(emos.items(), key = lambda k: -k[1])
+		for i, item in enumerate(emof):
+			emo, f = item
+			cum += f
+			fobj.write('%d. %s (%d %.2f%% %.2f%%)\n'%(i + 1, emo, f, 100. * f / n_emos, 100. * cum / n_emos))
+
+		fobj.close()
+
+	export_emo(blog_emos, 'output/bloganalyse_blogemos.txt')
+	export_emo(comm_emos, 'output/bloganalyse_commemos.txt')
 
 if __name__ == '__main__':
 	main()
