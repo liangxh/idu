@@ -101,7 +101,7 @@ def main():
 	dataset = merge_train_valid(dataset)
 	train, test = dataset
 
-	probwe = build(train)
+	probwe = build(train, opts.ydim)
 	preds = classify_batch(test[0], opts.ydim, probwe)
 	fname_test = 'data/dataset/test/%s_test.pkl'%(opts.prefix)
 	fname_valid = 'data/dataset/test/%s'%(opts.prefix)
