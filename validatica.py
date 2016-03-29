@@ -34,6 +34,7 @@ def precision_at_n(ys, pred_probs):
 		hit[i] += hit[i - 1]
 	
 	acc = [float(hi) / n_test for hi in hit]
+	return acc
 
 def report(ys, pred_probs, prefix):
 	'''
