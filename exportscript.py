@@ -32,12 +32,13 @@ def load_precs(fnames):
 
 def export(labels, precs, title):
 	ax = plt.subplot(1, 1, 1)
-	ax.xlabel('N')
-	ax_ylabel('Precision')
+	plt.xlabel('N')
+	plt.ylabel('Precision')
+	plt.axis([1, 90, 0., 1.])
 
 	for label in labels:
 		prec = precs[label]
-		ax.plot(prec, label = label)
+		ax.plot(range(1, 91), prec, label = label)
 
 	handles, labels = ax.get_legend_handles_labels()
 	ax.legend(handles[::-1], labels[::-1])
