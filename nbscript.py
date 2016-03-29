@@ -106,7 +106,7 @@ def main():
 	fname_test = 'data/dataset/test/%s_test.pkl'%(opts.prefix)
 	fname_valid = 'data/dataset/test/%s'%(opts.prefix)
 
-	cPickle.dump((test[1], preds), open(fname_test, 'r'))
+	cPickle.dump((test[1], preds), open(fname_test, 'w'))
 	validatica.report(test[1], preds, fname_valid)
 
 
