@@ -31,6 +31,7 @@ def load_precs(fnames):
 	return precs
 
 def export(labels, precs, title):
+	plt.figure()
 	ax = plt.subplot(1, 1, 1)
 	plt.xlabel('N')
 	plt.ylabel('Precision')
