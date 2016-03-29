@@ -17,11 +17,7 @@ import matplotlib.pyplot as plt
 
 from utils import progbar
 
-def report(ys, pred_probs, prefix):
-	'''
-	analyse the result of test set after model training
-	'''
-
+def precision_at_n(ys, pred_probs):
 	n_test = len(ys)
 	y_dim = len(pred_probs[0])
 	hit = [0 for i in range(y_dim)]
@@ -39,15 +35,21 @@ def report(ys, pred_probs, prefix):
 	
 	acc = [float(hi) / n_test for hi in hit]
 
+def report(ys, pred_probs, prefix):
+	'''
+	analyse the result of test set after model training
+	'''
+	acc = precision_at_n(ys, pred_probs)
+
 	plt.figure()
 	plt.axis([1, y_dim, 0., 1.])
 	plt.xlabel('Top N')
 	plt.ylabel('Precision')
 	plt.plot(range(1, y_dim + 1), acc)
 
-	rand_x = range(1, y_dim + 1)
-	rand_y = [float(xi) / y_dim for xi in rand_x]
-	plt.plot(rand_x, rand_y, '--r') 
+	#rand_x = range(1, y_dim + 1)
+	#rand_y = [float(xi) / y_dim for xi in rand_x]
+	#plt.plot(rand_x, rand_y, '--r')
 
 	plt.savefig('%s_precision.png'%(prefix))
 
