@@ -41,6 +41,7 @@ def report(ys, pred_probs, prefix):
 	analyse the result of test set after model training
 	'''
 	acc = precision_at_n(ys, pred_probs)
+	y_dim = len(pred_probs[0])
 
 	plt.figure()
 	plt.axis([1, y_dim, 0., 1.])
@@ -54,7 +55,7 @@ def report(ys, pred_probs, prefix):
 
 	plt.savefig('%s_precision.png'%(prefix))
 
-def report_from_file(ifname = 'output/lstm_result.pkl', prefix = 'test'):
+def report_from_file(ifname, prefix):
 	'''
 	demo
 	'''
