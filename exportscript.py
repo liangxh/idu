@@ -49,7 +49,7 @@ def export(labels, precs, title):
 if __name__ == '__main__':
 
 
-	prefixs = ['nb', 'nbu', 'randu9064', 'svdu9064', 'wv9064', 'wvu9064']
+	prefixs = ['nb', 'nbu', 'randu9064', 'svdu9064', 'rand9064', 'svd9064', 'wvu9064', 'pca9064', 'pcau9064']
 	
 	fnames = {}
 	for prefix in prefixs:
@@ -59,6 +59,9 @@ if __name__ == '__main__':
 
 	precs = load_precs(fnames)
 
-	export(['nbu', 'randu', 'svdu', 'wvu'], precs, '1')
-	export(['wv', 'wvu'], precs, '2')
+	export(['nbu', 'randu', 'svdu', 'wvu', 'pcau'], precs, '1')
+	#export(['wv', 'wvu'], precs, '2')
+	export(['rand', 'randu'], precs, '3')
+	export(['pca', 'pcau'], precs, '4')
+	export(['svd', 'svdu'], precs, '5')
 
