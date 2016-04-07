@@ -366,24 +366,31 @@ def build_model(tparams, options):
     trng = RandomStreams(SEED)
 
     # Used for dropout.
-    use_noise = theano.shared(numpy_floatX(0.))
+    use_noise = theano.shared(numpy_floatX(0.))         # a shared variable, changed in the training process to control whether to use noise or not
 
-    x = tensor.matrix('x', dtype='int64')
-    mask = tensor.matrix('mask', dtype=config.floatX)
-    y = tensor.vector('y', dtype='int64')
+    x = tensor.matrix('x', dtype='int64')               # a matrix, whose shape is (n_timestep, n_samples) for theano.scan in training process
+    mask = tensor.matrix('mask', dtype=config.floatX)   # a matrix, used to distinguish the valid elements in x or Wemb
+    y = tensor.vector('y', dtype='int64')		# a vector of targets for $n_samples samples
 
     n_timesteps = x.shape[0]
     n_samples = x.shape[1]
 
+    # transfer x, the matrix of tids, into Wemb, the 'matrix' of embedding vectors 
     emb = tparams['Wemb'][x.flatten()].reshape([n_timesteps,
                                                 n_samples,
                                                 options['dim_proj']])
+
+    # the result of LSTM, a matrix of shape (n_timestep, n_samples, dim_proj)
     proj = get_layer(options['encoder'])[1](tparams, emb, options,
                                             prefix=options['encoder'],
                                             mask=mask)
+
+    # mean pooling, a matrix of shape (n_samples, dim_proj)
     if options['encoder'] == 'lstm':
         proj = (proj * mask[:, :, None]).sum(axis=0)
         proj = proj / mask.sum(axis=0)[:, None]
+
+    # add a dropout layer after mean pooling
     if options['use_dropout']:
         proj = dropout_layer(proj, use_noise, trng)
 
