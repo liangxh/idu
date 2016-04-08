@@ -96,8 +96,6 @@ def soup2comments(soup):
 							'to_name':to_name,
 							'text':text})
 
-	comments.reverse()
-
 	return comments
 
 def soup2ids(soup):
@@ -228,6 +226,7 @@ def get(urlopener, uid, mid, show_result = False, show_max = 10):
 			elif i == show_max:
 				print '...(%d in total)'%(len(comments))
 
+	comments.reverse()
 	return comments, ids
 	
 
