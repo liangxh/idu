@@ -3,6 +3,7 @@
 '''
 Author: Xihao Liang
 Created: 2016.03.29
+Description: export several curves into one graph
 '''
 
 import re

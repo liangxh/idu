@@ -68,7 +68,9 @@ Xihao Liang, 2016.03.17
 	* 是否篩去數字
 
 27. 鑒於期中答辯, 優先得出4 x 2種算法的分類效果
-28. blogselector重新編寫sample / main, 運行並等候周末完成爬蟲, 單機線程數量調整
+28. umtc分列為３個文件 output/umtc_subset_{0..2}.txt 分別以weibolauncher.py -i output/umtc_subset_0.txt -o blogs/raw/blogs_subset_0.txt -a 0,32 -n 6下載
+29. 篩去没有評論的微博 grep -v '"commengs: \[\]"' blogs/raw/blogs_subset_0.txt blogs/bcomm/bcomm_subset_0.txt
+
 30. 使用GPU http://deeplearning.net/software/theano/install.html#gpu-linux
 31. 經dA降維后向量為全1., #TODO
 32. PCA降維方法添加
@@ -89,6 +91,10 @@ Xihao Liang, 2016.03.17
 	# average number of comments with emoticons of blogs with emoticons: 1.67	#
 	# average number of comments with emoticons of blogs without emoticons: 1.03	#
 	#################################################################################
+
+40. 把blogs/bcomm/bcomm_subset_0.txt結構化為 {MID, TEXT, RE} 並保存至 blogs/mtr/0.txt (python blogdata.py blogs/bcomm/bcomm_subset_0.txt blogs/mtr/0.txt)
+
+
 
 ## BUG
 
