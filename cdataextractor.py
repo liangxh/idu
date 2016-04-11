@@ -5,6 +5,7 @@ Author: Xihao Liang
 Created: 2016.04.11
 '''
 
+import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
