@@ -96,6 +96,35 @@ def get_emotf():
 	emos = [emo for emo, tf in top_emo[:500]]
 	open('data/blogs/eid.txt', 'w').write('\n'.join(emos))
 
+def split(eids):
+	all_emos = open('data/blogs/eid.txt', 'w').read().split('\n')
+
+	eidmap = {}
+	for eid in eids:
+		eidmap[all_emos[eid]] = eid
+
+	odname = 'data/blogs/eid_data/'
+	if not os.path.isdir(odname):
+		os.mkdir(odname)
+
+	datalist = {}
+	for eid in eids:
+		datalist[eid] = []
+
+	for i in range(3):
+		fname = 'data/blogs/teaf/%d.txt'%(i)
+		with open(fname, 'r') as fobj:
+			for line in fobj:
+				blog = json.loads(line)
+				if eidmap.has_key(blog['emo']):
+					datalist[eidmap[blog['emo']]].append(line)
+
+	for eid, lines in datalist.items():
+		fname = 'data/blogs/eid_data/%d.txt'%(eid)
+		fobj = open(fname, 'w')
+		fobj.write(''.join(lines))
+		fobj.close()
+
 def main():
 	#ifname = 'data/blogs/0s.txt'
 	#ofname = 'data/blogs/out0s.txt'
