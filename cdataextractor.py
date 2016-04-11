@@ -74,6 +74,27 @@ def extract(ifname, ofname):
 	
 	ofobj.close()
 
+def get_emotf():
+	emos = []
+	tf = {}
+
+	for i in range(3):
+		fname = 'data/blogs/teaf/%d.txt'%(i)
+		with open(fname, 'r') as fobj:
+			for line in fobj:
+				blog = json.loads(line)
+				emo = blog['emo']
+				if tf.has_key(emo):
+					tf[emo] += 1
+				else:
+					tf[emo] = 1
+
+	cPickle.dump(tf, open('data/blogs/emotf.pkl', 'w'))	
+	
+	top_emo = sorted(tf.items(), key = lambda k:-k[1])
+	emos = [emo for emo, tf in top_emo[:500]]
+	open('data/blogs/eid.txt', 'w').write('\n'.join(emos))
+
 def main():
 	#ifname = 'data/blogs/0s.txt'
 	#ofname = 'data/blogs/out0s.txt'
