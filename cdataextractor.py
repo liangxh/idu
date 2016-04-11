@@ -121,7 +121,8 @@ def split(eids):
 					datalist[eidmap[blog['emo']]].append(line)
 
 	for eid, lines in datalist.items():
-		fname = 'data/blogs/eid_data/%d.txt'%(eid)
+		print eid, len(lines)
+		fname = odname + '%d.txt'%(eid)
 		fobj = open(fname, 'w')
 		fobj.write(''.join(lines))
 		fobj.close()
