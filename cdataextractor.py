@@ -98,7 +98,7 @@ def get_emotf():
 	open('data/blogs/eid.txt', 'w').write(u'\n'.join(emos))
 
 def split(eids):
-	all_emos = open('data/blogs/eid.txt', 'r').read().split('\n')
+	all_emos = open('data/blogs/eid.txt', 'r').read().decode('utf8').split('\n')
 
 	eidmap = {}
 	for eid in eids:
