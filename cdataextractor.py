@@ -126,6 +126,31 @@ def split(eids):
 		fobj.write(''.join(lines))
 		fobj.close()
 
+def prepare_dataset(n_emo, n_samples):
+	idname = 'data/blogs/eid_data/'
+
+	odname = 'data/blogs/dataset/'
+	if not os.path.isdir(odname):
+		os.mkdir(odname)
+
+	for i in range(n_emo):
+		ifname = idname + '%d.txt'%(i)
+		ofname = odname + '%d.txt'%(i)
+		
+		print >> sys.stderr, 'preparing %s (-> %s)'%(ifname, ofname)
+
+		blogs = []
+		with open(ifname, 'r') as ifobj:
+			for line in ifobj:
+				blogs.append(json.loads(line))
+		
+		blogs = sorted(blogs, key = lambda k: -len(k['above']))
+
+		ofobj = open(ofname, 'w')
+		for blog in blogs[:n_samples]:
+			ofobj.write(blog.dumps() + '\n')
+		ofobj.close()
+
 def main():
 	#ifname = 'data/blogs/0s.txt'
 	#ofname = 'data/blogs/out0s.txt'
