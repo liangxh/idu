@@ -95,7 +95,7 @@ def get_emotf():
 	
 	top_emo = sorted(tf.items(), key = lambda k:-k[1])
 	emos = [emo for emo, tf in top_emo[:500]]
-	open('data/blogs/eid.txt', 'w').write('\n'.join(emos))
+	open('data/blogs/eid.txt', 'w').write(u'\n'.join(emos))
 
 def split(eids):
 	all_emos = open('data/blogs/eid.txt', 'r').read().split('\n')
@@ -121,7 +121,6 @@ def split(eids):
 					datalist[eidmap[blog['emo']]].append(line)
 
 	for eid, lines in datalist.items():
-		print eid, len(lines)
 		fname = odname + '%d.txt'%(eid)
 		fobj = open(fname, 'w')
 		fobj.write(''.join(lines))
