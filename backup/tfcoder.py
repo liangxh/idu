@@ -125,8 +125,8 @@ def default_load():
 	return cPickle.load(open(PKL_TFCODER, 'r'))
 
 if __name__ == '__main__':
-	text = u'husband, to live with you and laugh with you, to stand by your side, and sleep in your arms....哥们饶了我吧，我不素这种人，这真不是我的强项啊 [泪]'
-	#tokens = TfCoder.tokenize(text)
-	#print '/'.join(tokens)
+	text = u'哗一下又涨几十个粉1880个粉丝最少有1500是和他的姘头输送的，剩下380个是我认识的我自己根本一个粉丝也没有，唯一一个铁杆粉丝还被我做通思想工作，傲娇地离开了'
+	tokens = TfCoder.tokenize(text)
+	print '/'.join(tokens)
 
-	init(text)
+	#init(text)

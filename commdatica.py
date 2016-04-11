@@ -3,7 +3,7 @@
 '''
 Author: Xihao Liang
 Created: 2016.03.04
-Description: a script used to analyse umcomm.txt
+Description: a script for umcomm.txt
 '''
 
 import sys

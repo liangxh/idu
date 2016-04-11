@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Author: Xihao Liang
+Description: a script to turn blogs downloaded from weiboparser into {MID, TEXT, RE}
 Created: 2016.04.07
 '''
 
@@ -12,7 +13,6 @@ sys.setdefaultencoding('utf8')
 import re
 import json
 import commands
-
 
 '''
 class BlogData:
@@ -163,6 +163,7 @@ def load_from_rawblogs(j):
 				j -= 1
 				continue
 
+			# this is rough but quick, still xD
 			last_comm = comments[j]
 			f1 = (flag_uname and last_comm['to_name'] is None and (flag_toNone or flag_toUndef))
 			f2 = (flag_toNone and last_comm['to_name'] == from_name)
