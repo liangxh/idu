@@ -9,6 +9,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 import json
+import cPickle
 import commands
 
 import blogger
