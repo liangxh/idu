@@ -148,7 +148,7 @@ def prepare_dataset(n_emo, n_samples):
 
 		ofobj = open(ofname, 'w')
 		for blog in blogs[:n_samples]:
-			ofobj.write(blog.dumps() + '\n')
+			ofobj.write(json.dumps(blog) + '\n')
 		ofobj.close()
 
 def main():
