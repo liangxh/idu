@@ -96,7 +96,8 @@ Xihao Liang, 2016.03.17
 41. 把 mtr/IDX.txt 轉化為 {TEXT, EMO, ABOVE, FOLLOW} (python cdataextractor.py data/blogs/mtr/0.txt data/blogs/teaf.txt # t-e-a-f = TEXT-EMO-ABOVE-FOLLOW )
 42. 统计分析表情符出現次數並導出到 data/blogs/emotf.pkl 和 data/blogs/eid.txt (python -c "import cdataextractor; cdataextractor.get_emotf()")
 43. 把不用表情符的數據分別保存到 data/blogs/eid_data/ 下的不同文件中 (python -c "import cdataextractor; cdataextractor.split(range(90))")
-44. 從 data/blogs/eid_data/篩出實驗數據到 data/blogs/dataset/raw/ (python -c "import cdataextractor; cdataextractor.prepare_dataset('dataset', 25, 4000)")
+44. 從 data/blogs/eid_data/篩出實驗數據到 data/blogs/dataset/raw/ (python -c "import cdataextractor; cdataextractor.prepare_dataset('dataset', 25, 4000)";　#　其中prepare_dataset可修改篩选方式, 以后以dname_dataset區分不出實驗數據集)
+45. 從 data/blogs/dataset/raw/中進行 unigramize和blogger.decompose並保存到不同文件夾({text,above,follow}_unigram/)下  (python daticaext.py dataset 25)
 
 ## BUG
 

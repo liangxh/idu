@@ -27,7 +27,7 @@ def unigramize_dataset(dname_dataset, n_emo):
 
 	import zhtokenizer
 
-	idname = 'data/blogs/dataset/raw'
+	idname = 'data/blogs/dataset/raw/'
 	odname_textu = 'data/blogs/dataset/text_unigram/'
 	odname_aboveu = 'data/blogs/dataset/above_unigram/'
 	odname_followu = 'data/blogs/dataset/follow_unigram/'
