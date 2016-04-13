@@ -39,6 +39,10 @@ DIR_FEAT = DIR_DATASET + 'feat/'
 PKL_TFCODER = DIR_DATASET + 'tfcoder.pkl'
 PKL_TFDATA = DIR_DATASET + 'tfdata.pkl'
 
+
+DIR_EXTMODEL = DIR_DATA + 'blogs/model/'
+DIR_EXTTEST = DIR_DATA + 'blogs/test/'
+
 ################ CONST VARIABLE ##############################
 
 N_EMO = 90

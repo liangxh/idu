@@ -94,7 +94,9 @@ Xihao Liang, 2016.03.17
 
 40. 把 blogs/bcomm/bcomm_subset_0.txt結構化為 {MID, TEXT, RE} 並保存至 blogs/mtr/0.txt (python blogdata.py data/blogs/bcomm/bcomm_subset_0.txt data/blogs/mtr/0.txt # m-t-r = MID-TEXT-RE)
 41. 把 mtr/IDX.txt 轉化為 {TEXT, EMO, ABOVE, FOLLOW} (python cdataextractor.py data/blogs/mtr/0.txt data/blogs/teaf.txt # t-e-a-f = TEXT-EMO-ABOVE-FOLLOW )
-42. 统计分析表情符出現次數並導出到 data/blogs/emotf.pkl 和 data/blogs/eid.txt (python -c "import cdataextractor; cdataextractor.get_emotf")
+42. 统计分析表情符出現次數並導出到 data/blogs/emotf.pkl 和 data/blogs/eid.txt (python -c "import cdataextractor; cdataextractor.get_emotf()")
+43. 把不用表情符的數據分別保存到 data/blogs/eid_data/ 下的不同文件中 (python -c "import cdataextractor; cdataextractor.split(range(90))")
+44. 從 data/blogs/eid_data/篩出實驗數據到 data/blogs/dataset/raw/ (python -c "import cdataextractor; cdataextractor.prepare_dataset('dataset', 25, 4000)")
 
 ## BUG
 

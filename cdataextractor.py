@@ -126,16 +126,21 @@ def split(eids):
 		fobj.write(''.join(lines))
 		fobj.close()
 
-def prepare_dataset(n_emo, n_samples):
+def init_folders(dnames):
+	for dname in dnames:
+		if not os.path.isdir(dname):
+			os.mkdir(dname)
+
+def prepare_dataset(dname_dataset, n_emo, n_samples):
 	idname = 'data/blogs/eid_data/'
 
-	odname = 'data/blogs/dataset/'
-	if not os.path.isdir(odname):
-		os.mkdir(odname)
+	odname = 'data/blogs/%s/raw'%(dname_dataset)
 
-	for i in range(n_emo):
-		ifname = idname + '%d.txt'%(i)
-		ofname = odname + '%d.txt'%(i)
+	init_folders('data/blogs/%'%(dname_dataset), odname)
+
+	for eid in range(n_emo):
+		ifname = idname + '%d.txt'%(eid)
+		ofname = odname + '%d.txt'%(eid)
 		
 		print >> sys.stderr, 'preparing %s (-> %s)'%(ifname, ofname)
 
@@ -156,7 +161,7 @@ def main():
 	#ofname = 'data/blogs/out0s.txt'
 	
 	ifname = sys.argv[1]
-	ofname = sys.argv[2]	
+	ofname = sys.argv[2]
 
 	extract(ifname, ofname)
 
