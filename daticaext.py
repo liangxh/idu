@@ -27,10 +27,10 @@ def unigramize_dataset(dname_dataset, n_emo):
 
 	import zhtokenizer
 
-	idname = 'data/blogs/dataset/raw/'
-	odname_textu = 'data/blogs/dataset/text_unigram/'
-	odname_aboveu = 'data/blogs/dataset/above_unigram/'
-	odname_followu = 'data/blogs/dataset/follow_unigram/'
+	idname = 'data/blogs/%s/raw/'%(dname_dataset)
+	odname_textu = 'data/blogs/%s/text_unigram/'%(dname_dataset)
+	odname_aboveu = 'data/blogs/%s/above_unigram/'%(dname_dataset)
+	odname_followu = 'data/blogs/%s/follow_unigram/'%(dname_dataset)
 
 	init_folders([odname_textu, odname_aboveu, odname_followu])
 
