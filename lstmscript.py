@@ -15,7 +15,6 @@ from optparse import OptionParser
 import datica
 import validatica
 from const import N_EMO, DIR_MODEL, DIR_TEST
-from inputadapter import InputAdapter
 from lstm import LstmClassifier
 
 class LstmScript:

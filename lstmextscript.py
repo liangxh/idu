@@ -12,13 +12,18 @@ sys.setdefaultencoding('utf8')
 import cPickle
 from optparse import OptionParser
 
-import datica
+import daticaext
 import validatica
-from const import N_EMO, DIR_EXT_MODEL, DIR_EXT_TEST
-from inputadapter import InputAdapter
+
 from lstmext import LstmClassifier
 
-class lstmextscript:
+import wemb_rand
+from wordembedder import WordEmbedder
+
+N_EMO = 25
+from const import DIR_EXTTEST, DIR_EXTMODEL
+
+class LstmExtScript:
 	def __init__(self):
 		self.init_default_options()
 		self.add_extra_options()
@@ -28,9 +33,10 @@ class lstmextscript:
 
 		# necessary
 		parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
-		
+		parser.add_option('-x', '--dname_x', action='store', type = 'str', dest='dname_x')
+		parser.add_option('-s', '--dname_xsup', action='store', type = 'str', dest='dname_xsup')		
+
 		# optional
-		parser.add_option('-u', '--unigram', action='store_true', dest='unigram', default = False)
 		parser.add_option('-r', '--resume', action='store_true', dest='resume', default = False)
 
 		# debug
@@ -46,14 +52,14 @@ class lstmextscript:
 		'''
 		more options can be added for init_embedder, and so on
 		'''
-		pass
+		self.optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
 
 	def init_folder(self):
 		'''
 		mkdir if the necessary folders do not exist
 		'''
 
-		for dname = [DIR_EXTMODEL, DIR_EXTTEST]
+		for dname in [DIR_EXTMODEL, DIR_EXTTEST]:
 			if not os.path.isdir(dname):
 				os.mkdir(dname)
 
@@ -63,21 +69,19 @@ class lstmextscript:
 		or build the model by the dataset and save it
 		'''
 
-		#if os.path.exists(fname):
-		#	print >> sys.stderr, 'embedding model %s found and loaded'%(fname)
-		#	return RandEmbedder.load(fname)
-		#else:
-		#	def x_iterator(dataset):
-		#		for set_x, set_y in dataset:
-		#			for x in set_x:
-		#				yield x
-		#
-		#	embedder = RandEmbedder()
-		#	embedder.build(x_iterator(dataset), dim_proj)
-		#	embedder.dump(fname)
-		#	return embedder
+		if os.path.exists(fname_embedder):
+			print >> sys.stderr, 'embedding model %s found and loaded'%(fname_embedder)
+			return WordEmbedder.load(fname_embedder)
+		else:
+			def x_iterator(dataset):
+				for set_x, set_y in dataset:
+					for x in set_x:
+						yield x
 
-		raise NotImplementedError
+			embedder = WordEmbedder(*wemb_rand.build(x_iterator(dataset), self.opts.dim_proj))
+			embedder.dump(fname_embedder)
+		
+			return embedder
 
 	def prepare_input(self, dataset, embedder):
 		'''
@@ -120,24 +124,8 @@ class lstmextscript:
 		#################### Preparation of Input ##############
 		print >> sys.stderr, 'lstmextscript.run: [info] loading dataset ... ', 
 
-		if opts.unigram:
-			dataset = datica.load_unigram(n_emo, datalen) 
-		else:
-			dataset = datica.load_token(n_emo, datalen)
-
-		def add_default_xsup(dataset):
-			train, valid, test = dataset
-
-			def add_xsup(set_x_y):
-				x, y = set_x_y
-				n_samples = len(x)
-				xsup = [[0, ] for i in range(n_samples)]
-				return (x, y, xsup)
-
-			return add_xsup(train), add_xsup(valid), add_xsup(test)
-
-		dataset = add_default_xsup(dataset)
-
+		dataset = daticaext.load_data(opts.dname_x, opts.dname_xsup, n_emo, datalen) 
+		
 		print >> sys.stderr, 'Done'
 
 		print >> sys.stderr, 'lstmextscript.run: [info] initialization of embedder'
@@ -190,7 +178,11 @@ class lstmextscript:
 		cPickle.dump((test_y, preds_prob), open(fname_test, 'w'))
 
 		###################### Report ############################
-		validatica.report(test_y, preds_prob, DIR_TEST + prefix)
+		validatica.report(test_y, preds_prob, DIR_EXTTEST + prefix)
+
+def main():
+	script = LstmExtScript()
+	script.run()
 
 if __name__ == '__main__':
 	main()
