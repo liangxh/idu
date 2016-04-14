@@ -34,7 +34,7 @@ class LstmExtScript:
 		# necessary
 		parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 		parser.add_option('-x', '--dname_x', action='store', type = 'str', dest='dname_x')
-		parser.add_option('-s', '--dname_xsup', action='store', type = 'str', dest='dname_xsup')		
+		parser.add_option('-s', '--dname_xsup', action='store', type = 'str', dest='dname_xsup', default = None)		
 
 		# optional
 		parser.add_option('-r', '--resume', action='store_true', dest='resume', default = False)
