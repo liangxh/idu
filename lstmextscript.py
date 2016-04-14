@@ -88,11 +88,11 @@ class LstmExtScript:
 		turn sequences of string into list of vectors
 		'''
 		
-		def index_set(set_x_y):
-			x, y = set_x_y
+		def index_set(set_x_y_xsup):
+			x, y, xsup = set_x_y_xsup
 			new_x = [embedder.index(xi) for xi in x]
 			print len(new_x)
-			return (new_x, y)
+			return (new_x, y, xsup)
 
 		train, test, valid = dataset
 		new_dataset = (index_set(train), index_set(test), index_set(valid))
