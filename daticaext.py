@@ -69,7 +69,7 @@ def unigramize_dataset(dname_dataset, n_emo):
 		cPickle.dump(all_followu, open(ofname_followu, 'w'))
 
 
-def load_data(dirname_x, dirname_xsup, n_emo, datalen = None, valid_rate = 0.2, test_rate = 0.1):
+def load_data(n_emo, dirname_x, dirname_xsup = None, datalen = None, valid_rate = 0.2, test_rate = 0.1):
 	'''
 	load the dataset of EID in [0, emo) with datalen for each under dirname
 	'''
@@ -79,14 +79,20 @@ def load_data(dirname_x, dirname_xsup, n_emo, datalen = None, valid_rate = 0.2, 
 	for eid in range(n_emo):
 		datalist_x.append(cPickle.load(open(dirname_x + '%d.pkl'%(eid), 'r')))
 	
-	datalist_xsup = []
-	for eid in range(n_emo):
-		datalist_xsup.append(cPickle.load(open(dirname_xsup + '%d.pkl'%(eid), 'r')))
-
 	n_samples = len(datalist_x[0])
 
 	if datalen is not None and n_samples > datalen:
 		n_samples = datalen
+
+	if dirname_xsup is None:
+		default_xsup = [0. ]
+		datalist_xsup = [[default_xsup for i in range(n_samples)] for eid in range(n_emo)]
+
+	else:
+		datalist_xsup = []
+		for eid in range(n_emo):
+			datalist_xsup.append(cPickle.load(open(dirname_xsup + '%d.pkl'%(eid), 'r')))
+
 
 	n_valid = int(valid_rate * n_samples)
 	n_test = int(test_rate * n_samples)

@@ -124,7 +124,7 @@ class LstmExtScript:
 		#################### Preparation of Input ##############
 		print >> sys.stderr, 'lstmextscript.run: [info] loading dataset ... ', 
 
-		dataset = daticaext.load_data(opts.dname_x, opts.dname_xsup, n_emo, datalen) 
+		dataset = daticaext.load_data(n_emo, opts.dname_x, opts.dname_xsup, datalen) 
 		
 		print >> sys.stderr, 'Done'
 
