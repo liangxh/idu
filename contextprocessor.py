@@ -68,7 +68,7 @@ def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
 		
 		ofname = odname + '%d.pkl'%(eid)
 		print >> sys.stderr, '\t%s OK'%(ofname)
-		cPickle.dump(probs, open(ofname, 'r'))
+		cPickle.dump(probs, open(ofname, 'w'))
 
 
 if __name__ == '__main__':
