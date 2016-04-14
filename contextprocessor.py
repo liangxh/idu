@@ -40,8 +40,10 @@ def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
 		
 		n_train = int(len(contextu) * ratio)
 
-		for i, item in enumerate(contextu):
-			tokens, emos = item
+		for i, comms in enumerate(contextu):
+			tokens = []
+			for ts, emos in comms:
+				tokens.extend(ts)
 
 			xlist.append(tokens)
 
