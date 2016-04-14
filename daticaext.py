@@ -11,6 +11,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import json
 import cPickle
+import numpy as np
 
 import blogger
 from utils import progbar
@@ -98,7 +99,7 @@ def load_data(dirname_x, dirname_xsup, n_emo, datalen = None, valid_rate = 0.2, 
 		for i in idx_range:
 			for eid in range(n_emo):
 				x.append(datalist_x[eid][i])
-				xsup.append(datalist_xsup[eid][i])
+				xsup.append(np.asarray(datalist_xsup[eid][i]))
 				y.append(eid)
 		return x, y, xsup
 

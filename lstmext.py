@@ -133,6 +133,7 @@ class LstmClassifier:
 		logger.info('building model...')
 
 		dim_proj = Wemb.shape[1] # numpy.ndarray expected
+		print train[0][0]
 		dim_sup = train[0][0][-1].shape[0]
 
 		model_options = locals().copy()
