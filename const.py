@@ -40,8 +40,8 @@ PKL_TFCODER = DIR_DATASET + 'tfcoder.pkl'
 PKL_TFDATA = DIR_DATASET + 'tfdata.pkl'
 
 
-DIR_EXTMODEL = DIR_DATA + 'blogs/model/'
-DIR_EXTTEST = DIR_DATA + 'blogs/test/'
+DIR_EXTMODEL = DIR_DATA + 'blogs/dataset/model/'
+DIR_EXTTEST = DIR_DATA + 'blogs/dataset/test/'
 
 ################ CONST VARIABLE ##############################
 
