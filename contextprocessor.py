@@ -32,10 +32,13 @@ def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
 	odname = 'data/blogs/dataset/xsup_above_nb/'
 	init_folders([odname, ])
 
+	print >> sys.stderr, 'contextprocessor: [info] loading data'
 	for eid in range(n_emo):
 		xlist = []
 
 		ifname = idname + '%d.pkl'%(eid)
+		print >> sys.stderr, '\t%s OK'%(ifname)
+
 		contextu = cPickle.load(open(ifname, 'r'))
 		
 		n_train = int(len(contextu) * ratio)
@@ -53,15 +56,19 @@ def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
 
 		dlist.append(xlist)
 
-	classifier = NaiveBayesClassifier
+	print >> sys.stderr, 'contextprocessor: [info] training naive bayes classifier'
+	classifier = NaiveBayesClassifier()
 	classifier.train(train_x, train_y, k)
 	
+	print >> sys.stderr, 'contextprocessor: [info] exporting naive bayes result'
 	for eid, xlist in enumerate(dlist):
 		probs = []
 		for tokens in xlist:
 			probs.append(classifier.classify(tokens))
 		
-		cPickle.dump(probs, open(odname + '%d.pkl'%(eid), 'r'))
+		ofname = odname + '%d.pkl'%(eid)
+		print >> sys.stderr, '\t%s OK'%(ofname)
+		cPickle.dump(probs, open(ofname, 'r'))
 
 
 if __name__ == '__main__':
