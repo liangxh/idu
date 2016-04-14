@@ -22,7 +22,7 @@ def init_folders(dnames):
 		if not os.path.isdir(dname):
 			os.mkdir(dname)	
 
-def prepare_above_naivebayes(dname_dataset, sun_emo, k = 1, ratio = 0.9):
+def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
 	train_x = []
 	train_y = []
 	dlist = []
