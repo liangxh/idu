@@ -53,7 +53,7 @@ def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
 
 		dlist.append(xlist)
 
-	classifier = NaiveBayesClassifier
+	classifier = NaiveBayesClassifier()
 	classifier.train(train_x, train_y, k)
 	
 	for eid, xlist in enumerate(dlist):
