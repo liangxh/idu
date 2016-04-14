@@ -128,14 +128,14 @@ class LstmExtScript:
 		
 		print >> sys.stderr, 'Done'
 
+		#################### Preparation for Output ############
+		self.init_folder()
+
 		print >> sys.stderr, 'lstmextscript.run: [info] initialization of embedder'
 		embedder = self.init_embedder(dataset, fname_embedder)
 
 		print >> sys.stderr, 'lstmextscript.run: [info] preparing input'
 		dataset, Wemb = self.prepare_input(dataset, embedder)
-
-		#################### Preparation for Output ############
-		self.init_folder()
 	
 		#################### Training ##########################
 		print >> sys.stderr, 'lstmextscript.run: [info] start training'
