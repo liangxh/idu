@@ -74,7 +74,7 @@ class LstmExtScript:
 			return WordEmbedder.load(fname_embedder)
 		else:
 			def x_iterator(dataset):
-				for set_x, set_y in dataset:
+				for set_x, set_y, set_xsup in dataset:
 					for x in set_x:
 						yield x
 
