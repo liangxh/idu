@@ -97,10 +97,6 @@ def load_data(dirname_x, dirname_xsup, n_emo, datalen = None, valid_rate = 0.2, 
 		y = []
 		for i in idx_range:
 			for eid in range(n_emo):
-				if len(datalist_x[eid][i]) == 0:
-					# this is a bug from zhtokenizer.tokenize, not solved now 
-					continue
-
 				x.append(datalist_x[eid][i])
 				xsup.append(datalist_xsup[eid][i])
 				y.append(eid)
