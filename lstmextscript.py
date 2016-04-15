@@ -38,6 +38,7 @@ class LstmExtScript:
 
 		# optional
 		parser.add_option('-r', '--resume', action='store_true', dest='resume', default = False)
+		parser.add_option('-l', '--load', action='store_true', dest='load', default = False)	
 
 		# debug
 		parser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
@@ -142,7 +143,9 @@ class LstmExtScript:
 	
 		classifier = LstmClassifier()
 
-		if not opts.resume:
+		if opts.load:
+			classifier.load(fname_model)
+		elif not opts.resume:
 			res = classifier.train(
 				dataset = dataset,
 				Wemb = Wemb,
@@ -168,9 +171,6 @@ class LstmExtScript:
 				batch_size = opts.batch_size,
 				valid_batch_size = opts.batch_size,
 			)
-		#else:
-		#	print >> sys.stderr, 'lstm model %s found and loaded'%(fname_model)
-		#	classifier.load(fname_model)
 
 		###################### Test ##############################
 		test_x, test_y, test_xsup = dataset[2]
