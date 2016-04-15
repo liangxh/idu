@@ -28,7 +28,6 @@ def export(label_prec, title, ofname):
 	plt.axis([1, ydim, 0., 1.])
 
 	for label, prec in label_prec.items():
-		prec = precs[label]
 		ax.plot(range(1, ydim + 1), prec, label = label)
 
 	handles, labels = ax.get_legend_handles_labels()
