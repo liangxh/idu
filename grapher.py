@@ -48,7 +48,7 @@ def main():
 
 	lprec = {
 		'text':cPickle.load(open(idname + 'ori25_prec.pkl', 'r')),
-		'text-above':cPickle.load(open(idname + 'above25_test.pkl', 'r'))
+		'text-above':cPickle.load(open(idname + 'above25_prec.pkl', 'r'))
 	}
 
 	export(lprec, title, ofname)
