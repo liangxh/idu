@@ -47,7 +47,7 @@ def main():
 	ofname = odname + 'exp1.png'
 
 	lprec = {
-		'text':cPickle.load(open(idname + 'ori25_test.pkl', 'r')),
+		'text':cPickle.load(open(idname + 'ori25_prec.pkl', 'r')),
 		'text-above':cPickle.load(open(idname + 'above25_test.pkl', 'r'))
 	}
 
