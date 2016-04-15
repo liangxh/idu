@@ -41,6 +41,8 @@ def report(ys, pred_probs, prefix):
 	analyse the result of test set after model training
 	'''
 	acc = precision_at_n(ys, pred_probs)
+	cPickle.dump(acc, open('%s_prec.pkl'%(prefix), 'w'))
+
 	y_dim = len(pred_probs[0])
 
 	plt.figure()
