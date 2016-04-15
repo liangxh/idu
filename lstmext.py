@@ -49,7 +49,7 @@ class LstmClassifier:
 
 	def classify_batch(self, seqs, xsups):
 		x, x_mask = self.prepare_x(seqs)
-		pds = self.f_pred_prob(x, x_mask, xsup)
+		pds = self.f_pred_prob(x, x_mask, xsups)
 
 		return pds
 
