@@ -23,16 +23,15 @@ def init_folders(dnames):
 
 def unigramize_dataset(dname_dataset, n_emo):
 	'''
-	prepare (unigramize and decompose above) raw data from idname
+	prepare (unigramize and decompose above-follow) raw data from idname
 	'''
 
 	import zhtokenizer
 
-	dir_dataset = 'data/blogs/%s/'%(dname_dataset)
-	idname = dir_dataset + 'raw/'
-	odname_textu = dir_dataset + 'text_unigram/'
-	odname_abovesu = dir_dataset + 'above_s_unigram/'
-	odname_abovetu = dir_dataset + 'above_t_unigram/'
+	idname = 'data/blogs/%s/raw/'%(dname_dataset)
+	odname_textu = 'data/blogs/%s/text_unigram/'%(dname_dataset)
+	odname_aboveu = 'data/blogs/%s/above_unigram/'%(dname_dataset)
+	odname_followu = 'data/blogs/%s/follow_unigram/'%(dname_dataset)
 
 	init_folders([odname_textu, odname_aboveu, odname_followu])
 
@@ -40,12 +39,12 @@ def unigramize_dataset(dname_dataset, n_emo):
 		ifname = idname + '%d.txt'%(eid)
 
 		ofname_textu = odname_textu + '%d.pkl'%(eid)
-		ofname_abovesu = odname_abovesu + '%d.pkl'%(eid)
-		ofname_abovetu = odname_abovetu + '%d.pkl'%(eid)
+		ofname_aboveu = odname_aboveu + '%d.pkl'%(eid)
+		ofname_followu = odname_followu + '%d.pkl'%(eid)
 
 		all_textu = []
-		all_abovesu = []
-		all_abovetu = []
+		all_aboveu = []
+		all_followu = []
 
 		with open(ifname, 'r') as ifobj:
 			for line in ifobj:
@@ -53,21 +52,21 @@ def unigramize_dataset(dname_dataset, n_emo):
 
 				all_textu.append(zhtokenizer.unigramize(blog['text']))
 
-				abovesu = []
-				for comm in blog['above_s']:
+				aboveu = []
+				for comm in blog['above']:
 					text, emos = blogger.decompose(comm)
-					abovesu.append((zhtokenizer.unigramize(text), emos))
-				all_abovesu.append(abovesu)
+					aboveu.append((zhtokenizer.unigramize(text), emos))
+				all_aboveu.append(aboveu)
 
-				abovetu = []
-				for comm in blog['above_t']:
+				followu = []
+				for comm in blog['follow']:
 					text, emos = blogger.decompose(comm)
-					abovetu.append((zhtokenizer.unigramize(text), emos))
-				all_abovetu.append(abovetu)
+					followu.append((zhtokenizer.unigramize(text), emos))
+				all_followu.append(followu)
 
 		cPickle.dump(all_textu, open(ofname_textu, 'w'))
-		cPickle.dump(all_abovesu, open(ofname_abovesu, 'w'))
-		cPickle.dump(all_abovetu, open(ofname_abovetu, 'w'))
+		cPickle.dump(all_aboveu, open(ofname_aboveu, 'w'))
+		cPickle.dump(all_followu, open(ofname_followu, 'w'))
 
 
 def load_data(n_emo, dirname_x, dirname_xsup = None, datalen = None, valid_rate = 0.2, test_rate = 0.1):
