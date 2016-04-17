@@ -28,7 +28,7 @@ def extract(dname_dataset, idx):
 	dir_dataset = 'data/blogs/%s/'%(dname_dataset)
 	odname = dir_dataset + 'tea/'
 
-	init_folders([odname, dir_dataset, odname])
+	init_folders([dir_dataset, odname])
 
 	ifname = idname + '%d.txt'%(idx)
 	ofname = odname + '%d.pkl'%(idx)
