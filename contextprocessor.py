@@ -22,21 +22,24 @@ def init_folders(dnames):
 		if not os.path.isdir(dname):
 			os.mkdir(dname)	
 
-def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
+def prepare_above_naivebayes(dname_dataset, idname, odname, n_emo, k = 1, ratio = 0.9):
 	train_x = []
 	train_y = []
 	dlist = []
 
-	idname = 'data/blogs/dataset/above_unigram/'
 
-	odname = 'data/blogs/dataset/xsup_above_nb/'
-	init_folders([odname, ])
+	dir_dataset = 'data/blogs/%s/'%(dname_dataset)
+
+	idir = dir_dataset + '%s/'%(idname)
+	odir = dir_dataset + '%s/'%(odname)
+
+	init_folders([odir, ])
 
 	print >> sys.stderr, 'contextprocessor: [info] loading data'
 	for eid in range(n_emo):
 		xlist = []
 
-		ifname = idname + '%d.pkl'%(eid)
+		ifname = idir + '%d.pkl'%(eid)
 		print >> sys.stderr, '\t%s OK'%(ifname)
 
 		contextu = cPickle.load(open(ifname, 'r'))
@@ -66,7 +69,7 @@ def prepare_above_naivebayes(dname_dataset, n_emo, k = 1, ratio = 0.9):
 		for tokens in xlist:
 			probs.append(classifier.classify(tokens))
 		
-		ofname = odname + '%d.pkl'%(eid)
+		ofname = odir + '%d.pkl'%(eid)
 		print >> sys.stderr, '\t%s OK'%(ofname)
 		cPickle.dump(probs, open(ofname, 'w'))
 

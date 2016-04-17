@@ -34,7 +34,7 @@ def unigramize_dataset(dname_dataset, n_emo):
 	odname_abovesu = dir_dataset + 'above_s_unigram/'
 	odname_abovetu = dir_dataset + 'above_t_unigram/'
 
-	init_folders([odname_textu, odname_aboveu, odname_followu])
+	init_folders([odname_textu, odname_abovesu, odname_abovetu])
 
 	for eid in range(n_emo):
 		ifname = idname + '%d.txt'%(eid)
