@@ -23,7 +23,7 @@ def init_folders(dnames):
 		if not os.path.isdir(dname):
 			os.mkdir(dname)
 
-def extract(dname_dataset, odname, idx):
+def extract(dname_dataset, idx):
 	idname = 'data/blogs/mtr/'
 	dir_dataset = 'data/blogs/%s/'%(dname_dataset)
 	odname = dir_dataset + 'tea/'
