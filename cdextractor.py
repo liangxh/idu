@@ -31,11 +31,11 @@ def extract(dname_dataset, idx):
 	init_folders([dir_dataset, odname])
 
 	ifname = idname + '%d.txt'%(idx)
-	ofname = odname + '%d.pkl'%(idx)
+	ofname = odname + '%d.txt'%(idx)
 	
 	n_lines = int(commands.getoutput('grep -cF "" %s'%(ifname)))
 	if n_lines == 0:
-		return
+		retu
 
 
 
@@ -135,7 +135,7 @@ def prepare_dataset(dname_dataset, n_emo, n_samples):
 	dir_dataset = 'data/blogs/%s/'%(dname_dataset)
 
 	idname = dir_dataset + 'eid_data/'
-	odname = dir_dataset + 'raw'
+	odname = dir_dataset + 'raw/'
 
 	init_folders([odname, ])
 
@@ -150,7 +150,7 @@ def prepare_dataset(dname_dataset, n_emo, n_samples):
 			for line in ifobj:
 				blogs.append(json.loads(line))
 		
-		blogs = sorted(blogs, key = lambda k: -len(k['above']))
+		blogs = sorted(blogs, key = lambda k: -len(k['above_s']))
 
 		ofobj = open(ofname, 'w')
 		for blog in blogs[:n_samples]:
