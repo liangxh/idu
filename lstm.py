@@ -319,6 +319,7 @@ class LstmClassifier:
 
 		return train_err, valid_err, test_err, end_time - start_time
 
+'''
 from tfcoder import TfCoder
 
 def randWemb(n_words, dim_proj):
@@ -383,7 +384,7 @@ def main():
 	import validatica
 	validatica.report(test_y, preds_prob, fname_valid_prefix)
 
-'''
+
 def valid(n_emo, datalen, fname_model, fname_result, fname_valid_prefix):
 	import cPickle
 	import tfcoder	
