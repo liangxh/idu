@@ -14,7 +14,7 @@ import cPickle
 import blogger
 from const import N_EMO, DIR_TEXT, DIR_UNIGRAM, DIR_TOKEN, DIR_DATA
 
-def prepare(n_emo = N_EMO):
+def prepare(eids = range(N_EMO)):
 	'''
 	tokenize and unigramize the text under data/dataset/text
 	'''
@@ -32,7 +32,7 @@ def prepare(n_emo = N_EMO):
 	unigram_list = []
 	token_list = []
 
-	for eid in range(n_emo):
+	for eid in eids:
 		lines = open(DIR_TEXT + '%d.txt'%(eid), 'r').read().split('\n')
 		
 		unigram_list = []

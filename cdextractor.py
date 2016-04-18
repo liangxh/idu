@@ -35,9 +35,8 @@ def extract(dname_dataset, idx):
 	
 	n_lines = int(commands.getoutput('grep -cF "" %s'%(ifname)))
 	if n_lines == 0:
-		retu
-
-
+		print >> sys.stderr, '%s is empty'%(ifname)
+		return
 
 	pbar = progbar.start(n_lines)
 	l = 0
