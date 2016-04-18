@@ -90,14 +90,13 @@ def prepare_above_emos(dname_dataset, idname, odname, n_emo):
 
 	print >> sys.stderr, 'contextprocessor: [info] loading data'
 	for eid in range(n_emo):
-		print >> sys.stderr, '\t%s -> ... '%(ifname), 
-
-		xlist = []
-
 		ifname = idir + '%d.pkl'%(eid)
 		ofname = odir + '%d.pkl'%(eid)
 
+		print >> sys.stderr, '\t%s -> ... '%(ifname), 
+
 		contextu = cPickle.load(open(ifname, 'r'))
+		xlist = []
 
 		for i, comms in enumerate(contextu):
 			emos = np.zeros(n_emo)
