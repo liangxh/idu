@@ -14,7 +14,7 @@ from optparse import OptionParser
 
 import datica
 import validatica
-from const import N_EMO, DIR_MODEL, DIR_TEST, DIR_DATA
+from const import N_EMO, DIR_MODEL, DIR_TEST, DIR_DATA, DIR_UNIGRAM
 from lstm import LstmClassifier
 
 import wemb_rand
@@ -118,7 +118,7 @@ class LstmScriptRand:
 		print >> sys.stderr, 'lstmscript.run: [info] loading dataset ... ', 
 		
 		eids_list = datica.load_config(opts.fname_config)
-		dataset = datica.load_by_config(eids_list, datalen) 
+		dataset = datica.load_by_config(DIR_UNIGRAM, eids_list, datalen) 
 
 		n_emo = len(eids_list)
 		print >> sys.stderr, 'Done'
