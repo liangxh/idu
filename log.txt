@@ -118,11 +118,17 @@ Xihao Liang, 2016.03.17
 	sudo python lstmextscript.py -p tnb2532 -x data/blogs/dataset/text_unigram/ -s data/blogs/dataset/above_t_nb/ -d 32
 	sudo python lstmextscript.py -p none2532 -x data/blogs/dataset/text_unigram/ -d 32
 
-48. 準備上文表情符
-	
+48. 準備表情符上文
+	python -c "import contextprocessor as ctp; ctp.prepare_above_emos('dataset', 'above_s_unigram', 'above_s_emo_mean', 25)"
+	python -c "import contextprocessor as ctp; ctp.prepare_above_emos('dataset', 'above_t_unigram', 'above_t_emo_mean', 25)"
+
+49. 對表情符上文進行測試
+	sudo python lstmextscript.py -p semo2532 -x data/blogs/dataset/text_unigram/ -s data/blogs/dataset/above_s_emo_mean/ -d 32
+	sudo python lstmextscript.py -p temo2532 -x data/blogs/dataset/text_unigram/ -s data/blogs/dataset/above_t_emo_mean/ -d 32
 
 
-	
+
+
 
 
 ## BUG
