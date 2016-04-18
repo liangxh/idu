@@ -40,8 +40,6 @@ def prepare_above_naivebayes(dname_dataset, idname, odname, n_emo, k = 1, ratio 
 		xlist = []
 
 		ifname = idir + '%d.pkl'%(eid)
-		print >> sys.stderr, '\t%s OK'%(ifname)
-
 		contextu = cPickle.load(open(ifname, 'r'))
 		
 		n_train = int(len(contextu) * ratio)
@@ -59,6 +57,8 @@ def prepare_above_naivebayes(dname_dataset, idname, odname, n_emo, k = 1, ratio 
 
 		dlist.append(xlist)
 
+		print >> sys.stderr, '\t%s OK'%(ifname)
+
 	print >> sys.stderr, 'contextprocessor: [info] training naive bayes classifier'
 	classifier = NaiveBayesClassifier()
 	classifier.train(train_x, train_y, k)
@@ -73,6 +73,47 @@ def prepare_above_naivebayes(dname_dataset, idname, odname, n_emo, k = 1, ratio 
 		print >> sys.stderr, '\t%s OK'%(ofname)
 		cPickle.dump(probs, open(ofname, 'w'))
 
+def prepare_above_emos(dname_dataset, idname, odname, n_emo):
+	dir_dataset = 'data/blogs/%s/'%(dname_dataset)
 
+	# get emos
+	all_emos = open(dir_dataset + 'eid.txt', 'r').read().decode('utf8').split('\n')
+
+	eidmap = {}
+	for eid in range(n_emo):
+		eidmap[all_emos[eid]] = eid
+
+	idir = dir_dataset + '%s/'%(idname)
+	odir = dir_dataset + '%s/'%(odname)
+
+	init_folders([odir, ])
+
+	print >> sys.stderr, 'contextprocessor: [info] loading data'
+	for eid in range(n_emo):
+		print >> sys.stderr, '\t%s -> ... '%(ifname), 
+
+		xlist = []
+
+		ifname = idir + '%d.pkl'%(eid)
+		ofname = odir + '%d.pkl'%(eid)
+
+		contextu = cPickle.load(open(ifname, 'r'))
+
+		for i, comms in enumerate(contextu):
+			emos = np.zeros(n_emo)
+			for ts, es in comms:
+				for emo in es:
+					if eidmap.has_key(emo):
+						emos[eidmap[emo]] += 1
+
+			emo_sum = np.sum(emos)
+			if not emo_sum == 0.:
+				emos /= emo_sum
+
+			xlist.append(emos)
+
+		cPickle.dump(xlist, open(ofname, 'w'))
+		print >> sys.stderr, '-> %s OK!'%(ofname)
+		
 if __name__ == '__main__':
 	pass
