@@ -12,7 +12,7 @@ sys.setdefaultencoding('utf8')
 
 import cPickle
 import blogger
-from const import N_EMO, DIR_TEXT, DIR_UNIGRAM, DIR_TOKEN
+from const import N_EMO, DIR_TEXT, DIR_UNIGRAM, DIR_TOKEN, DIR_DATA
 
 def prepare(n_emo = N_EMO):
 	'''
@@ -106,6 +106,78 @@ def load_token(n_emo = N_EMO, datalen = None):
 	load dataset under data/dataset/token
 	'''
 	return load_data(DIR_TOKEN, n_emo, datalen)
+
+
+def load_by_config(dirname, eids_list, datalen = None, valid_rate = 0.2, test_rate = 0.1):
+	datalist = []
+
+	for eids in eids_list:
+		dlist = []
+		for eid in eids:
+			dlist.extend(cPickle.load(open(dirname + '%d.pkl'%(eid), 'r')))
+		datalist.append(dlist)	
+
+	n_samples = len(datalist[0])
+
+	if datalen is not None and n_samples > datalen:
+		n_samples = datalen
+
+	n_valid = int(valid_rate * n_samples)
+	n_test = int(test_rate * n_samples)
+	n_train = n_samples - n_valid - n_test
+
+	def build_dataset(idx_range):
+		x = []
+		y = []
+		for i in idx_range:
+			for eid in range(n_emo):
+				if len(datalist[eid][i]) == 0:
+					# this is a bug from zhtokenizer.tokenize, not solved now 
+					continue
+
+				x.append(datalist[eid][i])
+				y.append(eid)
+		return x, y
+
+	train = build_dataset(range(n_train))
+	valid = build_dataset(range(n_train, n_train + n_valid))
+	test = build_dataset(range(n_samples - n_test, n_samples))
+
+	return train, valid, test
+
+def load_config(ifname, fname_eid = DIR_DATA + 'eid.txt'):
+	all_emos = open(fname_eid, 'r').read().decode('utf8').split('\n')
+
+	emos_list = []
+	fobj = open(ifname, 'r')
+
+	ydim = 0
+	emomap = {}
+	n_emo = 0
+
+	for line in fobj:
+		emos = line.decode('utf8').strip().split(',')
+		if len(line) == 0:
+			break
+
+		for emo in emos:
+			emomap[emo] = ydim
+		ydim += 1
+		n_emo += len(emos)
+
+	print n_emo
+
+	config = [[] for i in range(ydim)]
+	for eid, emo in enumerate(all_emos):
+		if emomap.has_key(emo):
+			config[emomap[emo]].append(eid)
+			n_emo -= 1
+			if n_emo == 0:
+				break
+	
+	return config
+	
+
 
 if __name__ == '__main__':
 	prepare()
