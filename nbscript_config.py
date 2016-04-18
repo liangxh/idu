@@ -31,12 +31,12 @@ def main():
 	optparser.add_option('-n', '--n_samples', action='store', dest='n_samples', default = None)
 
 	opts, args = optparser.parse_args()
-
+	
 	#################### Preparation of Input ##############
 	print >> sys.stderr, 'lstmscript.run: [info] loading dataset ... ', 
 		
 	eids_list = datica.load_config(opts.fname_config)
-	dataset = datica.load_by_config(DIR_UNIGRAM, eids_list, datalen) 
+	dataset = datica.load_by_config(DIR_UNIGRAM, eids_list, opts.n_samples) 
 
 	n_emo = len(eids_list)
 	print >> sys.stderr, 'Done'
