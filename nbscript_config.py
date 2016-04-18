@@ -53,7 +53,7 @@ def main():
 	train, test = dataset
 
 	classifier = NaiveBayesClassifier()
-	classifier.build(train[0], train[1], opts.value_k)
+	classifier.train(train[0], train[1], opts.value_k)
 	preds = [classifier.classify(x) for x in test[0]]
 
 	fname_test = 'data/dataset/test/%s_test.pkl'%(opts.prefix)
