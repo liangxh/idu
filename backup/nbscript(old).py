@@ -13,19 +13,71 @@ sys.setdefaultencoding('utf8')
 from optparse import OptionParser
 import datica
 import validatica
-from naivebayes import NaiveBayesClassifier
 
 from utils import progbar
 from const import N_EMO
 
 import numpy as np
 
+def build(train_x_y, ydim):
+	probwe = {}
+
+	x, y = train_x_y
+	n_y = np.zeros(ydim)
+
+	n_samples = len(x)
+
+	print >> sys.stderr, 'scaning train dataset'
+
+	pbar = progbar.start(n_samples)
+	loop = 0
+
+	for seq, yi in zip(x, y):
+		n_y[yi] += 1
+
+		for token in set(seq):
+			if not probwe.has_key(token):
+				probwe[token] = np.zeros(ydim)
+			probwe[token][yi] += 1
+	
+		loop += 1
+		pbar.update(loop)
+
+	pbar.finish()
+
+	print >> sys.stderr, 'normalization'
+
+	pbar = progbar.start(len(probwe))
+	loop = 0
+
+	for k in probwe.keys():
+		probwe[k] /= n_y
+
+		loop += 1
+		pbar.update(loop)
+
+	pbar.finish()
+
+	return probwe
+
+def classify(seq, ydim, probwe):
+	p = np.ones(ydim)
+	for t in seq:
+		if not probwe.has_key(t):
+			continue
+		p *= probwe[t]
+
+	return p
+
+def classify_batch(seqs, ydim, probwe):
+	return [classify(seq, ydim, probwe) for seq in seqs]
+
 def main():
 	optparser = OptionParser()
 
 	# necessary
 	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
-	optparser.add_option('-k', '--value_k', dest='value_k', type='float', action = 'store', default = 1.)
+	optparser.add_option('-u', '--unigram', action='store_true', dest='unigram', default = False)
 
 	# debug
 	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
@@ -49,10 +101,8 @@ def main():
 	dataset = merge_train_valid(dataset)
 	train, test = dataset
 
-	classifier = NaiveBayesClassifier()
-	classifier.train(train[0], train[1], opts.value_k)
-	preds = [classifier.classify(x) for x in test[0]]
-
+	probwe = build(train, opts.ydim)
+	preds = classify_batch(test[0], opts.ydim, probwe)
 	fname_test = 'data/dataset/test/%s_test.pkl'%(opts.prefix)
 	fname_valid = 'data/dataset/test/%s'%(opts.prefix)
 
