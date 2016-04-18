@@ -135,7 +135,7 @@ def merge(dname_dataset, idnames, odname, n_emo):
 			if xlist is None:
 				xlist = xs
 			else:
-				for i, x in numerate(xs):
+				for i, x in enumerate(xs):
 					xlist[i] = np.concatenate([xlist[i], x], axis = 1)
 
 		cPickle.dump(xlist, open(ofname, 'w'))
