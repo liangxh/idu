@@ -126,6 +126,8 @@ def load_by_config(dirname, eids_list, datalen = None, valid_rate = 0.2, test_ra
 	n_test = int(test_rate * n_samples)
 	n_train = n_samples - n_valid - n_test
 
+	n_emo = len(datalist)
+
 	def build_dataset(idx_range):
 		x = []
 		y = []
