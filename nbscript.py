@@ -26,6 +26,7 @@ def main():
 	# necessary
 	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	optparser.add_option('-k', '--value_k', dest='value_k', type='float', action = 'store', default = 1.)
+	optparser.add_option('-u', '--unigram', action='store_true', dest='unigram', default = False)
 
 	# debug
 	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
