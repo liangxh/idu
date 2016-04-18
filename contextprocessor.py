@@ -120,6 +120,8 @@ def merge(dname_dataset, idnames, odname, n_emo):
 	idirs = [dir_dataset + '%s/'%(idname) for idname in idnames]
 	odir = dir_dataset + '%s/'%(odname)
 
+	init_folders([odir, ])
+
 	for eid in range(n_emo):
 		xlist = None
 		ofname = odir + '%d.pkl'%(eid)
