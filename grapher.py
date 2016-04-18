@@ -48,8 +48,8 @@ def main():
 
 	lprec = {
 		'text':cPickle.load(open(idname + 'none2532_prec.pkl', 'r')),
-		'text-above_s':cPickle.load(open(idname + 'tnb2532_prec.pkl', 'r')),
-		'text-above_t':cPickle.load(open(idname + 'snb2532_prec.pkl', 'r')),
+		'text-above_s':cPickle.load(open(idname + 'snb2532_prec.pkl', 'r')),
+		'text-above_t':cPickle.load(open(idname + 'tnb2532_prec.pkl', 'r')),
 	}
 
 	export(lprec, title, ofname)
