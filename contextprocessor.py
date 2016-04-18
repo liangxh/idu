@@ -93,7 +93,7 @@ def prepare_above_emos(dname_dataset, idname, odname, n_emo):
 		ifname = idir + '%d.pkl'%(eid)
 		ofname = odir + '%d.pkl'%(eid)
 
-		print >> sys.stderr, '\t%s -> ... '%(ifname), 
+		print >> sys.stderr, '\t%s -> ...'%(ifname), 
 
 		contextu = cPickle.load(open(ifname, 'r'))
 		xlist = []
@@ -113,6 +113,31 @@ def prepare_above_emos(dname_dataset, idname, odname, n_emo):
 
 		cPickle.dump(xlist, open(ofname, 'w'))
 		print >> sys.stderr, '-> %s OK!'%(ofname)
+
+def merge(dname_dataset, idnames, odname, n_emo):
+	dir_dataset = 'data/blogs/%s/'%(dname_dataset)
+
+	idirs = [dir_dataset + '%s/'%(idname) for idname in idnames]
+	odir = dir_dataset + '%s/'%(odname)
+
+	for eid in range(n_emo):
+		xlist = None
+		ofname = odir + '%d.pkl'%(eid)
+
+		print >> sys.stderr, 'contextprocessor: [info] exporting to %s ...'%(ofname), 
 		
+		for idir in idirs:
+			ifname = idir + '%d.pkl'%(eid)
+			xs = cPickle.load(open(ifname, 'r'))
+
+			if xlist is None:
+				xlist = xs:
+			else:
+				for i, x in numerate(xs):
+					xlist[i] = np.concatenate([xlist[i], x], axis = 1)
+
+		cPickle.dump(xlist, open(ofname, 'w'))
+		print >> sys.stderr, 'OK'
+
 if __name__ == '__main__':
 	pass
