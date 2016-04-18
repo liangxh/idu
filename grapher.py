@@ -43,13 +43,17 @@ def main():
 	if not os.path.isdir(odname):
 		os.mkdir(odname)
 
-	title = 'exp1_new'
-	ofname = odname + 'exp1_new.png'
+	title = 'exp2_new'
+	ofname = odname + 'exp2_new.png'
 
 	lprec = {
 		'text':cPickle.load(open(idname + 'none2532_prec.pkl', 'r')),
-		'text-above_s':cPickle.load(open(idname + 'snb2532_prec.pkl', 'r')),
-		'text-above_t':cPickle.load(open(idname + 'tnb2532_prec.pkl', 'r')),
+		'text-above_s_nb':cPickle.load(open(idname + 'snb2532_prec.pkl', 'r')),
+		'text-above_s_emo':cPickle.load(open(idname + 'semo2532_prec.pkl', 'r')),
+		'text-above_s_nb_emo':cPickle.load(open(idname + 'snbemean2532_prec.pkl', 'r')),
+		'text-above_t_nb':cPickle.load(open(idname + 'tnb2532_prec.pkl', 'r')),
+		'text-above_t_emo':cPickle.load(open(idname + 'temo2532_prec.pkl', 'r')),
+		'text-above_t_nb_emo':cPickle.load(open(idname + 'tnbemean2532_prec.pkl', 'r')),
 	}
 
 	export(lprec, title, ofname)
