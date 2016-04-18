@@ -106,6 +106,13 @@ Xihao Liang, 2016.03.17
 46. 為比較不同上文間區別, 重新編寫cdataextractor.py 為cdextractor.py 重新完成數據提取
 	python -c "import cdextractor; for i in range(3): cdextractor.extract('dataset', i)"
 	python -c "import cdextractor; cdextractor.get_emotf('dataset')"
+	python -c "import cdextractor; cdextractor.split('dataset', range(40))"
+	python -c "import cdextractor; cdextractor.prepare_dataset('dataset', 25, 4000)"
+	python daticaext.py dataset 25
+
+	python -c "import contextprocessor as ctp; ctp.prepare_above_naivebayes('dataset', 'above_s_unigram', 'above_s_nb', 25)"                              
+	python -c "import contextprocessor as ctp; ctp.prepare_above_naivebayes('dataset', 'above_t_unigram', 'above_t_nb', 25)"                              
+
 
 
 ## BUG
