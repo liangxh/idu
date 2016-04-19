@@ -42,7 +42,7 @@ def main():
 
 
 	print >> sys.stderr, 'executing... '
-	cur.execute('SELECT text FROM microblogs LIMIT 500')
+	cur.execute('SELECT text FROM microblogs LIMIT 10000')
 	
 	pbar = progbar.start(all_N)
 	l = 0
