@@ -118,9 +118,9 @@ class LstmScriptRand:
 		#################### Preparation of Input ##############
 		print >> sys.stderr, 'lstmscript.run: [info] loading dataset ... ', 
 		
-		dataset = datica.load_data(opts.dir_x, ydim, datalen) 
+		dataset = datica.load_data(opts.dir_x, opts.ydim, datalen) 
 
-		n_emo = len(eids_list)
+		n_emo = opts.ydim
 		print >> sys.stderr, 'Done'
 
 		print >> sys.stderr, 'lstmscript.run: [info] initialization of embedder'
