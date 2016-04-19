@@ -51,7 +51,7 @@ def main():
 		if res is None or not emo_map.has_key(res[1]):
 			continue
 
-		label = emo_map(res[1])
+		label = emo_map[res[1]]
 		if counts[label] < N:
 			counts[label] += 1
 			fobjs[label].write(res[0] + '\n')
