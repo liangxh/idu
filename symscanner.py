@@ -42,7 +42,7 @@ def main():
 
 
 	print >> sys.stderr, 'executing... '
-	cur.execute('SELECT text FROM microblogs LIMIT 90000')
+	cur.execute('SELECT text FROM microblogs')
 	
 	pbar = progbar.start(all_N)
 	l = 0
@@ -59,7 +59,6 @@ def main():
 			if pi.search(t) >= 0:
 				p = pi
 				pid = i
-				print t
 				break
 		
 		if p is None:
@@ -81,6 +80,8 @@ def main():
 
 	cur.close()
 	con.close()
+
+	print counts
 
 	for fobj in fobjs:
 		fobj.close()
