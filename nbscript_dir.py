@@ -26,7 +26,6 @@ def main():
 	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	optparser.add_option('-x', '--dir_x', action='store', type = 'str', dest='dir_x')
 	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim')
-	optparser.add_option('-n', '--n_samples', action='store', dest='n_samples', default = None)
 
 	optparser.add_option('-k', '--value_k', dest='value_k', type='float', action = 'store', default = 1.)
 
