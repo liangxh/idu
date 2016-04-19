@@ -39,11 +39,14 @@ def main():
 
 	con = db.connect()
 	cur = con.cursor()
+
+
+	print >> sys.stderr, 'executing... '
+	cur.execute('SELECT text FROM microblogs LIMIT 500')
 	
 	pbar = progbar.start(all_N)
 	l = 0
 
-	cur.execute('SELECT text FROM microblogs')
 	for t in cur:
 		t = t[0]
 		pid = None
@@ -53,7 +56,6 @@ def main():
 				p = pi
 				pid = i
 				print t
-				return
 				break
 		
 		if p is None:
