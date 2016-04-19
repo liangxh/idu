@@ -147,6 +147,10 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	python -c "import datica; i = 3; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
 
 
+	sudo python lstmscript_dir.py -p emo4708 -x data/dataset_emo/unigram/ -y 4 -d 8
+	sudo python lstmscript_dir.py -p emo4732 -x data/dataset_emo/unigram/ -y 4 -d 32
+	python nbscript_dir.py -p nbemo4710 -x data/dataset_emo/unigram/ -y 4 -k 1.
+
 
 ## BUG
 
