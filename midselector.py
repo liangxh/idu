@@ -38,7 +38,7 @@ def main():
 
 			mids = open(ifname, 'r').read().split('\n')
 
-			pbar = progbar.start(len(mids)):
+			pbar = progbar.start(len(mids))
 			l = 0
 			for mid in mids:
 				t = load_by_mid(cur, mid)
