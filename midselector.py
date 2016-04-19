@@ -23,6 +23,7 @@ def main():
 
 	con = db.connect()
 	cur = con.cursor()
+	maxN = 70000
 
 	odname = 'data/dataset_emo/'
 	if not os.path.isdir(odname):
@@ -39,6 +40,8 @@ def main():
 			ofobj = open(ofname, 'w')
 
 			mids = open(ifname, 'r').read().split('\n')
+			if len(mids) > maxN:
+				mids = mids[:maxN]
 
 			pbar = progbar.start(len(mids))
 			l = 0
