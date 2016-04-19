@@ -4,7 +4,7 @@
 Author: Xihao Liang
 Created: 2016.04.19
 '''
-
+import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -24,7 +24,8 @@ def main():
 	cur = con.cursor()
 
 	odname = 'data/dataset_emo/'
-	
+	if not os.path.isdir(odname):
+		os.mkdir(odname)
 
 	config = datica.load_config('data/config4.txt')
 	for label, eids in enumerate(config):
