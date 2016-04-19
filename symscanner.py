@@ -18,8 +18,8 @@ def main():
 	import blogger
 	from utils import progbar
 
-	p1 = re.compile('[:;]\)')
-	p2 = re.compile('[:;]\(')
+	p1 = re.compile(' [:;]\)')
+	p2 = re.compile(' [:;]\(')
 	patterns = [p1, p2]
 	n_label = 2
 	N = 70000
@@ -66,14 +66,14 @@ def main():
 			continue
 
 		text = p.sub('', res[0])
-		if counts[label] < N:
+		if counts[pid] < N:
 			counts[pid] += 1
 			fobjs[pid].write(text + '\n')
 
 			l += 1
 			pbar.update(l)
 
-			if counts[label] == N and sum(counts) == all_N:
+			if counts[pid] == N and sum(counts) == all_N:
 				break
 
 	pbar.finish()
