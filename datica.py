@@ -22,6 +22,7 @@ def prepare_unigramize(ifname, ofname):
 
 	seqs = []
 	for line in lines:
+		line = line.decode('utf8')
 		line = zhprocessor.simplify(line)
 		tokens = zhtokenizer.unigramize(line)
 		seqs.append(tokens)
