@@ -14,6 +14,20 @@ import cPickle
 import blogger
 from const import N_EMO, DIR_TEXT, DIR_UNIGRAM, DIR_TOKEN, DIR_DATA
 
+def prepare_unigramize(ifname, ofname):
+	import zhtokenizer
+	from utils import zhprocessor
+
+	lines = open(ifname, 'r').readlines()
+
+	seqs = []
+	for line in lines:
+		line = zhprocessor.simplify(line)
+		tokens = zhtokenizer.unigramize(line)
+		seqs.append(tokens)
+
+	cPickle.dump(seqs, open(ofname, 'w'))
+
 def prepare(eids = range(N_EMO)):
 	'''
 	tokenize and unigramize the text under data/dataset/text

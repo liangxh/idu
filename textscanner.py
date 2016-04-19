@@ -34,7 +34,12 @@ def main():
 	if not os.path.isdir(odname):
 		os.mkdir(odname)
 
-	fobjs = [open(odname + '%d'%(i), 'w') for i in range(n_label)]
+	odname += 'raw/'
+	if not os.path.isdir(odname):
+		os.mkdir(odname)
+
+
+	fobjs = [open(odname + '%d.txt'%(i), 'w') for i in range(n_label)]
 	counts = [0 for i in range(n_label)]
 	N = 70000
 	all_N = N * n_label
