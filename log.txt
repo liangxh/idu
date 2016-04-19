@@ -132,6 +132,13 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_s_nb', '
 python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', 'above_t_emo_mean'], 'above_t_nb_emean', 25)"
 
 
+51. 4種情感分類
+	python nbscript_config.py -p nbemo4410 -k 1.0 -c data/config4.txt
+	sudo python lstmscript_config.py -p emo4432 -c data/config4.txt -d 32                          
+
+52. 對51, 懐疑數據量不足导致LSTM效果比NaiveBayes效果差, 從數據庫中重新篩選數據進行實驗
+
+
 
 
 ## BUG
