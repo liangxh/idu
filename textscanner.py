@@ -51,7 +51,7 @@ def main():
 			continue
 
 		label = emo_map(res[1])
-		if counts[label] < N
+		if counts[label] < N:
 			counts[label] += 1
 			fobjs[label].write(res[0] + '\n')
 
