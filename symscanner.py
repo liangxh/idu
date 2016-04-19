@@ -18,8 +18,8 @@ def main():
 	import blogger
 	from utils import progbar
 
-	p1 = re.compile(' [:;]\)')
-	p2 = re.compile(' [:;]\(')
+	p1 = re.compile('[:;]\)')
+	p2 = re.compile('[:;]\(')
 	patterns = [p1, p2]
 	n_label = 2
 	N = 70000
@@ -48,7 +48,11 @@ def main():
 	l = 0
 
 	for t in cur:
-		t = t[0]
+		res = blogger.extract(t, check_emo = False)
+		if res is None:
+			continue
+	
+		t = res[0]		
 		pid = None
 		p = None
 		for i, pi in enumerate(patterns):
@@ -61,11 +65,8 @@ def main():
 		if p is None:
 			continue
 
-		res = blogger.extract(t, check_emo = False)
-		if res is None:
-			continue
-
-		text = p.sub('', res[0])
+		
+		text = p.sub('', t)
 		if counts[pid] < N:
 			counts[pid] += 1
 			fobjs[pid].write(text + '\n')
