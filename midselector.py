@@ -18,6 +18,7 @@ def load_by_mid(cur, mid):
 def main():
 	import db
 	import datica
+	import blogger
 	from utils import progbar
 
 	con = db.connect()
