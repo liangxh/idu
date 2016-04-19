@@ -48,7 +48,7 @@ def main():
 	l = 0
 
 	for t in cur:
-		res = blogger.extract(t, check_emo = False)
+		res = blogger.extract(t[0], check_emo = False)
 		if res is None:
 			continue
 	
