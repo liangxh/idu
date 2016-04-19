@@ -138,6 +138,13 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 
 52. 對51, 懐疑數據量不足导致LSTM效果比NaiveBayes效果差, 從數據庫中重新篩選數據進行實驗
 
+53. 重新提取數據
+
+	python textscanner.py
+	python -c "import datica; i = 0; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+	python -c "import datica; i = 1; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+	python -c "import datica; i = 2; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+	python -c "import datica; i = 3; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
 
 
 

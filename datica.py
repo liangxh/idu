@@ -16,9 +16,12 @@ from const import N_EMO, DIR_TEXT, DIR_UNIGRAM, DIR_TOKEN, DIR_DATA
 
 def prepare_unigramize(ifname, ofname):
 	import zhtokenizer
-	from utils import zhprocessor
+	from utils import zhprocessor, progbar
 
 	lines = open(ifname, 'r').readlines()
+
+	pbar = progbar.start(len(lines))
+	l = 0
 
 	seqs = []
 	for line in lines:
@@ -26,6 +29,10 @@ def prepare_unigramize(ifname, ofname):
 		line = zhprocessor.simplify(line)
 		tokens = zhtokenizer.unigramize(line)
 		seqs.append(tokens)
+
+		l += 1
+		pbar.update(l)
+	pbar.finish()
 
 	cPickle.dump(seqs, open(ofname, 'w'))
 
