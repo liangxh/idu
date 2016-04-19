@@ -15,6 +15,7 @@ from optparse import OptionParser
 import datica
 import validatica
 from lstm import LstmClassifier
+from const import DIR_MODEL, DIR_TEST
 
 import wemb_rand
 from wordembedder import WordEmbedder
