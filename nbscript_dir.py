@@ -26,6 +26,7 @@ def main():
 	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	optparser.add_option('-x', '--dir_x', action='store', type = 'str', dest='dir_x')
 	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim')
+	optparser.add_option('-n', '--n_samples', action='store', dest='n_samples', default = None)
 
 	optparser.add_option('-k', '--value_k', dest='value_k', type='float', action = 'store', default = 1.)
 
@@ -36,10 +37,11 @@ def main():
 	
 	#################### Preparation of Input ##############
 	print >> sys.stderr, 'lstmscript.run: [info] loading dataset ... ', 
-		
+	
+	n_emo = opts.ydim
+	datalen = opts.n_samples		
 	dataset = datica.load_data(opts.dir_x, opts.ydim, datalen) 
 
-	n_emo = opts.ydim
 	print >> sys.stderr, 'Done'
 
 	def merge_train_valid(dataset):
