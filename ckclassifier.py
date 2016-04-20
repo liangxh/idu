@@ -295,12 +295,6 @@ class CKClassifier:
 	
 		# initialization
 		xdim = x.shape[1]
-
-		w = np.random.randn(xdim)
-		v = calculate_v(w)
-
-		miu = np.random.randn(Np)
-		u = calculate_u(miu, rho)
 	
 		lambda1 = .5
 		lambda2 = .5
@@ -309,6 +303,12 @@ class CKClassifier:
 		rho = .5
 		eta = 1.2
 		L0 = 0.1
+
+		w = np.random.randn(xdim)
+		v = calculate_v(w)
+
+		miu = np.random.randn(Np)
+		u = calculate_u(miu, rho)
 
 		def calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2):
 			return (
@@ -354,6 +354,7 @@ class CKClassifier:
 		self.w = w
 
 def main():
+	'''
 	optparser = OptionParser()
 	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='float', default = 0.2)
 	opts, args = optparser.parse_args()
@@ -388,6 +389,10 @@ def main():
 	y = CKClassifier.prepare_y(train[1])
 
 	cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
+	'''
+
+	x, y, sim_tids, sentiscores = cPickle.dump(open('data/ckdata.pkl', 'r'))
+
 
 	classifier = CKClassifier()
 	classifier.train(x, y, sim_tids, sentiscores)
