@@ -16,7 +16,7 @@ class CKClassifier:
 		texts.extend(valid[0])
 		texts.extend(test[0])
 
-		self.prepare_PMI(texts, thr = None)
+		self.prepare_PMI(texts, thr)
 	
 	@classmethod
 	def prepare_PMI(self, texts, thr = None):
