@@ -164,6 +164,7 @@ class CKClassifier:
 					x[i][tid] += 1
 
 		x /= np.sum(x, axis = 1).reshape(x.shape[0], 1)
+		x[x == np.inf] = 0.
 		return x
 
 	@classmethod
@@ -175,9 +176,7 @@ class CKClassifier:
 		return y
 
 	
-	def train(self, x, y, sim_tids, senti_tids, sentiscores,
-		rho = 0.1
-	):
+	def train(self, x, y, sim_tids, sentiscores):
 		# rename
 		A0 = []
 		A1 = []
@@ -186,7 +185,6 @@ class CKClassifier:
 			A1.append(t2)
 
 		Np = len(sim_tids)
-
 		p = sentiscores
 	
 		# set function
