@@ -119,7 +119,7 @@ class CKClassifier:
 		count = np.zeros((n_tokens, ydim))
 
 		for tokens, y in zip(x, y):
-			for token in y:
+			for token in tokens:
 				if tokens_valid.has_key(token):
 					tid = tokens_valid[token]
 					count[tid][y] += 1
