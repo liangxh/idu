@@ -83,7 +83,7 @@ class CKClassifier:
 					print i
 				
 			for j in range(i + 1, n_tokens):
-				v = np.log2(p[i][j] * n_samples / (p_margin[i] * p_margin[j]))
+				v = p[i][j] / (p_margin[i] * p_margin[j])
 				pmi_list.append(((i, j), v))
 				values.append(v)
 
