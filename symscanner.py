@@ -10,6 +10,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 import re
+import time
 
 from utils import progbar
 
@@ -40,9 +41,10 @@ def main():
 	con = db.connect()
 	cur = con.cursor()
 
-
-	print >> sys.stderr, 'executing... '
+	st_time = time.time()
+	print >> sys.stderr, 'executing... ',
 	cur.execute('SELECT text FROM microblogs')
+	print >> sys.stderr, time.time() - st_time
 	
 	pbar = progbar.start(all_N)
 	l = 0
