@@ -166,6 +166,8 @@ class CKClassifier:
 
 		x /= np.sum(x, axis = 1).reshape(x.shape[0], 1)
 		x[x == np.inf] = 0.
+		x[x is np.nan] = 0.
+
 		return x
 
 	@classmethod
@@ -362,7 +364,6 @@ class CKClassifier:
 		self.w = w
 
 def main():
-	'''
 	optparser = OptionParser()
 	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='float', default = 0.2)
 	opts, args = optparser.parse_args()
@@ -396,12 +397,12 @@ def main():
 	x = CKClassifier.prepare_x(train[0], tokens_valid)
 	y = CKClassifier.prepare_y(train[1])
 
-	cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
-	'''
-
 	print >> sys.stderr, 'loading data...', 
 	st = time.time()
-	x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
+	
+	cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
+	#x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
+
 	print >> sys.stderr, ' done (%.2f sec)'%(time.time() - st)
 
 
