@@ -151,7 +151,7 @@ def main():
 	get_valid_rate(texts, tokens_valid)
 	
 	classifier = CKClassifier()
-	pmi_list = CKClassifier.prepare_PMI(texts, tokens_valid, thr_PMI)
+	#pmi_list = CKClassifier.prepare_PMI(texts, tokens_valid, thr_PMI)
 	sentiscores = CKClassifier.prepare_sentiscore(train, tokens_valid, alpha = 1.):
 
 if __name__ == '__main__':
