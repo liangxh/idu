@@ -36,7 +36,7 @@ class CKClassifier:
 		print len([v for v in tf.values() if v >= thr])
 
 def main():
-	if len(sys.argv) > 1
+	if len(sys.argv) > 1:
 		thr = int(sys.argv[1])
 	else:
 		thr = None
