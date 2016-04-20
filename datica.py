@@ -189,8 +189,6 @@ def load_config(ifname, fname_eid = DIR_DATA + 'eid.txt'):
 		ydim += 1
 		n_emo += len(emos)
 
-	print n_emo
-
 	config = [[] for i in range(ydim)]
 	for eid, emo in enumerate(all_emos):
 		if emomap.has_key(emo):
