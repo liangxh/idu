@@ -31,7 +31,7 @@ class CKClassifier:
 		print len([v for v in tf.values() if v >= thr])
 
 def main():
-	config = dataica.load_config('data/config2.txt')
+	config = datica.load_config('data/config2.txt')
 	dataset = datica.load_by_config('data/dataset/unigram', config)
 
 	classifier = CKClassifier()
@@ -39,4 +39,5 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
 	
