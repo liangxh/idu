@@ -222,13 +222,16 @@ class CKClassifier:
 			return y
 
 		def g(z, f, x, y, v, u, p, alpha, lambda1, rho):
-			return (f(x, y, z) - alpha * np.dot(p, z) 
+			return (f(x, y, z)
+					- alpha * np.dot(p, z) 
 					+ lambda1 * np.sum(z ** 2)
 					+ rho / 2 * np.sum((calculate_v(z) - v + u) ** 2)
 				)
 
 		def g_grad(z, f_grad, x, y, v, u, p, alpha, lambda1, rho):
-			return (f_grad(x, y, z) + alpha * p + 2 * lambda1 * z
+			return (f_grad(x, y, z)
+					- alpha * p
+					+ 2 * lambda1 * z
 					+ rho * calculate_turnAdot(calculate_v(z) - v + u)
 				)
 
@@ -253,8 +256,8 @@ class CKClassifier:
 					)
 	
 			z_f1 = w    # z_(t+1)
-			z_b1 = 0    # z_(t-1)
 			z = w
+			z_b1 = 0    # z_(t-1)
 
 			k = 0.
 			L = L0
@@ -364,6 +367,7 @@ class CKClassifier:
 		self.w = w
 
 def main():
+	'''
 	optparser = OptionParser()
 	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='float', default = 0.2)
 	opts, args = optparser.parse_args()
@@ -396,6 +400,7 @@ def main():
 	
 	x = CKClassifier.prepare_x(train[0], tokens_valid)
 	y = CKClassifier.prepare_y(train[1])
+	'''
 
 	print >> sys.stderr, 'loading data...', 
 	st = time.time()
