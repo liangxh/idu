@@ -237,8 +237,8 @@ class CKClassifier:
 				lhs = g(z, f, x, y, v, u, p, alpha, lambda1, rho)
 				rhs = (
 					g(s, f, x, y, v, u, p, alpha, lambda1, rho) + 
-					np.dot(g_grad(s, f, x, y, v, u, p, alpha, lambda1, rho) * (z - s)) + 
-					L / 2 * np.sum((z - s) ** 2)
+					np.dot(g_grad(s, f, x, y, v, u, p, alpha, lambda1, rho), (z - s)) + 
+						L / 2 * np.sum((z - s) ** 2)
 					)
 
 				return lhs <= rhs
