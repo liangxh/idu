@@ -165,8 +165,7 @@ class CKClassifier:
 					x[i][tid] += 1
 
 		x /= np.sum(x, axis = 1).reshape(x.shape[0], 1)
-		x[x == np.inf] = 0.
-		x[x is np.nan] = 0.
+		x[np.isnan(x)] = 0.
 
 		return x
 
@@ -281,6 +280,7 @@ class CKClassifier:
 					z_f1 = f_thresholding(s_f1 - g_grad_s_f1 / L, lambda2 / L)
 
 				cost = calculate_cost(f, x, y, w, v, u, p, alpha, lambda1, lambda2, rho)
+				print 'update_w: [info] EPOCHE %d cost %f'%(k, cost)
 
 				if cost < min_value:
 					min_value = cost
