@@ -391,7 +391,7 @@ def main():
 	cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
 	'''
 
-	x, y, sim_tids, sentiscores = cPickle.dump(open('data/ckdata.pkl', 'r'))
+	x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
 
 
 	classifier = CKClassifier()
