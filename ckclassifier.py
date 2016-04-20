@@ -248,7 +248,7 @@ class CKClassifier:
 				return (
 					f(x, y, w) - alpha * np.dot(p, w)
 					+ lambda1 * np.sum(w ** 2)	
-					+ lambda2 * np.norm(w, 1)
+					+ lambda2 * np.linalg.norm(w, 1)
 					+ rho / 2 * np.sum((calculate_v(w) - v + u) ** 2)
 					)
 	
@@ -322,9 +322,9 @@ class CKClassifier:
 
 		def calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2):
 			return (
-				f(x, y, w) - alpha * np.dot(p, w) + beta * np.norm(calculate(w), 1)
+				f(x, y, w) - alpha * np.dot(p, w) + beta * np.linalg.norm(calculate(w), 1)
 				+ lambda1 * np.sum(w ** 2)
-				+ lambda2 * np.norm(w, 1)
+				+ lambda2 * np.linalg.norm(w, 1)
 				)
 
 		patience_max = 10
