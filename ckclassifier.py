@@ -110,6 +110,26 @@ class CKClassifier:
 		#cPickle.dump(values, open('output/pmi_values.pkl', 'w'))
 		return pmi_list
 
+	@classmethod
+	def prepare_sentiscore(train_x_y, tokens_valid, alpha = 1.):
+		x, y = train_x_y
+		ydim = np.max(y) + 1
+		n_tokens = len(tokens_valid)
+
+		count = np.zeros((n_tokens, ydim))
+
+		for tokens, y in zip(x, y):
+			for token in y:
+				if tokens_valid.has_key(token):
+					tid = tokens_valid[token]
+					count[tid][y] += 1
+
+		count_sum = np.sum(count, axis = 0)
+		sentiscore = np.log2(((count[:, 0] + alpha) / (count_sum[0] + n_tokens * alpha) ) / ((count[:, 1] + alpha) / (count_sum[1] + n_tokens * alpha)))
+
+		cPickle.dump(sentiscore.tolist(), open('output/senti_values.pkl', 'w'))
+		return sentiscore
+
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='float', default = 0.2)
@@ -117,11 +137,12 @@ def main():
 
 	###################### Load dataset ###################################
 	config = datica.load_config('data/config2.txt')
-	dataset = datica.load_by_config('data/dataset/unigram/', config)
+	dataset = datica.load_by_config('data/dataset/unigram/', config, valid_rate = 0.)
 
 	###################### Preparation ###################################
-	texts = dataset_to_texts(dataset)
 
+	train, valid, test = dataset
+	texts = dataset_to_texts(dataset)
 
 	thr_PMI = 0.02
 	rate_TF = opts.keep_rate
@@ -131,7 +152,7 @@ def main():
 	
 	classifier = CKClassifier()
 	pmi_list = CKClassifier.prepare_PMI(texts, tokens_valid, thr_PMI)
-
+	sentiscores = CKClassifier.prepare_sentiscore(train, tokens_valid, alpha = 1.):
 
 if __name__ == '__main__':
 	main()
