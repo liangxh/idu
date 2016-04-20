@@ -14,7 +14,7 @@ from utils import progbar
 
 class CKClassifier:
 	@classmethod
-	def prepare_PMI_from_dataset(self, dataset, keep_rate = None):
+	def prepare_PMI_from_dataset(self, dataset, keep_rate):
 		train, valid, test = dataset
 		texts = []
 		texts.extend(train[0])
@@ -24,7 +24,7 @@ class CKClassifier:
 		self.prepare_PMI(texts, keep_rate)
 	
 	@classmethod
-	def prepare_PMI(self, texts, keep_rate = 0.2):
+	def prepare_PMI(self, texts, keep_rate):
 		tf = {}
 
 		for tokens in texts:
@@ -81,7 +81,7 @@ class CKClassifier:
 
 def main():
 	optparser = OptionParser()
-	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='str', default = None)
+	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='str', default = 0.2)
 	opts, args = optparser.parse_args()
 
 	config = datica.load_config('data/config2.txt')
