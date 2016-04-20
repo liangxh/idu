@@ -13,39 +13,54 @@ from optparse import OptionParser
 import datica
 from utils import progbar
 
+def dataset_to_texts(dataset):
+	train, valid, test = dataset
+	texts = []
+	texts.extend(train[0])
+	texts.extend(valid[0])
+	texts.extend(test[0])
+	return texts
+
+def filter_valid_tokens(texts, rate):
+	tf = {}
+
+	for tokens in texts:
+		for token in tokens:
+			if tf.has_key(token):
+				tf[token] += 1
+			else:
+				tf[token] = 1
+
+	n_samples = len(texts)
+	n_tokens = int(len(tf) * rate)
+
+	tf = sorted(tf.items(), key = lambda k: -k[1])[: n_tokens]
+
+	tokens_valid = {}
+	for i, item in enumerate(tf):
+		t, f = item
+		tokens_valid[t] = i
+
+	return tokens_valid
+
+def get_valid_rate(texts, tokens_valid):
+	c = 0
+	valid_tokens = set(tokens_valid.keys())
+
+	for tokens in texts:
+		tokens = set(tokens)
+		if len(tokens.intersection(valid_tokens)) == 0:
+			c += 1
+
+	print 'invalid coverage: %d (%.2f%%)'%(c, 100. * c / len(texts))
 
 class CKClassifier:
-	@classmethod
-	def prepare_PMI_from_dataset(self, dataset, keep_rate):
-		train, valid, test = dataset
-		texts = []
-		texts.extend(train[0])
-		texts.extend(valid[0])
-		texts.extend(test[0])
-
-		self.prepare_PMI(texts, keep_rate)
 	
 	@classmethod
-	def prepare_PMI(self, texts, keep_rate):
-		tf = {}
-
-		for tokens in texts:
-			for token in tokens:
-				if tf.has_key(token):
-					tf[token] += 1
-				else:
-					tf[token] = 1
-
-		n_samples = len(texts)
-		n_tokens = int(len(tf) * keep_rate)
-
-		tf = sorted(tf.items(), key = lambda k: -k[1])[: n_tokens]
-		
-		tokens_valid = {}
-		for i, item in enumerate(tf):
-			t, f = item
-			tokens_valid[t] = i
-
+	
+	
+	@classmethod
+	def prepare_PMI(self, texts, tokens_valid, thr):
 		p_margin = np.zeros(n_tokens)
 		p = np.zeros((n_tokens, n_tokens))
 		
@@ -72,7 +87,7 @@ class CKClassifier:
 		pbar.finish()
 		
 		pmi_list = []
-		values = []
+		#values = []
 	
 		n = (n_tokens - 1) * n_tokens / 2
 		pbar = progbar.start(n)
@@ -84,25 +99,40 @@ class CKClassifier:
 				
 			for j in range(i + 1, n_tokens):
 				v = p[i][j] / (p_margin[i] * p_margin[j])
-				pmi_list.append(((i, j), v))
-				values.append(v)
 
+				if v > thr:
+					pmi_list.append(((i, j), v))
+				
+				#values.append(v)
 				l += 1
 				pbar.update(l)
 		pbar.finish()
 
-		cPickle.dump(values, open('output/pmi_values.pkl', 'w'))
+		#cPickle.dump(values, open('output/pmi_values.pkl', 'w'))
+		return pmi_list
 
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='str', default = 0.2)
 	opts, args = optparser.parse_args()
 
+	###################### Load dataset ###################################
 	config = datica.load_config('data/config2.txt')
 	dataset = datica.load_by_config('data/dataset/unigram/', config)
 
+	###################### Preparation ###################################
+	texts = dataset_to_texts(dataset)
+
+
+	thr_PMI = 0.02
+	rate_TF = opts.keep_rate
+
+	tokens_valid = filter_valid_tokens(texts, rate_TF)
+	get_valid_rate(texts, tokens_valid)
+	
 	classifier = CKClassifier()
-	classifier.prepare_PMI_from_dataset(dataset, opts.keep_rate)
+	pmi_list = classifier.prepare_PMI(texts, tokens_valid, thr_PMI)
+
 
 if __name__ == '__main__':
 	main()
