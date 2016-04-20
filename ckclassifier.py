@@ -5,6 +5,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import time
 import cPickle
 import numpy as np
 from optparse import OptionParser
@@ -210,7 +211,14 @@ class CKClassifier:
 			return x if x > 0 else 0.
 
 		def f_thresholding(a, k):
-			return f_pos(a - k) - f_pos(- a - k)
+			y = np.zeros(a.shape[0])
+			flags = (a - k > 0)
+			y[flags] = a[flags]
+
+			flags = (- a - k > 0)
+			y[flags] -= a[flags]
+
+			return y
 
 		def g(z, f, x, y, v, u, p, alpha, lambda1, rho):
 			return (f(x, y, z) - alpha * np.dot(p, z) 
@@ -391,7 +399,10 @@ def main():
 	cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
 	'''
 
+	print >> sys.stderr, 'loading data...'
+	st = time.time()
 	x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
+	print >> sys.stderr, ' done (%.2f sec)'%(time.time() - st)
 
 
 	classifier = CKClassifier()
