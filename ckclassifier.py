@@ -168,7 +168,7 @@ class CKClassifier:
 
 	@classmethod
 	def prepare_y(self, ori_y):
-		y = np.zeros(0.)
+		y = np.zeros(len(ori_y))
 		for i, yi in enumerate(ori_y):
 			y[i] = 1 if yi == 0 else -1
 
