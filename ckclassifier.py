@@ -4,6 +4,8 @@
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
+
+import cPickle
 import numpy as np
 from optparse import OptionParser
 
@@ -63,7 +65,7 @@ class CKClassifier:
 					if t1 < t2:
 						p[t1][t2] += 1
 					else:
-						p[t1][t2] += 1
+						p[t2][t1] += 1
 			
 			l += 1
 			pbar.update(l)
@@ -71,11 +73,20 @@ class CKClassifier:
 		
 		pmi_list = []
 		values = []
+	
+		n = (n_tokens - 1) * (n_tokens - 2) / 2
+		pbar = progbar.start(n)
+		l = 0
+
 		for i in range(n_tokens - 1):
 			for j in range(i + 1, n_tokens):
-				v = np.log2(p[i][j] * n_samples / (p[i] * p[j]))
+				v = np.log2(p[i][j] * n_samples / (p_margin[i] * p_margin[j]))
 				pmi_list.append(((i, j), v))
 				values.append(v)
+
+				l += 1
+				pbar.update(l)
+		pbar.finish()
 
 		cPickle.dump(values, open('output/pmi_values.pkl', 'w'))
 
