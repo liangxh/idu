@@ -73,7 +73,7 @@ class CKClassifier:
 		values = []
 		for i in range(n_tokens - 1):
 			for j in range(i + 1, n_tokens):
-				v = np.log2(p[i][j] * n_samples / (p[i], p[j]))
+				v = np.log2(p[i][j] * n_samples / (p[i] * p[j]))
 				pmi_list.append(((i, j), v))
 				values.append(v)
 
