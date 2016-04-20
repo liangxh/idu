@@ -35,7 +35,7 @@ class CKClassifier:
 					tf[token] = 1
 
 		n_samples = len(texts)
-		n_token = int(len(tf) * keep_rate)
+		n_tokens = int(len(tf) * keep_rate)
 
 		tf = sorted(tf.items(), key = lambda k: -k[1])[: n_tokens]
 		
