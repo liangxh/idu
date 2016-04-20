@@ -32,7 +32,7 @@ class CKClassifier:
 
 def main():
 	config = datica.load_config('data/config2.txt')
-	dataset = datica.load_by_config('data/dataset/unigram', config)
+	dataset = datica.load_by_config('data/dataset/unigram/', config)
 
 	classifier = CKClassifier()
 	classifier.prepare_PMI_from_dataset(dataset)
