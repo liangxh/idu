@@ -166,6 +166,7 @@ class CKClassifier:
 		x /= np.sum(x, axis = 1).reshape(x.shape[0], 1)
 		return x
 
+	@classmethod
 	def prepare_y(self, ori_y):
 		y = np.zeros(0.)
 		for i, yi in enumerate(ori_y):
