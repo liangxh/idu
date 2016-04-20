@@ -54,11 +54,7 @@ def get_valid_rate(texts, tokens_valid):
 
 	print 'invalid coverage: %d (%.2f%%)'%(c, 100. * c / len(texts))
 
-class CKClassifier:
-	
-	@classmethod
-	
-	
+class CKClassifier:	
 	@classmethod
 	def prepare_PMI(self, texts, tokens_valid, thr):
 		p_margin = np.zeros(n_tokens)
@@ -131,7 +127,7 @@ def main():
 	get_valid_rate(texts, tokens_valid)
 	
 	classifier = CKClassifier()
-	pmi_list = classifier.prepare_PMI(texts, tokens_valid, thr_PMI)
+	pmi_list = CKClassifier.prepare_PMI(texts, tokens_valid, thr_PMI)
 
 
 if __name__ == '__main__':
