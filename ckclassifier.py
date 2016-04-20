@@ -346,7 +346,7 @@ class CKClassifier:
 			l += 1
 
 			loss = calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2)
-			print >> sys.stderr, 'EPOCH %d loss %f'%(loss)
+			print >> sys.stderr, 'EPOCH %d loss %f'%(l, loss)
 
 			if loss < min_value:
 				min_value = loss
@@ -400,8 +400,8 @@ def main():
 	print >> sys.stderr, 'loading data...', 
 	st = time.time()
 	
-	cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
-	#x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
+	#cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
+	x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
 
 	print >> sys.stderr, ' done (%.2f sec)'%(time.time() - st)
 
