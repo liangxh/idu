@@ -146,13 +146,14 @@ def main():
 
 	thr_PMI = 0.02
 	rate_TF = opts.keep_rate
+	alpha_SENTI = 1.0
 
 	tokens_valid = filter_valid_tokens(texts, rate_TF)
 	get_valid_rate(texts, tokens_valid)
 	
 	classifier = CKClassifier()
 	#pmi_list = CKClassifier.prepare_PMI(texts, tokens_valid, thr_PMI)
-	sentiscores = CKClassifier.prepare_sentiscore(train, tokens_valid, alpha = 1.):
+	sentiscores = CKClassifier.prepare_sentiscore(train, tokens_valid, alpha_SENTI)
 
 if __name__ == '__main__':
 	main()
