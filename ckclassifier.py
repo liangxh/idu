@@ -112,7 +112,7 @@ class CKClassifier:
 
 def main():
 	optparser = OptionParser()
-	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='str', default = 0.2)
+	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='float', default = 0.2)
 	opts, args = optparser.parse_args()
 
 	###################### Load dataset ###################################
