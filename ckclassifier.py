@@ -57,6 +57,9 @@ def get_valid_rate(texts, tokens_valid):
 class CKClassifier:	
 	@classmethod
 	def prepare_PMI(self, texts, tokens_valid, thr):
+		n_tokens = len(tokens_valid)
+		n_samples = len(texts)
+
 		p_margin = np.zeros(n_tokens)
 		p = np.zeros((n_tokens, n_tokens))
 		
