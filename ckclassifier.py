@@ -23,7 +23,7 @@ class CKClassifier:
 		tf = {}
 
 		if thr is None:
-			thr = int(len(text) * 0.0001)
+			thr = int(len(texts) * 0.0001)
 
 		for tokens in texts:
 			for token in tokens:
