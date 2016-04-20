@@ -139,7 +139,7 @@ class CKClassifier:
 		thr_up = abs(thr)
 		thr_down = -thr_up
 
-		for i in scores.shape[0]:
+		for i in range(scores.shape[0]):
 			score = scores[i]
 			if score >= thr_up:
 				sentiscores.append(1)
