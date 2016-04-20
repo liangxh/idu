@@ -223,7 +223,7 @@ class CKClassifier:
 		def g(z, f, x, y, v, u, p, alpha, lambda1, rho):
 			return (f(x, y, z) - alpha * np.dot(p, z) 
 					+ lambda1 * np.sum(z ** 2)
-					+ rou / 2 * np.sum((calculate_v(z) - v + u) ** 2)
+					+ rho / 2 * np.sum((calculate_v(z) - v + u) ** 2)
 				)
 
 		def g_grad(z, f_grad, x, y, v, u, p, alpha, lambda1, rho):
@@ -399,7 +399,7 @@ def main():
 	cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
 	'''
 
-	print >> sys.stderr, 'loading data...'
+	print >> sys.stderr, 'loading data...', 
 	st = time.time()
 	x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
 	print >> sys.stderr, ' done (%.2f sec)'%(time.time() - st)
