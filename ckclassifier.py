@@ -74,11 +74,14 @@ class CKClassifier:
 		pmi_list = []
 		values = []
 	
-		n = (n_tokens - 1) * (n_tokens - 2) / 2
+		n = (n_tokens - 1) * n_tokens / 2
 		pbar = progbar.start(n)
 		l = 0
 
 		for i in range(n_tokens - 1):
+			if p_margin[i] == 0.:
+					print i
+				
 			for j in range(i + 1, n_tokens):
 				v = np.log2(p[i][j] * n_samples / (p_margin[i] * p_margin[j]))
 				pmi_list.append(((i, j), v))
