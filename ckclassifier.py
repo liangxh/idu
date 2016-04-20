@@ -279,7 +279,7 @@ class CKClassifier:
 					L *= eta
 					z_f1 = f_thresholding(s_f1 - g_grad_s_f1 / L, lambda2 / L)
 
-				cost = calculate_cost(f, x, y, w, v, u, p, alpha, lambda1, lambda2, rho)
+				cost = calculate_cost(f, x, y, z_f1, v, u, p, alpha, lambda1, lambda2, rho)
 				print 'update_w: [info] EPOCHE %d cost %f'%(k, cost)
 
 				if cost < min_value:
@@ -322,7 +322,7 @@ class CKClassifier:
 
 		def calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2):
 			return (
-				f(x, y, w) - alpha * np.dot(p, w) + beta * np.linalg.norm(calculate(w), 1)
+				f(x, y, w) - alpha * np.dot(p, w) + beta * np.linalg.norm(calculate_v(w), 1)
 				+ lambda1 * np.sum(w ** 2)
 				+ lambda2 * np.linalg.norm(w, 1)
 				)
