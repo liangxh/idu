@@ -117,7 +117,7 @@ class CKClassifier:
 		return pmi_list
 
 	@classmethod
-	def prepare_sentiscore(self, train_x_y, tokens_valid, alpha = 1.):
+	def prepare_sentiscore(self, train_x_y, tokens_valid, alpha, thr):
 		x, y = train_x_y
 		ydim = np.max(y) + 1
 		n_tokens = len(tokens_valid)
