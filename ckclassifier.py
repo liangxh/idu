@@ -59,7 +59,7 @@ def f_sqrloss(x, y, w):
 	return np.sum((y - np.dot(x, w)) ** 2)
 
 def fgrad_sqrloss(x, y, w):
-	return - np.sum( (y - np.dot(x, w)).reshape(x.shape[0], 1) * x, axis = 0)
+	return - np.sum( (y - np.dot(x, w)).reshape(y.shape[0], 1) * x, axis = 0)
 
 class CKClassifier:	
 	@classmethod
@@ -166,6 +166,8 @@ class CKClassifier:
 
 		x /= np.sum(x, axis = 1).reshape(x.shape[0], 1)
 		x[np.isnan(x)] = 0.
+
+		print 'sample X: ', x[0, :50]
 
 		return x
 
@@ -309,10 +311,10 @@ class CKClassifier:
 		# initialization
 		xdim = x.shape[1]
 	
-		lambda1 = .5
-		lambda2 = .5
-		alpha = .5
-		beta = .5
+		lambda1 = 1.
+		lambda2 = 1.
+		alpha = 0.
+		beta = 0.
 		rho = .5
 		eta = 1.2
 		L0 = 0.1
