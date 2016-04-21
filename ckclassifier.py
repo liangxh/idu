@@ -237,10 +237,11 @@ class CKClassifier:
 			def sub_condition(z, s, L, f, f_grad, x, y, v, u, p, alpha, lambda1, rho):
 				lhs = g(z, f, x, y, v, u, p, alpha, lambda1, rho)
 				rhs = (
-					g(s, f, x, y, v, u, p, alpha, lambda1, rho) + 
-					np.dot(g_grad(s, f, x, y, v, u, p, alpha, lambda1, rho), (z - s)) + 
-						L / 2 * np.sum((z - s) ** 2)
+					g(s, f, x, y, v, u, p, alpha, lambda1, rho)
+					+ np.dot(g_grad(s, f, x, y, v, u, p, alpha, lambda1, rho), (z - s))
+					+ L / 2 * np.sum((z - s) ** 2)
 					)
+				#print '\tchecking if %.2f <= %.2f'%(lhs, rhs)
 
 				return lhs <= rhs
 
@@ -265,6 +266,8 @@ class CKClassifier:
 			min_value = None
 			max_epoch = 500000
 			
+			new_w = None			
+
 			while True:
 				z_b1 = z
 				z = z_f1
@@ -283,9 +286,11 @@ class CKClassifier:
 				cost = calculate_cost(f, x, y, z_f1, v, u, p, alpha, lambda1, lambda2, rho)
 				print 'update_w: [info] EPOCHE %d cost %f'%(k, cost)
 
-				if cost < min_value:
+				if min_value is None or cost < min_value:
 					min_value = cost
+					new_w = z_f1
 					patience_count = 0
+					print '> !!UPDATED'
 				else:
 					patience_count += 1
 					if patience_count > patience_max:
@@ -296,7 +301,7 @@ class CKClassifier:
 					#print >> sys.stderr, 'max_epoch met'
 					break
 			
-			return z_f1
+			return new_w
 
 		def update_v(w, u, beta, rho):
 			return f_thresholding(calculate_Adot(w) + u, beta / rho)
@@ -313,7 +318,7 @@ class CKClassifier:
 		beta = 0.
 		rho = .5
 		eta = 1.1
-		L0 = 2.
+		L0 = 0.1
 
 		w = np.random.random(xdim) - 0.5
 		v = calculate_Adot(w)
@@ -323,7 +328,7 @@ class CKClassifier:
 
 		def calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2):
 			return (
-				f(x, y, w) - alpha * np.dot(p, w) + beta * np.linalg.norm(calculate_v(w), 1)
+				f(x, y, w) - alpha * np.dot(p, w) + beta * np.linalg.norm(calculate_Adot(w), 1)
 				+ lambda1 * np.sum(w ** 2)
 				+ lambda2 * np.linalg.norm(w, 1)
 				)
@@ -331,6 +336,7 @@ class CKClassifier:
 		patience_max = 10
 		patience_count = 0
 		min_value = None
+		best_w = None
 
 		max_epoch = 500000
 		l = 0
@@ -349,8 +355,9 @@ class CKClassifier:
 			loss = calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2)
 			print >> sys.stderr, 'EPOCH %d loss %f'%(l, loss)
 
-			if loss < min_value:
+			if min_value is None or loss < min_value:
 				min_value = loss
+				best_w = w
 				patience_count = 0
 			else:
 				patience_count += 1
@@ -362,7 +369,14 @@ class CKClassifier:
 				print >> sys.stderr, 'train: [info] epoch max met'
 				break
 
-		self.w = w
+		self.w = best_w
+
+	def classify(self, x):
+		score_y = np.dot(x, self.w)
+		y = np.ones(x.shape[0])
+		y[score_y < 0] = -1
+		
+		return y
 
 def main():
 	optparser = OptionParser()
@@ -412,6 +426,17 @@ def main():
 	classifier = CKClassifier()
 	classifier.train(x, y, sim_tids, sentiscores)
 	
+	x = CKClassifier.prepare_x(test[0], tokens_valid)
+	y = CKClassifier.prepare_y(test[1])
+
+	pred_y = classifier.classify(x)
+
+	print len(pred_y[pred_y == 1])
+	print len(pred_y[pred_y == -1])
+
+	prec = 100. * len(pred_y[pred_y == y]) / pred_y.shape[0]
+	print 'precision: %.2f%%'%(prec)	
+
 if __name__ == '__main__':
 	main()
 
