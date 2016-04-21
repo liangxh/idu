@@ -317,10 +317,10 @@ class CKClassifier:
 		eta = 1.2
 		L0 = 0.1
 
-		w = np.random.randn(xdim)
+		w = np.random.random(xdim) - 0.5
 		v = calculate_v(w)
 
-		miu = np.random.randn(Np)
+		miu = np.random.random(Np) - 0.5
 		u = calculate_u(miu, rho)
 
 		def calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2):
@@ -367,13 +367,14 @@ class CKClassifier:
 		self.w = w
 
 def main():
-	'''
 	optparser = OptionParser()
 	optparser.add_option('-k', '--keep_rate', action='store', dest='keep_rate', type='float', default = 0.2)
+	optparser.add_option('-c', '--fname_config', action='store', type = 'str', dest='fname_config')
 	opts, args = optparser.parse_args()
 
 	###################### Load dataset #####################################
-	config = datica.load_config('data/config2.txt')
+
+	config = datica.load_config(opts.fname_config)
 	dataset = datica.load_by_config('data/dataset/unigram/', config, valid_rate = 0.)
 
 	###################### Preparation ######################################
@@ -400,15 +401,14 @@ def main():
 	
 	x = CKClassifier.prepare_x(train[0], tokens_valid)
 	y = CKClassifier.prepare_y(train[1])
-	'''
-
-	print >> sys.stderr, 'loading data...', 
-	st = time.time()
+	
+	#print >> sys.stderr, 'loading data...', 
+	#st = time.time()
 	
 	#cPickle.dump((x, y, sim_tids, sentiscores), open('data/ckdata.pkl', 'w'))
-	x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
+	#x, y, sim_tids, sentiscores = cPickle.load(open('data/ckdata.pkl', 'r'))
 
-	print >> sys.stderr, ' done (%.2f sec)'%(time.time() - st)
+	#print >> sys.stderr, ' done (%.2f sec)'%(time.time() - st)
 
 
 	classifier = CKClassifier()
