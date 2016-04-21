@@ -155,7 +155,7 @@ class CKClassifier:
 	def prepare_x(self, texts, tokens_valid):
 		n_tokens = len(tokens_valid)
 		n_samples = len(texts)
-			
+		
 		x = np.zeros((n_samples, n_tokens))
 
 		for i, tokens in enumerate(texts):
@@ -166,8 +166,6 @@ class CKClassifier:
 
 		x /= np.sum(x, axis = 1).reshape(x.shape[0], 1)
 		x[np.isnan(x)] = 0.
-
-		print 'sample X: ', x[0, :50]
 
 		return x
 
@@ -195,11 +193,8 @@ class CKClassifier:
 		f = f_sqrloss
 		f_grad = fgrad_sqrloss
 
-		def calculate_v(w):
+		def calculate_Adot(w):
 			return w[A0] - w[A1]
-
-		def calculate_u(miu, rho):
-			return miu / rho
 
 		def calculate_turnAdot(w):
 			r = np.zeros(xdim)
@@ -227,14 +222,14 @@ class CKClassifier:
 			return (f(x, y, z)
 					- alpha * np.dot(p, z) 
 					+ lambda1 * np.sum(z ** 2)
-					+ rho / 2 * np.sum((calculate_v(z) - v + u) ** 2)
+					+ rho / 2 * np.sum((calculate_Adot(z) - v + u) ** 2)
 				)
 
 		def g_grad(z, f_grad, x, y, v, u, p, alpha, lambda1, rho):
 			return (f_grad(x, y, z)
 					- alpha * p
 					+ 2 * lambda1 * z
-					+ rho * calculate_turnAdot(calculate_v(z) - v + u)
+					+ rho * calculate_turnAdot(calculate_Adot(z) - v + u)
 				)
 
 		def update_w(f, f_grad, x, y, w, v, u, p, alpha, lambda1, lambda2, rho, eta, L0):
@@ -251,10 +246,11 @@ class CKClassifier:
 
 			def calculate_cost(f, x, y, w, v, u, p, alpha, lambda1, lambda2, rho):
 				return (
-					f(x, y, w) - alpha * np.dot(p, w)
+					f(x, y, w)
+					- alpha * np.dot(p, w)
 					+ lambda1 * np.sum(w ** 2)	
 					+ lambda2 * np.linalg.norm(w, 1)
-					+ rho / 2 * np.sum((calculate_v(w) - v + u) ** 2)
+					+ rho / 2 * np.sum((calculate_Adot(w) - v + u) ** 2)
 					)
 	
 			z_f1 = w    # z_(t+1)
@@ -303,10 +299,10 @@ class CKClassifier:
 			return z_f1
 
 		def update_v(w, u, beta, rho):
-			return f_thresholding(calculate_v(w) + u, beta / rho)
+			return f_thresholding(calculate_Adot(w) + u, beta / rho)
 
 		def update_u(w, u, v):
-			return u + calculate_v(w) - v
+			return u + calculate_Adot(w) - v
 	
 		# initialization
 		xdim = x.shape[1]
@@ -316,14 +312,14 @@ class CKClassifier:
 		alpha = 0.
 		beta = 0.
 		rho = .5
-		eta = 1.2
-		L0 = 0.1
+		eta = 1.1
+		L0 = 2.
 
 		w = np.random.random(xdim) - 0.5
-		v = calculate_v(w)
+		v = calculate_Adot(w)
 
-		miu = np.random.random(Np) - 0.5
-		u = calculate_u(miu, rho)
+		miu = np.random.random(Np)
+		u = miu / rho
 
 		def calculate_loss(f, x, y, w, p, alpha, beta, lambda1, lambda2):
 			return (
