@@ -246,6 +246,15 @@ class CKClassifier:
 				return lhs <= rhs
 
 			def calculate_cost(f, x, y, w, v, u, p, alpha, lambda1, lambda2, rho):
+				p1 = f(x, y, w)
+				p2 = - alpha * np.dot(p, w)
+				p3 = lambda1 * np.sum(w ** 2)	
+				p4 = lambda2 * np.linalg.norm(w, 1)
+				p5 = rho / 2 * np.sum((calculate_Adot(w) - v + u) ** 2)
+				
+				#print p1, p2, p3, p4, p5
+				return p1 + p2 + p3 + p4 + p5
+
 				return (
 					f(x, y, w)
 					- alpha * np.dot(p, w)
@@ -261,7 +270,7 @@ class CKClassifier:
 			k = 0.
 			L = L0
 
-			patience_max = 10
+			patience_max = 2
 			patience_count = 0
 			min_value = None
 			max_epoch = 500000
@@ -274,17 +283,24 @@ class CKClassifier:
 
 				k += 1
 				a = k / (k + 3)
+				print 'a: ', a
+
 				s_f1 = z + a * (z - z_b1)
+				print 's_f1: ',s_f1[:3]
+
 				g_grad_s_f1 = g_grad(s_f1, f_grad, x, y, v, u, p, alpha, lambda1, rho)
-			
+				print 'g_grad_s_f1: ', g_grad_s_f1[:3]
+				
 				z_f1 = f_thresholding(s_f1 - g_grad_s_f1 / L, lambda2 / L)
 
 				while not sub_condition(z_f1, s_f1, L, f, f_grad, x, y, v, u, p, alpha, lambda1, rho):
 					L *= eta
 					z_f1 = f_thresholding(s_f1 - g_grad_s_f1 / L, lambda2 / L)
 
+				print 'z_f1: ', z_f1[:3]
 				cost = calculate_cost(f, x, y, z_f1, v, u, p, alpha, lambda1, lambda2, rho)
 				print 'update_w: [info] EPOCHE %d cost %f'%(k, cost)
+				print
 
 				if min_value is None or cost < min_value:
 					min_value = cost
@@ -312,13 +328,13 @@ class CKClassifier:
 		# initialization
 		xdim = x.shape[1]
 	
-		lambda1 = 1.
-		lambda2 = 1.
+		lambda1 = 0.
+		lambda2 = 0.
 		alpha = 0.
 		beta = 0.
 		rho = .5
 		eta = 1.1
-		L0 = 0.1
+		L0 = 0.2
 
 		w = np.random.random(xdim) - 0.5
 		v = calculate_Adot(w)
@@ -368,6 +384,8 @@ class CKClassifier:
 			if l > max_epoch:
 				print >> sys.stderr, 'train: [info] epoch max met'
 				break
+
+			break
 
 		self.w = best_w
 
@@ -426,8 +444,8 @@ def main():
 	classifier = CKClassifier()
 	classifier.train(x, y, sim_tids, sentiscores)
 	
-	x = CKClassifier.prepare_x(test[0], tokens_valid)
-	y = CKClassifier.prepare_y(test[1])
+	#x = CKClassifier.prepare_x(test[0], tokens_valid)
+	#y = CKClassifier.prepare_y(test[1])
 
 	pred_y = classifier.classify(x)
 
