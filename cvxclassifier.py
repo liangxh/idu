@@ -175,7 +175,7 @@ class CKClassifier:
 			if not vec_sum == 0:
 				vec /= vec_sum
 
-			x.append(vec / vec_sum)
+			x.append(vec)
 			y.append(1 if labels[i] == 0 else -1)
 
 		return np.asarray(x), np.asarray(y)
