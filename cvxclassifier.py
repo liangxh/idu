@@ -171,7 +171,9 @@ class CKClassifier:
 					tid = tokens_valid[token]
 					vec[tid] += 1
 
-			vec_sum = np.sum(vec)
+			vec_sum = np.linalg.norm(vec, 1)
+			#vec_sum = np.sum(vec)
+
 			if not vec_sum == 0:
 				vec /= vec_sum
 
@@ -276,9 +278,8 @@ def main():
 
 	pred_y = classifier.classify(x)
 
-	print len(pred_y[pred_y == 1])
-	print len(pred_y[pred_y == -1])
-
+	#print len(pred_y[pred_y == 1])
+	#print len(pred_y[pred_y == -1])
 
 	prec = 100. * len(pred_y[pred_y == y]) / pred_y.shape[0]
 	print 'precision: %.2f%%'%(prec)	
