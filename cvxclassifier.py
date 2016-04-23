@@ -147,11 +147,11 @@ class CKClassifier:
 		for i in range(scores.shape[0]):
 			score = scores[i]
 			if score >= thr_up:
-				sentiscores.append(1)
+				sentiscores.append(1.)
 			elif score <= thr_down:
-				sentiscores.append(-1)
+				sentiscores.append(-1.)
 			else:
-				sentiscores.append(0)
+				sentiscores.append(0.)
 
 		return np.asarray(sentiscores)
 
@@ -172,13 +172,11 @@ class CKClassifier:
 					vec[tid] += 1
 
 			vec_sum = np.linalg.norm(vec, 1)
-			#vec_sum = np.sum(vec)
-
 			if not vec_sum == 0:
 				vec /= vec_sum
 
 			x.append(vec)
-			y.append(1 if labels[i] == 0 else -1)
+			y.append(1. if labels[i] == 0. else -1.)
 
 		return np.asarray(x), np.asarray(y)
 	
@@ -193,7 +191,7 @@ class CKClassifier:
 					)
 
 		prob = cvxpy.Problem(objective)
-		result = prob.solve()
+		result = prob.solve(solver = cvxpy.CVXOPT, verbose = True)
 
 		self.w = w.value
 
