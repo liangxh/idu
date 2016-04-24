@@ -198,7 +198,7 @@ class CKClassifier:
 	def classify(self, x):
 		score_y = np.asarray(np.dot(x, self.w)).flatten()
 		y = np.ones(x.shape[0])
-		y[score_y < 0] = -1
+		y[score_y <= 0] = -1
 		
 		return y
 
