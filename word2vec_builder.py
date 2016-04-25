@@ -68,7 +68,7 @@ class DBTextIterator:
 		
 		while res is not None:
 			self.l += 1
-			self.pbar.update(l)
+			self.pbar.update(self.l)
 			
 			try:
 				t = res[0]
