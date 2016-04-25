@@ -54,10 +54,10 @@ class DBTextIterator:
 		self.cur = self.con.cursor()
 
 		self.cur.execute('SELECT COUNT(*) FROM microblogs LIMIT 3')
-		n_text = cur.fetchone()[0]
+		n_text = self.cur.fetchone()[0]
 		print >> sys.stderr, 'Totally %d text, executing SELECT text FROM microblogs...'%(n_text), 
 	
-		cur.execute('SELECT text FROM microblogs LIMIT 3')
+		self.cur.execute('SELECT text FROM microblogs LIMIT 3')
 		print >> sys.stderr, 'OK'
 
 		self.pbar = progbar.start(n_text)
