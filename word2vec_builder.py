@@ -64,9 +64,14 @@ def main():
 	optparser.add_option('-o', '--output', action='store', type = 'str', dest='output')
 	opts, args = optparser.parse_args()
 
-	dbiter = DBTextIterator()
+	m = gensim.models.Word2Vec()
 
-	m = gensim.models.Word2Vec(
+	dbiter = DBTextIterator(100000)
+	m.build_vocab(dbiter)
+	dbiter.close()
+
+	dbiter = DBTextIterator()
+	m.train(
 		dbiter,
 		size = opts.dim_proj,
 		workers = opts.n_worker,
