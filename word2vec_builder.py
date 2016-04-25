@@ -66,10 +66,10 @@ def main():
 
 	m = gensim.models.Word2Vec()
 
-	m.build_vocab(DBTextIterator(1000))
+	m.build_vocab(DBTextIterator(3))
 
 	m.train(
-		DBTextIterator(),
+		DBTextIterator(3),
 		size = opts.dim_proj,
 		workers = opts.n_worker,
 		)
