@@ -10,6 +10,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import cPickle
 import gensim
+import traceback
 from optparse import OptionParser
 
 import zhtokenizer
@@ -41,8 +42,9 @@ class DBTextIterator:
 		for t0 in cur:
 			try:
 				t = t[0].decode('utf8')
-				t = zhprocessor.simplify(t)
+				t = zhprocessor.simplify(t)				
 			except:
+				print traceback.format_exc()
 				l += 1
 				pbar.update(l)
 				continue
