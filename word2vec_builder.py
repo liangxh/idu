@@ -74,8 +74,9 @@ class DBTextIterator:
 				t = res[0]
 				t = t.decode('utf8')
 				t = zhprocessor.simplify(t).decode('utf8')
-				tokens = zhtokenizer.unigramize()
-				return tokens
+				#tokens = zhtokenizer.unigramize()
+				#return tokens
+				return t
 			except:
 				res = self.cur.fetchone()
 
