@@ -25,7 +25,7 @@ class DBTextIterator:
 		con = db.connect()
 		cur = con.cursor()
 
-		if self.limit is not None:
+		if self.limit is None:
 			cur.execute('SELECT COUNT(*) FROM microblogs')
 			n_text = cur.fetchone()[0]
 			print >> sys.stderr, 'Totally %d text'%(n_text)
@@ -41,7 +41,6 @@ class DBTextIterator:
 		l = 0
 		for t0 in cur:
 			try:
-				t = t0[0].decode('utf8')
 				t = zhprocessor.simplify(t)				
 			except:
 				print traceback.format_exc()
