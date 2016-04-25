@@ -68,7 +68,7 @@ def main():
 
 	m = gensim.models.Word2Vec(
 		DBTextIterator(3),
-		DBTextIterator(3)size = opts.dim_proj,
+		size = opts.dim_proj,
 		workers = opts.n_worker,
 		min_count = 1,
 		)
