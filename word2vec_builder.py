@@ -72,7 +72,7 @@ def main():
 		min_count = 1,
 		)
 	m.build_vocab(DBTextIterator(50))
-	m.train(DBTextIterator(50))
+	m.train(DBTextIterator(500))
 
 	m.save_word2vec_format(opts.output, binary = True)
 	m = gensim.models.Word2Vec.load_word2vec_format(opts.output, binary = True)
