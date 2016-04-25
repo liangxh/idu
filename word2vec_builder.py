@@ -24,7 +24,7 @@ def text_iterator():
 	n_text = cur.fetchone()[0]
 	print >> sys.stderr, 'Totally %d text, executing SELECT text FROM microblogs...'%(n_text), 
 	
-	cur.execute('SELECT text FROM microblogs')
+	cur.execute('SELECT text FROM microblogs LIMIT 3')
 	print >> sys.stderr, 'OK'
 
 	pbar = progbar.start(n_text)
