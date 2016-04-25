@@ -67,7 +67,7 @@ def main():
 	opts, args = optparser.parse_args()
 
 	m = gensim.models.Word2Vec(
-		DBTextIterator(10),
+		DBTextIterator(1000),
 		size = opts.dim_proj,
 		workers = opts.n_worker,
 		min_count = 1,
