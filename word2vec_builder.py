@@ -74,9 +74,8 @@ class DBTextIterator:
 				t = res[0]
 				t = t.decode('utf8')
 				t = zhprocessor.simplify(t).decode('utf8')
-				#tokens = zhtokenizer.unigramize()
-				#return tokens
-				return t
+				tokens = zhtokenizer.unigramize()
+				return tokens
 			except:
 				res = self.cur.fetchone()
 
@@ -102,6 +101,7 @@ def main():
 	m = gensim.models.Word2Vec(
 		dbiter,
 		size = opts.dim_proj,
+		min_count = 1,
 		workers = opts.n_worker,
 		)
 
