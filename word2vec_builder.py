@@ -32,7 +32,7 @@ class DBTextIterator:
 		else:
 			n_text = self.limit 
 	
-		sql = 'SELECT text FROM microblogs' + ' LIMIT %d'%(self.limit) if self.limit is not None else ''
+		sql = 'SELECT text FROM microblogs' + (' LIMIT %d'%(self.limit) if self.limit is not None else '')
 		print >> sys.stderr, 'executing "%s"'%(sql)
 		cur.execute(sql)
 		print >> sys.stderr, 'OK'
@@ -71,7 +71,7 @@ def main():
 		workers = opts.n_worker,
 		min_count = 1,
 		)
-	m.build_vocab(DBTextIterator(10))
+	m.build_vocab(DBTextIterator(100000))
 	m.train(DBTextIterator())
 
 	m.save_word2vec_format(opts.output, binary = True)
