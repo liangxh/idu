@@ -108,6 +108,7 @@ def main():
 
 	m.save_word2vec_format(opts.output, binary = True)
 	m = gensim.models.Word2Vec.load_word2vec_format(opts.output, binary = True)
+	print m[u'我']
 
 if __name__ == '__main__':
 	main()
