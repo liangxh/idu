@@ -67,14 +67,11 @@ def main():
 	opts, args = optparser.parse_args()
 
 	m = gensim.models.Word2Vec(
-		DBTextIterator(3),
+		DBTextIterator(10),
 		size = opts.dim_proj,
 		workers = opts.n_worker,
 		min_count = 1,
 		)
-
-	#m.build_vocab(DBTextIterator(3))
-	#m.train(DBTextIterator(3))
 
 	m.save_word2vec_format(opts.output, binary = True)
 	m = gensim.models.Word2Vec.load_word2vec_format(opts.output, binary = True)
