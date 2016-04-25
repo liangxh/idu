@@ -51,7 +51,7 @@ class DBTextIterator:
 	def __init__(self):
 		import db
 		self.con = db.connect()
-		self.cur = con.cursor()
+		self.cur = self.con.cursor()
 
 		self.cur.execute('SELECT COUNT(*) FROM microblogs LIMIT 3')
 		n_text = cur.fetchone()[0]
