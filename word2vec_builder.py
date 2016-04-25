@@ -64,13 +64,16 @@ def main():
 	optparser.add_option('-o', '--output', action='store', type = 'str', dest='output')
 	opts, args = optparser.parse_args()
 
-	m = gensim.models.Word2Vec(size = opts.dim_proj)
+	m = gensim.models.Word2Vec(
+		size = opts.dim_proj,
+		workers = opts.n_worker,
+		)
 
 	m.build_vocab(DBTextIterator(3))
 
 	m.train(
 		DBTextIterator(3),
-		workers = opts.n_worker,
+
 		)
 
 	m.save_word2vec_format(opts.output, binary = True)
