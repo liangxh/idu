@@ -53,7 +53,7 @@ class DBTextIterator:
 		self.con = db.connect()
 		self.cur = self.con.cursor()
 
-		self.cur.execute('SELECT COUNT(*) FROM microblog')
+		self.cur.execute('SELECT COUNT(*) FROM microblogs')
 		n_text = self.cur.fetchone()[0]
 		print >> sys.stderr, 'Totally %d text, executing SELECT text FROM microblogs...'%(n_text), 
 	
