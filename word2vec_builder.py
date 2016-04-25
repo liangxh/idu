@@ -66,18 +66,13 @@ def main():
 
 	m = gensim.models.Word2Vec()
 
-	dbiter = DBTextIterator(100000)
-	m.build_vocab(dbiter)
-	dbiter.close()
+	m.build_vocab(DBTextIterator(1000))
 
-	dbiter = DBTextIterator()
 	m.train(
-		dbiter,
+		DBTextIterator(),
 		size = opts.dim_proj,
 		workers = opts.n_worker,
 		)
-
-	dbiter.close()
 
 	m.save_word2vec_format(opts.output, binary = True)
 	m = gensim.models.Word2Vec.load_word2vec_format(opts.output, binary = True)
