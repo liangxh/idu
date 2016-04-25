@@ -16,16 +16,24 @@ import zhtokenizer
 from utils import progbar, zhprocessor
 
 class DBTextIterator:
+	def __init__(self, limit = None):
+		self.limit = limit
+
 	def __iter__(self):	
 		import db
 		con = db.connect()
 		cur = con.cursor()
 
-		cur.execute('SELECT COUNT(*) FROM microblogs')
-		n_text = cur.fetchone()[0]
-		print >> sys.stderr, 'Totally %d text, executing SELECT text FROM microblogs...'%(n_text), 
+		if self.limit is not None:
+			cur.execute('SELECT COUNT(*) FROM microblogs')
+			n_text = cur.fetchone()[0]
+			print >> sys.stderr, 'Totally %d text'
+		else:
+			n_text = limit 
 	
-		cur.execute('SELECT text FROM microblogs LIMIT 3')
+		print >> sys.stderr, 'executing SELECT text FROM microblogs...'%(n_text),
+		sql = 'SELECT text FROM microblogs' + ' LIMIT %d'%(self.limit) if self.limit is not None else ''
+		cur.execute(sql)
 		print >> sys.stderr, 'OK'
 
 		pbar = progbar.start(n_text)
@@ -61,7 +69,6 @@ def main():
 	m = gensim.models.Word2Vec(
 		dbiter,
 		size = opts.dim_proj,
-		min_count = 1,
 		workers = opts.n_worker,
 		)
 
