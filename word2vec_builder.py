@@ -71,10 +71,7 @@ def main():
 
 	m.build_vocab(DBTextIterator(3))
 
-	m.train(
-		DBTextIterator(3),
-
-		)
+	m.train(DBTextIterator(3))
 
 	m.save_word2vec_format(opts.output, binary = True)
 	m = gensim.models.Word2Vec.load_word2vec_format(opts.output, binary = True)
