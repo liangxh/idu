@@ -27,11 +27,11 @@ class DBTextIterator:
 		if self.limit is not None:
 			cur.execute('SELECT COUNT(*) FROM microblogs')
 			n_text = cur.fetchone()[0]
-			print >> sys.stderr, 'Totally %d text'
+			print >> sys.stderr, 'Totally %d text'%(n_text)
 		else:
-			n_text = limit 
+			n_text = self.limit 
 	
-		print >> sys.stderr, 'executing SELECT text FROM microblogs...'%(n_text),
+		print >> sys.stderr, 'executing SELECT text FROM microblogs...'
 		sql = 'SELECT text FROM microblogs' + ' LIMIT %d'%(self.limit) if self.limit is not None else ''
 		cur.execute(sql)
 		print >> sys.stderr, 'OK'
