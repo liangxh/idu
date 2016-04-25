@@ -48,6 +48,7 @@ class DBTextIterator:
 				continue
 
 			tokens = zhtokenizer.unigramize(t)
+			print tokens
 			yield tokens
 		
 			l += 1
