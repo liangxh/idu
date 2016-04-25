@@ -71,7 +71,7 @@ def main():
 		workers = opts.n_worker,
 		min_count = 1,
 		)
-	m.build_vocab(DBTextIterator(100000))
+	m.build_vocab(DBTextIterator(10000))
 	m.train(DBTextIterator())
 
 	m.save_word2vec_format(opts.output, binary = True)
