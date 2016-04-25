@@ -105,8 +105,8 @@ def main():
 
 	dbiter.close()
 
-	m.save_word2vec_format(opts.ofname, binary = True)
-	m = gensim.models.Word2Vec.load_word2vec_format(opts.ofname, binary = True)
+	m.save_word2vec_format(opts.output, binary = True)
+	m = gensim.models.Word2Vec.load_word2vec_format(opts.output, binary = True)
 
 if __name__ == '__main__':
 	main()
