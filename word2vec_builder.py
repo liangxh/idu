@@ -32,8 +32,8 @@ class DBTextIterator:
 		else:
 			n_text = self.limit 
 	
-		print >> sys.stderr, 'executing SELECT text FROM microblogs...'
 		sql = 'SELECT text FROM microblogs' + ' LIMIT %d'%(self.limit) if self.limit is not None else ''
+		print >> sys.stderr, 'executing "%s"'%(sql)
 		cur.execute(sql)
 		print >> sys.stderr, 'OK'
 
