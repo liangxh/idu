@@ -73,7 +73,7 @@ class DBTextIterator:
 			try:
 				t = res[0]
 				t = t.decode('utf8')
-				t = zhprocessor.simplify(t)
+				t = zhprocessor.simplify(t).decode('utf8')
 				tokens = zhtokenizer.unigramize()
 				return tokens
 			except:
