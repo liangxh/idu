@@ -41,7 +41,7 @@ class DBTextIterator:
 		l = 0
 		for t0 in cur:
 			try:
-				t = t[0].decode('utf8')
+				t = t0[0].decode('utf8')
 				t = zhprocessor.simplify(t)				
 			except:
 				print traceback.format_exc()
