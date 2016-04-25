@@ -78,7 +78,7 @@ class DBTextIterator:
 			except:
 				res = self.cur.fetchone()
 
-		raise StopIterator
+		raise StopIteration
 
 	def close(self):
 		self.pbar.finish()
