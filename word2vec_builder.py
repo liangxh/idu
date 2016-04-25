@@ -48,47 +48,38 @@ def text_iterator():
 	con.close()
 
 class DBTextIterator:
-	def __init__(self):
+	def __iter__(self):	
 		import db
-		self.con = db.connect()
-		self.cur = self.con.cursor()
+		con = db.connect()
+		cur = con.cursor()
 
-		self.cur.execute('SELECT COUNT(*) FROM microblogs')
-		n_text = self.cur.fetchone()[0]
+		cur.execute('SELECT COUNT(*) FROM microblogs')
+		n_text = cur.fetchone()[0]
 		print >> sys.stderr, 'Totally %d text, executing SELECT text FROM microblogs...'%(n_text), 
 	
-		self.cur.execute('SELECT text FROM microblogs LIMIT 3')
+		cur.execute('SELECT text FROM microblogs')
 		print >> sys.stderr, 'OK'
 
-		self.pbar = progbar.start(n_text)
-		self.l = 0
-
-	def next(self):
-		res = self.cur.fetchone()
-		
-		while res is not None:
-			self.l += 1
-			self.pbar.update(self.l)
-			
+		pbar = progbar.start(n_text)
+		l = 0
+		for t0 in cur:
 			try:
-				t = res[0]
-				t = t.decode('utf8')
-				t = zhprocessor.simplify(t).decode('utf8')
-				tokens = zhtokenizer.unigramize()
-				print tokens
-				return tokens
+				t = t[0].decode('utf8')
+				t = zhprocessor.simplify(t)
 			except:
-				res = self.cur.fetchone()
+				l += 1
+				pbar.update(l)
+				continue
 
-		raise StopIteration
-
-	def close(self):
-		self.pbar.finish()
-		self.cur.close()
-		self.con.close()
-
-	def __iter__(self):	
-		return self
+			tokens = zhtokenizer.unigramize(t)
+			yield tokens
+		
+			l += 1
+			pbar.update(l)
+		
+		pbar.finish()
+		cur.close()
+		con.close()
 
 def main():
 	optparser = OptionParser()
