@@ -59,6 +59,19 @@ class DBTextIterator:
 		cur.close()
 		con.close()
 
+class VocabIterator:
+	def __init__(self, n_emo):
+		self.n_emo = n_emo
+
+	def __iter__(self):
+		pbar = progbar.start(n_emo)
+		for i in range(n_emo):
+			seqs = cPickle.load(open('data/dataset/unigram/%d.pkl'%(i), 'r'))
+			for seq in seqs:
+				yield seq
+			pbar.update(i + 1)
+		pbar.finish()
+
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj')
@@ -71,7 +84,9 @@ def main():
 		workers = opts.n_worker,
 		min_count = 1,
 		)
-	m.build_vocab(DBTextIterator(100000))
+
+
+	m.build_vocab(VocabIterator())
 	m.train(DBTextIterator())
 
 	m.save_word2vec_format(opts.output, binary = True)
