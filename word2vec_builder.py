@@ -64,8 +64,8 @@ class VocabIterator:
 		self.n_emo = n_emo
 
 	def __iter__(self):
-		pbar = progbar.start(n_emo)
-		for i in range(n_emo):
+		pbar = progbar.start(self.n_emo)
+		for i in range(self.n_emo):
 			seqs = cPickle.load(open('data/dataset/unigram/%d.pkl'%(i), 'r'))
 			for seq in seqs:
 				yield seq
