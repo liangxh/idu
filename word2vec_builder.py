@@ -86,7 +86,7 @@ def main():
 		)
 
 
-	m.build_vocab(VocabIterator())
+	m.build_vocab(VocabIterator(90))
 	m.train(DBTextIterator())
 
 	m.save_word2vec_format(opts.output, binary = True)
