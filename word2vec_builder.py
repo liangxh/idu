@@ -11,10 +11,15 @@ sys.setdefaultencoding('utf8')
 import cPickle
 import gensim
 import traceback
+import theano
+import numpy as np
 from optparse import OptionParser
 
+
 import zhtokenizer
+from wordembedder import WordEmbedder
 from utils import progbar, zhprocessor
+from const import DIR_MODEL
 
 class DBTextIterator:
 	def __init__(self, limit = None):
@@ -72,6 +77,46 @@ class VocabIterator:
 			pbar.update(i + 1)
 		pbar.finish()
 
+def to_Wemb():
+	optparser = OptionParser()
+	optparser.add_option('-d', '--dim', action='store', type = 'int', dest='dim')
+	optparser.add_option('-i', '--input', action='store', type = 'str', dest='ifname')
+	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
+	opts, args = optparser.parse_args()
+
+	#ifname = 'data/word2vec_model_32.bin'
+
+	print >> sys.stderr, 'loading model from %s ... '%(opts.ifname),
+	m = gensim.models.Word2Vec.load_word2vec_format(opts.ifname, binary = True)
+	print >> sys.stderr, 'OK'
+
+	n_emo = 90
+	tokens = set()
+	for eid in range(n_emo):
+		seqs = cPickle.load(open('data/dataset/unigram/%d.pkl'%(eid), 'r'))
+		for seq in seqs:
+			tokens |= set(seq)
+
+	Widx = {}
+	vecs = [[0. for i in range(opts.dim)], ]
+	for token in tokens:
+		try:
+			vec = model[token]
+		except KeyError:
+			continue
+		
+		c += 1
+		Widx[token] = c
+		vecs.append(vec)
+
+	Wemb = np.asarray(vecs).astype(theano.config.floatX)
+	embedder = WordEmbedder(Widx, Wemb)
+	
+	fname_embedder = DIR_MODEL + '%s_embedder.pkl'%(opts.prefix)	
+	print >> sys.stderr, 'exporting embedder to %s ... '%(fname_embedder),
+	embedder.dump(fname_embedder)
+	print >> sys.stderr, 'OK'
+
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj')
@@ -90,8 +135,6 @@ def main():
 	m.train(DBTextIterator(50000000))
 
 	m.save_word2vec_format(opts.output, binary = True)
-	#m = gensim.models.Word2Vec.load_word2vec_format(opts.output, binary = True)
-	#print m[u'我']
-
+	
 if __name__ == '__main__':
 	main()
