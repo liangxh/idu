@@ -77,16 +77,16 @@ class VocabIterator:
 			pbar.update(i + 1)
 		pbar.finish()
 
-def to_Wemb():
-	optparser = OptionParser()
-	optparser.add_option('-d', '--dim', action='store', type = 'int', dest='dim')
-	optparser.add_option('-i', '--input', action='store', type = 'str', dest='ifname')
-	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
-	opts, args = optparser.parse_args()
+def to_Wemb(ifname, prefix, dim):
+	#optparser = OptionParser()
+	#optparser.add_option('-d', '--dim', action='store', type = 'int', dest='dim')
+	#optparser.add_option('-i', '--input', action='store', type = 'str', dest='ifname')
+	#optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
+	#opts, args = optparser.parse_args()
 
 	#ifname = 'data/word2vec_model_32.bin'
 
-	print >> sys.stderr, 'loading model from %s ... '%(opts.ifname),
+	print >> sys.stderr, 'loading model from %s ... '%(ifname),
 	m = gensim.models.Word2Vec.load_word2vec_format(opts.ifname, binary = True)
 	print >> sys.stderr, 'OK'
 
@@ -98,7 +98,7 @@ def to_Wemb():
 			tokens |= set(seq)
 
 	Widx = {}
-	vecs = [[0. for i in range(opts.dim)], ]
+	vecs = [[0. for i in range(dim)], ]
 	for token in tokens:
 		try:
 			vec = model[token]
@@ -112,7 +112,7 @@ def to_Wemb():
 	Wemb = np.asarray(vecs).astype(theano.config.floatX)
 	embedder = WordEmbedder(Widx, Wemb)
 	
-	fname_embedder = DIR_MODEL + '%s_embedder.pkl'%(opts.prefix)	
+	fname_embedder = DIR_MODEL + '%s_embedder.pkl'%(prefix)	
 	print >> sys.stderr, 'exporting embedder to %s ... '%(fname_embedder),
 	embedder.dump(fname_embedder)
 	print >> sys.stderr, 'OK'
@@ -137,4 +137,4 @@ def main():
 	m.save_word2vec_format(opts.output, binary = True)
 	
 if __name__ == '__main__':
-	main()
+	#main()
