@@ -87,7 +87,7 @@ def to_Wemb(ifname, prefix, dim):
 	#ifname = 'data/word2vec_model_32.bin'
 
 	print >> sys.stderr, 'loading model from %s ... '%(ifname),
-	m = gensim.models.Word2Vec.load_word2vec_format(opts.ifname, binary = True)
+	m = gensim.models.Word2Vec.load_word2vec_format(ifname, binary = True)
 	print >> sys.stderr, 'OK'
 
 	n_emo = 90
