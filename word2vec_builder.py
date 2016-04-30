@@ -138,6 +138,5 @@ def main():
 	m.save_word2vec_format(opts.output, binary = True)
 	
 if __name__ == '__main__':
-	#main()
-	pass
-
+	main()
+	
