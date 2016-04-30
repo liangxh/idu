@@ -99,6 +99,7 @@ def to_Wemb(ifname, prefix, dim):
 
 	Widx = {}
 	vecs = [[0. for i in range(dim)], ]
+	c = 0
 	for token in tokens:
 		try:
 			vec = m[token]
