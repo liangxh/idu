@@ -101,7 +101,7 @@ def to_Wemb(ifname, prefix, dim):
 	vecs = [[0. for i in range(dim)], ]
 	for token in tokens:
 		try:
-			vec = model[token]
+			vec = m[token]
 		except KeyError:
 			continue
 		
