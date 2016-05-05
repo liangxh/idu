@@ -17,8 +17,6 @@ import matplotlib.pyplot as plt
 
 #from utils import progbar
 
-fname_ysup = 'data/dataset/test_y_sup.pkl'
-
 def precision_at_n(ys, pred_probs):
 	n_test = len(ys)
 	y_dim = len(pred_probs[0])
@@ -61,7 +59,7 @@ def report(ys, pred_probs, prefix):
 	plt.savefig('%s_precision.png'%(prefix))
 
 
-def revalidate(prefix):
+def revalidate(fname_ysup, prefix):
 	sups = cPickle.load(open(fname_ysup, 'r'))
 
 	test_y, pred_probs = cPickle.load(open('data/dataset/test/%s_test.pkl'%(prefix), 'r'))
@@ -75,6 +73,7 @@ def revalidate(prefix):
 
 def main():
 	thr_rate = float(sys.argv[1])
+	ofname = sys.argv[2]
 
 	n_batch = 90
 
@@ -93,7 +92,7 @@ def main():
 			
 			y_sup.append(sup)
 
-	cPickle.dump(y_sup, open(fname_ysup, 'w'))
+	cPickle.dump(y_sup, open(ofname, 'w'))
 
 if __name__ == '__main__':
 	main()
