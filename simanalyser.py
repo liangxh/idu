@@ -10,7 +10,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 import cPickle
-from utils import progbar
+#from utils import progbar
 
 fname_ysup = 'data/dataset/test_y_sup.pkl'
 
@@ -79,8 +79,8 @@ def main():
 		fname = 'data/simrecord_90_%d.pkl'%(batch_id)
 		records = cPickle.load(open(fname, 'r'))
 
-		print 'LOOP %d'%(batch_id)
-		pbar = progbar.
+		#print 'LOOP %d'%(batch_id)
+		#pbar = progbar.
 
 		for y, x_len, record in records:
 			thr = x_len * thr_rate
