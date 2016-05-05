@@ -127,7 +127,7 @@ def sim_ED_batch():
 	
 	pbar.finish()
 
-	cPickle.dump(records, open('data/simrecord_ED_%d.pkl'%(batch_id), 'w'))	 
+	cPickle.dump(records, open('data/simrecord_%d_%d.pkl'%(batch_num, batch_id), 'w'))	 
 
 if __name__ == '__main__':
 	sim_ED_batch()
