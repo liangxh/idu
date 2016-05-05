@@ -124,7 +124,7 @@ def sim_ED_batch():
 		record = []
 		for xi, yi in zip(train_x, train_y):
 			d = Levenshtein.distance(target_x, xi)
-			if len_x - d < 1:
+			if len_x - d > 1:
 				record.append((yi, d))
 			l += 1			
 			pbar.update(l)
