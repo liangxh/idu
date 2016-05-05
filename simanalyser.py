@@ -64,7 +64,7 @@ def revalidate(prefix):
 	y_sup = []
 	for y, sup in zip(test_y, sups):
 		sup.add(y)
-		y_sup.append(y)	
+		y_sup.append(sup)
 
 	report(y_sup, pred_probs, 'data/dataset/test/%s_sup'%(prefix))
 
