@@ -95,7 +95,11 @@ def sim_ED_batch():
 	train_x = [u''.join(seq) for seq in train_x]
 	test_x = [u''.join(seq) for seq in test_x]
 
-	batch_size = len(test_x) / batch_num + 1
+	if len(text_x) % batch_num == 0:
+		batch_size = len(test_x) / batch_num 
+	else:
+		batch_size = len(test_x) / batch_num + 1
+
 	b = batch_id * batch_size
 	e = b + batch_size
 	if e > len(test_x):
@@ -115,15 +119,17 @@ def sim_ED_batch():
 	for i in range(n_test):
 		target_x = test_x[i]
 		target_y = test_y[i]
-		bias = len(target_x)
+		len_x = len(target_x)
 		
 		record = []
 		for xi, yi in zip(train_x, train_y):
-			record.append((yi, Levenshtein.distance(target_x, xi)))
+			d = Levenshtein.distance(target_x, xi)
+			if len_x - d < 1:
+				record.append((yi, d))
 			l += 1			
 			pbar.update(l)
 
-		records.append((target_y, bias, record))
+		records.append((target_y, len_x, record))
 	
 	pbar.finish()
 
