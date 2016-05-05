@@ -10,6 +10,11 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 import cPickle
+import matplotlib
+matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
+
 #from utils import progbar
 
 fname_ysup = 'data/dataset/test_y_sup.pkl'
