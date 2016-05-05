@@ -79,23 +79,22 @@ def main():
 
 	y_sup = []
 
+	pbar = progbar.start(n_batch)
+	
 	for batch_id in range(n_batch):
 		fname = 'data/simrecord_90_%d.pkl'%(batch_id)
 		records = cPickle.load(open(fname, 'r'))
 
-		print 'LOOP %d'%(batch_id)
-		pbar = progbar.start(len(records))
-		l = 0
-
+		
 		for y, x_len, record in records:
 			thr = x_len * thr_rate
 			sup = set([yi for yi, d in record if d <= thr])
 			
 			y_sup.append(sup)
-			l += 1
-			pbar.update(l)
+	
+		pbar.update(batch_id + 1)
 
-		pbar.finish()
+	pbar.finish()
 
 	cPickle.dump(y_sup, open(ofname, 'w'))
 
