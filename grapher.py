@@ -6,8 +6,12 @@ Created: 2016.04.15
 Description: export several curves into one graph
 '''
 
-import re
 import os
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+import re
 import cPickle
 import validatica
 
