@@ -82,6 +82,9 @@ def sim_ED():
 		print '%d. (%d) [%s] %s'%(i, v, phrases[y[xid]], ''.join(x[xid]))
 
 def sim_ED_batch():
+	batch_num = int(sys.argv[1])
+	batch_id = int(sys.argv[2])
+
 	n_emo = 90
 
 	dataset = datica.load_data('data/dataset/unigram/', n_emo)
@@ -91,6 +94,16 @@ def sim_ED_batch():
 
 	train_x = [u''.join(seq) for seq in train_x]
 	test_x = [u''.join(seq) for seq in test_x]
+
+	batch_size = len(test_x) / batch_num + 1
+	b = batch_id * batch_size
+	e = b + batch_size
+	if e > len(test_x):
+		print 'ID %d ~ END'
+		test_x = test_x[b:]
+	else:
+		print 'ID %d ~ %d'%(b, e - 1)
+		test_x = test_x[b:e]
 
 	n_test = len(test_x)
 	n_train = len(train_x)
@@ -114,7 +127,7 @@ def sim_ED_batch():
 	
 	pbar.finish()
 
-	cPickle.dump(records, open('data/simrecord_ED.pkl', 'w'))	 
+	cPickle.dump(records, open('data/simrecord_ED_%d.pkl'%(batch_id), 'w'))	 
 
 if __name__ == '__main__':
 	sim_ED_batch()
