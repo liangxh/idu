@@ -95,7 +95,7 @@ def sim_ED_batch():
 	train_x = [u''.join(seq) for seq in train_x]
 	test_x = [u''.join(seq) for seq in test_x]
 
-	if len(text_x) % batch_num == 0:
+	if len(test_x) % batch_num == 0:
 		batch_size = len(test_x) / batch_num 
 	else:
 		batch_size = len(test_x) / batch_num + 1
