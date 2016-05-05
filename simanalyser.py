@@ -59,7 +59,7 @@ def report(ys, pred_probs, prefix):
 	plt.savefig('%s_precision.png'%(prefix))
 
 
-def revalidate(fname_ysup, prefix):
+def revalidate(fname_ysup, prefix, oprefix):
 	sups = cPickle.load(open(fname_ysup, 'r'))
 
 	test_y, pred_probs = cPickle.load(open('data/dataset/test/%s_test.pkl'%(prefix), 'r'))
@@ -69,7 +69,7 @@ def revalidate(fname_ysup, prefix):
 		sup.add(y)
 		y_sup.append(sup)
 
-	report(y_sup, pred_probs, 'data/dataset/test/%s_sup'%(prefix))
+	report(y_sup, pred_probs, 'data/dataset/test/%s'%(oprefix))
 
 def main():
 	thr_rate = float(sys.argv[1])
