@@ -120,11 +120,15 @@ def sim_ED_batch():
 		target_x = test_x[i]
 		target_y = test_y[i]
 		len_x = len(target_x)
-		
+
+		thr = int(len_x * 0.1)		
+		if thr == 0:
+			thr = 1
+
 		record = []
 		for xi, yi in zip(train_x, train_y):
 			d = Levenshtein.distance(target_x, xi)
-			if len_x - d > 1:
+			if len_x  - d > thr:
 				record.append((yi, d))
 			l += 1			
 			pbar.update(l)
