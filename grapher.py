@@ -23,6 +23,7 @@ def export(label_prec, title, ofname):
 	ydim = len(label_prec.values()[0])
 
 	ax = plt.subplot(1, 1, 1)
+	plt.title(title)
 	plt.xlabel('N')
 	plt.ylabel('Precision@N')
 	plt.axis([1, ydim, 0., 1.])
@@ -34,6 +35,24 @@ def export(label_prec, title, ofname):
 	ax.legend(handles[::-1], labels[::-1])
 
 	plt.savefig(ofname)
+
+def export_by_config():
+	fname_config = sys.argv[1]
+
+	lines = open(fname_config, 'r').readlines()
+
+	ofname = lines[0].strip()
+	title = lines[1].strip()
+
+	lprec = {}
+	for l in lines[2:]:
+		params = l.strip().split(' ')
+		if len(params) == 2:
+			lprec[params[0]] = cPickle.load(open(params[1], 'r'))
+		else:
+			break
+	
+	export(lprec, title, ofname)
 
 def main():
 	rdname = 'data/blogs/dataset/'
@@ -59,5 +78,7 @@ def main():
 	export(lprec, title, ofname)
 
 if __name__ == '__main__':
-	main()
+	#main()
+	export_by_config()
+
 
