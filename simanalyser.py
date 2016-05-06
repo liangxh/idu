@@ -113,5 +113,5 @@ def main():
 	cPickle.dump(y_sup, open(ofname, 'w'))
 
 if __name__ == '__main__':
-	#main()
-	main2()
+	main()
+	
