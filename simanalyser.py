@@ -72,8 +72,8 @@ def revalidate(fname_ysup, prefix, oprefix):
 	report(y_sup, pred_probs, 'data/dataset/test/%s'%(oprefix))
 
 def main():
-	thr_rate = float(sys.argv[1])
 	ofname = sys.argv[2]
+	thr_rate = float(sys.argv[1])
 
 	n_batch = 90
 
@@ -89,7 +89,49 @@ def main():
 		for y, x_len, record in records:
 			thr = x_len * thr_rate
 			sup = set([yi for yi, d in record if d <= thr])
+			y_sup.append(sup)
+	
+		pbar.update(batch_id + 1)
+
+	pbar.finish()
+
+	cPickle.dump(y_sup, open(ofname, 'w'))
+
+
+def main2():
+	ofname = sys.argv[2]
+	thr_rate = float(sys.argv[1])
+	thr_rank = int(sys.argv)	
+
+	n_batch = 90
+
+	y_sup = []
+
+	pbar = progbar.start(n_batch)
+	
+	for batch_id in range(n_batch):
+		fname = 'data/simrecord_90_%d.pkl'%(batch_id)
+		records = cPickle.load(open(fname, 'r'))
+
+		
+		for y, x_len, record in records:
+			thr = x_len * thr_rate
 			
+			ys = [yi for yi, d in record if d <= thr]
+			yhist = {}
+			for yi in ys:
+				if yhist.has_key(yi):
+					yhist[yi] += 1
+				else:
+					yhist[yi] = 1.
+			yhist = sorted(yhist.items(), key = lambda k: -k)
+			if len(yhist) > thr_rank:
+				yhist = yhist[:thr_rank]
+			
+			sup = set()
+			for yi, f in yhist:
+				sup.add(yi)	
+
 			y_sup.append(sup)
 	
 		pbar.update(batch_id + 1)
@@ -99,4 +141,5 @@ def main():
 	cPickle.dump(y_sup, open(ofname, 'w'))
 
 if __name__ == '__main__':
-	main()
+	#main()
+	main2()
