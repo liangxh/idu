@@ -124,7 +124,7 @@ def main2():
 					yhist[yi] += 1
 				else:
 					yhist[yi] = 1.
-			yhist = sorted(yhist.items(), key = lambda k: -k)
+			yhist = sorted(yhist.items(), key = lambda k: -k[1])
 			if len(yhist) > thr_rank:
 				yhist = yhist[:thr_rank]
 			
