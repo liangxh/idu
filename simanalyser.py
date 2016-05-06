@@ -59,50 +59,26 @@ def report(ys, pred_probs, prefix):
 	plt.savefig('%s_precision.png'%(prefix))
 
 
-def revalidate(fname_ysup, prefix, oprefix):
+def revalidate(fname_ysup, thr_rank, prefix, oprefix):
 	sups = cPickle.load(open(fname_ysup, 'r'))
 
 	test_y, pred_probs = cPickle.load(open('data/dataset/test/%s_test.pkl'%(prefix), 'r'))
 	
 	y_sup = []
 	for y, sup in zip(test_y, sups):
+		if thr_rank is not None and len(sup) > thr_rank:
+			sup = sup[:thr_rank]
+
+		sup = set(sup)
 		sup.add(y)
 		y_sup.append(sup)
 
 	report(y_sup, pred_probs, 'data/dataset/test/%s'%(oprefix))
 
 def main():
-	ofname = sys.argv[2]
-	thr_rate = float(sys.argv[1])
-
-	n_batch = 90
-
-	y_sup = []
-
-	pbar = progbar.start(n_batch)
-	
-	for batch_id in range(n_batch):
-		fname = 'data/simrecord_90_%d.pkl'%(batch_id)
-		records = cPickle.load(open(fname, 'r'))
-
-		
-		for y, x_len, record in records:
-			thr = x_len * thr_rate
-			sup = set([yi for yi, d in record if d <= thr])
-			y_sup.append(sup)
-	
-		pbar.update(batch_id + 1)
-
-	pbar.finish()
-
-	cPickle.dump(y_sup, open(ofname, 'w'))
-
-
-def main2():
 	ofname = sys.argv[1]
 	thr_rate = float(sys.argv[2])
-	thr_rank = int(sys.argv[3])
-
+	
 	n_batch = 90
 
 	y_sup = []
@@ -124,14 +100,10 @@ def main2():
 					yhist[yi] += 1
 				else:
 					yhist[yi] = 1.
-			yhist = sorted(yhist.items(), key = lambda k: -k[1])
-			if len(yhist) > thr_rank:
-				yhist = yhist[:thr_rank]
-			
-			sup = set()
-			for yi, f in yhist:
-				sup.add(yi)	
 
+			yhist = sorted(yhist.items(), key = lambda k: -k[1])
+			sup = [yi for yi, f in yhist]
+			
 			y_sup.append(sup)
 	
 		pbar.update(batch_id + 1)
