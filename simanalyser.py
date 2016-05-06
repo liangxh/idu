@@ -99,9 +99,9 @@ def main():
 
 
 def main2():
-	ofname = sys.argv[2]
-	thr_rate = float(sys.argv[1])
-	thr_rank = int(sys.argv)	
+	ofname = sys.argv[1]
+	thr_rate = float(sys.argv[2])
+	thr_rank = int(sys.argv[3])
 
 	n_batch = 90
 
