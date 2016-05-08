@@ -75,6 +75,29 @@ def revalidate(fname_ysup, thr_rank, prefix, oprefix):
 
 	report(y_sup, pred_probs, 'data/dataset/test/%s'%(oprefix))
 
+def mismatch(fname_ysup, thr_rank, prefix, ofname):
+	sups = cPickle.load(open(fname_ysup, 'r'))
+
+	test_y, pred_probs = cPickle.load(open('data/dataset/test/%s_test.pkl'%(prefix), 'r'))
+	
+	y_sup = []
+	
+	mispair = np.zeros((90, 90))
+	for y, sup in zip(test_y, sups, pred_probs):		
+		eid_prob = sorted(enumerate(probs), key = lambda k:-k[1])
+
+		if thr_rank is not None and len(sup) > thr_rank:
+			sup = sup[:thr_rank]
+
+		sup = set(sup)
+		sup.discard(y)
+		
+		pred_y = eid_prob[0][0]
+		if pred_y in sup:
+			mispair[y][pred_y] += 1
+
+	cPickle.dump(mispair, open(ofname, 'w'))
+
 def main():
 	ofname = sys.argv[1]
 	thr_rate = float(sys.argv[2])
