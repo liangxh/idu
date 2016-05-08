@@ -84,7 +84,7 @@ def mismatch(fname_ysup, thr_rank, prefix, ofname):
 	y_sup = []
 	
 	mispair = np.zeros((90, 90))
-	for y, sup in zip(test_y, sups, pred_probs):		
+	for y, sup, probs in zip(test_y, sups, pred_probs):		
 		eid_prob = sorted(enumerate(probs), key = lambda k:-k[1])
 
 		if thr_rank is not None and len(sup) > thr_rank:
