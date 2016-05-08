@@ -9,6 +9,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import numpy as np
 import cPickle
 import matplotlib
 matplotlib.use('Agg')
