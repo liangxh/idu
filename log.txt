@@ -151,6 +151,21 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	sudo python lstmscript_dir.py -p emo4732 -x data/dataset_emo/unigram/ -y 4 -d 32
 	python nbscript_dir.py -p nbemo4710 -x data/dataset_emo/unigram/ -y 4 -k 1.
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+記錄結果
+
+1. 统計平均參與投票的訓練樣本數量
+
+thr_ED	thr_rank	count
+0.50	2		1.90477777778
+0.50	3		2.12458333333
+0.75	2		10.8983888889
+0.75	3		13.0860555556
+
+2.　sentiemo 覆蓋所有數據的比例 84.8365% (data/senticov.txt)
+
+3.
 
 ## BUG
 
