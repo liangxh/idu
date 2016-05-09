@@ -22,7 +22,7 @@ def prepare(key_embedder, ofname):
 	
 	def embed(xy):
 		seqs, y = xy
-		x_vec = [np.mean([embedder.embed(xi) for xi in seq]) for seq in seqs]
+		x_vec = [np.mean(embedder.embed(seq)) for seq in seqs]
 		return (x_vec, y)
 	
 	new_train = embed(train)
