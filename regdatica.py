@@ -10,6 +10,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import numpy as np
 import datica
 from wordembedder import WordEmbedder
 
