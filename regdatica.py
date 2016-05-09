@@ -10,9 +10,12 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import cPickle
 import numpy as np
 import datica
+
 from wordembedder import WordEmbedder
+from utils import progbar
 
 def prepare(key_embedder, ofname):
 	fname_embedder = 'data/dataset/model/%s_embedder.pkl'%(key_embedder)
@@ -22,7 +25,15 @@ def prepare(key_embedder, ofname):
 	
 	def embed(xy):
 		seqs, y = xy
-		x_vec = [np.mean(embedder.embed(seq)) for seq in seqs]
+		x_vec = []
+		pbar = progbar.start(len(seqs))
+
+		for i, seq in enumerate(seqs):
+			x_vec.append(np.mean(embedder.embed(seq)))
+			pbar.update(i + 1)
+
+		pbar.finish()
+
 		return (x_vec, y)
 	
 	new_train = embed(train)
