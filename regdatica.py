@@ -14,7 +14,7 @@ import datica
 from wordembedder import WordEmbedder
 
 def prepare(key_embedder, ofname):
-	fname_embedder = 'data/dataset/%s_embedder.pkl'%(key_embedder)
+	fname_embedder = 'data/dataset/model/%s_embedder.pkl'%(key_embedder)
 	embedder = WordEmbedder.load(fname_embedder)	
 
 	train, valid, test = datica.load_data('data/dataset/unigram/', 90, valid_rate = 0.)
