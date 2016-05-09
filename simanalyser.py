@@ -99,6 +99,38 @@ def mismatch(fname_ysup, thr_rank, prefix, ofname):
 
 	cPickle.dump(mispair, open(ofname, 'w'))
 
+def export_vote(thr_rate, ofname):
+	n_batch = 90
+
+	yhists = []
+	pbar = progbar.start(n_batch)
+	
+	for batch_id in range(n_batch):
+		fname = 'data/simrecord_90_%d.pkl'%(batch_id)
+		records = cPickle.load(open(fname, 'r'))
+
+		
+		for y, x_len, record in records:
+			thr = x_len * thr_rate
+			
+			ys = [yi for yi, d in record if d <= thr]
+			yhist = {}
+			for yi in ys:
+				if yhist.has_key(yi):
+					yhist[yi] += 1
+				else:
+					yhist[yi] = 1.
+
+			yhist = sorted(yhist.items(), key = lambda k: -k[1])
+			yhists.append(yhist)
+	
+		pbar.update(batch_id + 1)
+
+	pbar.finish()
+
+	cPickle.dump(yhists, open(ofname, 'w'))
+
+
 def main():
 	ofname = sys.argv[1]
 	thr_rate = float(sys.argv[2])
