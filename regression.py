@@ -44,8 +44,8 @@ def main():
 		train, test = load_data(key_regdata)
 
 		if model_class.has_key(key_model):
-			model = model_class()
-		elif key_model.startswith('svd'):
+			model = model_class[key_model]()
+		elif key_model.startswith('svm'):
 			params = key_model.split('-')
 			if len(params) == 1:
 				model = svm.SVC()
