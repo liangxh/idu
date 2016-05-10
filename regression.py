@@ -12,6 +12,7 @@ sys.setdefaultencoding('utf8')
 import cPickle
 import numpy as np
 
+from sklearn import svm
 from sklearn.linear_model import *
 
 def load_data(key_regdata):
@@ -29,20 +30,27 @@ def main():
 	print '=========== %s ============='%(key_regdata)
 	print 'model\tr_mean\tr_std\tp_mean\tp_std\ta_mean\ta_std'
 
+	model_class = {
+			'bayes':BayesianRidge,
+			'ridge':Ridge,
+			'linear':LinearRegression,
+			'elastic':ElasticNet,
+			'lars':Lars,
+			'lasso':Lasso,
+			'lassolars':LassoLars,
+			}
+
 	for key_model in keys_model.split(','):
 		train, test = load_data(key_regdata)
 
-		model_class = {
-				'bayes':BayesianRidge,
-				'ridge':Ridge,
-				'linear':LinearRegression,
-				'elastic':ElasticNet,
-				'lars':Lars,
-				'lasso':Lasso,
-				'lassolars':LassoLars,
-			}[key_model]
-
-		model = model_class()
+		if model_class.has_key(key_model):
+			model = model_class()
+		elif key_model.startswith('svd'):
+			params = key_model.split('-')
+			if len(params) == 1:
+				model = svm.SVC()
+			else:
+				model = svm.SVC(kernel = params[1])	
 
 		try:
 			if flag_split:
