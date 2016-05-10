@@ -25,7 +25,7 @@ def main():
 	train, test = load_data(key_regdata)
 
 	model_class = {
-			'bayes':BayesRegression,
+			'bayes':BayesRidge,
 			'ridge':Ridge,
 			'linear':LinearRegression,
 			'elasticnet':ElasticNet,
