@@ -21,15 +21,19 @@ def load_data(key_regdata):
 def main():
 	key_regdata = sys.argv[1]
 	keys_model = sys.argv[2]
+	flag_split = len(sys.argv) > 3 and sys.argv[3] == 's'
 
 	for key_model in keys_model.split(','):
 		train, test = load_data(key_regdata)
 
 		model_class = {
 				'bayes':BayesianRidge,
+				'ard':ARDRegression,
+				'log':LogisticRegression,
+				'logcv':LogisticRegressionCV,
 				'ridge':Ridge,
 				'linear':LinearRegression,
-				'elasticnet':ElasticNet,
+				'elastic':ElasticNet,
 				'lars':Lars,
 				'lasso':Lasso,
 				'lassolars':LassoLars,
@@ -38,6 +42,9 @@ def main():
 		model = model_class()
 
 		try:
+			if flag_split:
+				raise ValueError
+
 			model.fit(train[0], train[1])
 			pred_y = model.predict(test[0])	
 		except ValueError:
