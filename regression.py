@@ -23,14 +23,14 @@ def main():
 	keys_model = sys.argv[2]
 	flag_split = len(sys.argv) > 3 and sys.argv[3] == 's'
 
+	print '=========== %s ============='%(key_regdata)
+	print 'model\tr_mean\tr_std\tp_mean\tp_std\ta_mean\ta_std'
+
 	for key_model in keys_model.split(','):
 		train, test = load_data(key_regdata)
 
 		model_class = {
 				'bayes':BayesianRidge,
-				'ard':ARDRegression,
-				'log':LogisticRegression,
-				'logcv':LogisticRegressionCV,
 				'ridge':Ridge,
 				'linear':LinearRegression,
 				'elastic':ElasticNet,
@@ -73,10 +73,12 @@ def main():
 		r_mean = np.mean(r)
 		r_std = np.std(r)
 
-		print '# %s-%s'%(key_regdata, key_model)
-		print 'r mean: %.6f std: %.6f'%(r_mean, r_std)
-		print 'p mean: %.6f std: %.6f'%(mean_dif[0], d0_std)
-		print 'a mean: %.6f std: %.6f'%(mean_dif[1], d1_std)
+		#print '# %s-%s'%(key_regdata, key_model)
+		#print 'r mean: %.6f std: %.6f'%(r_mean, r_std)
+		#print 'p mean: %.6f std: %.6f'%(mean_dif[0], d0_std)
+		#print 'a mean: %.6f std: %.6f'%(mean_dif[1], d1_std)
+
+		print '%s\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f'%(key_model, r_mean, r_std, mean_dif[0], d0_std, mean_dif[1], d1_std)
 
 if __name__ == '__main__':
 	main()
