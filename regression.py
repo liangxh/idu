@@ -40,9 +40,8 @@ def main():
 			'lassolars':LassoLars,
 			}
 
-	for key_model in keys_model.split(','):
-		train, test = load_data(key_regdata)
 
+	def get_model(key_model):
 		if model_class.has_key(key_model):
 			model = model_class[key_model]()
 		elif key_model.startswith('svm'):
@@ -50,7 +49,13 @@ def main():
 			if len(params) == 1:
 				model = svm.SVC()
 			else:
-				model = svm.SVC(kernel = params[1])	
+				model = svm.SVC(kernel = params[1])
+
+		return model
+
+	for key_model in keys_model.split(','):
+		train, test = load_data(key_regdata)
+		model = get_model(key_model)
 
 		try:
 			if flag_split:
@@ -64,7 +69,7 @@ def main():
 
 			for i in [0, 1]:
 				y = train_y[:, 0]
-				model = model_class()
+				model = get_model(key_model)
 				model.fit(train[0], y)
 		
 				ys.append(model.predict(test[0]).reshape((len(test[0]), 1)))
