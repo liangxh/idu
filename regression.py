@@ -49,7 +49,7 @@ def main():
 				model = model_class()
 				model.fit(train[0], y)
 		
-				ys.append(model.predict(test[0]).reshape((y.shape[1], 1)))
+				ys.append(model.predict(test[0]).reshape((len(test[0]), 1)))
 
 			ys = np.concatenate(ys, axis = 1)
 
