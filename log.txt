@@ -151,6 +151,29 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	sudo python lstmscript_dir.py -p emo4732 -x data/dataset_emo/unigram/ -y 4 -d 32
 	python nbscript_dir.py -p nbemo4710 -x data/dataset_emo/unigram/ -y 4 -k 1.
 
+54. 對baseline算法Contextual knowledge, 使用cvxpy進行實驗 cvxclassifier.py data/config2x14.txt, 正負性情感各14個表情符,　最優情況準確率為70% (data/dataset/test/cvx2x14_report1.txt)
+
+55. lstmscript_tf_config.py 對 data/config2x14.txt進行與54.比較
+
+56. emourlexportor.extract　提取出90個表情符對應gif的url地址至 data/emodata/emourl.html
+57. grapher.export_by_config　根據配置文件把多個 X_prec.pkl的準確率曲線繪畫到同一幅圖中
+58. word2vec_builder.main 以數據庫中5,000,000條數據進行訓練得出詞向量, to_Wemb則把產生的模型轉換為wordembedder.WordEmbedder的數據結構
+
+59. mismatcher.py 產生data/dataset/mismatch/,　分析命中的額外表情符與原表情符的關係
+
+60. simtext.main 產生 simrecord_90_{0..89}.pkl 記錄測試集的相近樣本信息
+61. simanalyser.main產生 ysup/%s.pkl,
+	.revalidate基於已有的_test.pkl 產生multi_label結果后的_test.pkl
+	.export_vote產生 data/dataset/ysup/vote_%s.pkl記錄投票結果
+
+62. voteanalyser.py
+	.count_vote產生參與投票樣本數的直方圖至data/dataset/ysup/votecount_075.png
+	.vote_width產生投票樣本下滑拐點的直方圖至data/dataset/ysup/votewidth_075.png
+
+63. regdatica.py產生regression實驗用數據
+
+64. regression.py進行regression實驗
+
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 記錄結果
