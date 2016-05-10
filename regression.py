@@ -47,9 +47,9 @@ def main():
 		elif key_model.startswith('svm'):
 			params = key_model.split('-')
 			if len(params) == 1:
-				model = svm.SVC()
+				model = svm.SVR()
 			else:
-				model = svm.SVC(kernel = params[1])
+				model = svm.SVR(kernel = params[1])
 
 		return model
 
