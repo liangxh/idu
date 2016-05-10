@@ -42,10 +42,10 @@ def main():
 			pred_y = model.predict(test[0])	
 		except ValueError:
 			ys = []
-			train[1] = np.asarray(train[1])
+			train_y = np.asarray(train[1])
 
 			for i in [0, 1]:
-				y = train[1][:, 0]
+				y = train_y[:, 0]
 				model = model_class()
 				model.fit(train[0], y)
 		
