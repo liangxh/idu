@@ -9,6 +9,9 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import cPickle
+import numpy as np
+
 from sklearn.linear_model import LinearRegression as LR
 
 def load_data(key_regdata):
