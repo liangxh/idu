@@ -27,9 +27,6 @@ def main():
 	if flag_split:
 		print 'split_model'
 
-	print '=========== %s ============='%(key_regdata)
-	print 'model\tr_mean\tr_std\tp_mean\tp_std\ta_mean\ta_std'
-
 	model_class = {
 			'bayes':BayesianRidge,
 			'ridge':Ridge,
@@ -49,14 +46,18 @@ def main():
 		elif key_model.startswith('svm'):
 			params = key_model.split('-')
 			if len(params) == 1:
-				model = svm.SVR(max_iter = MAX_ITER)
+				model = svm.SVR(max_iter = MAX_ITER, verbose = True)
 			else:
-				model = svm.SVR(kernel = params[1], max_iter = MAX_ITER)
+				model = svm.SVR(kernel = params[1], max_iter = MAX_ITER, verbose = True)
 
 		return model
 
+	result = ''
+
+	train, test = load_data(key_regdata)		
+
 	for key_model in keys_model.split(','):
-		train, test = load_data(key_regdata)
+		print 'test model#%s#'%(key_model)
 		model = get_model(key_model)
 
 		try:
@@ -96,7 +97,13 @@ def main():
 		#print 'p mean: %.6f std: %.6f'%(mean_dif[0], d0_std)
 		#print 'a mean: %.6f std: %.6f'%(mean_dif[1], d1_std)
 
-		print '%s\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f'%(key_model, r_mean, r_std, mean_dif[0], d0_std, mean_dif[1], d1_std)
+		print 'model#%s# done!'%(key_model)
+
+		result += '%s\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n'%(key_model, r_mean, r_std, mean_dif[0], d0_std, mean_dif[1], d1_std)
+	
+	print '=========== %s ============='%(key_regdata)
+	print 'model\tr_mean\tr_std\tp_mean\tp_std\ta_mean\ta_std'
+	print result
 
 if __name__ == '__main__':
 	main()
