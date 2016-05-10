@@ -15,7 +15,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression as LR
 
 def load_data(key_regdata):
-	fname = 'data/dataset/regdata/%s.pkl'
+	fname = 'data/dataset/regdata/%s.pkl'%(key_regdata)
 	return cPickle.load(open(fname, 'r'))
 
 def main():
