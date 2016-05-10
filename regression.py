@@ -51,7 +51,7 @@ def main():
 		
 				ys.append(model.predict(test[0]).reshape((len(test[0]), 1)))
 
-			ys = np.concatenate(ys, axis = 1)
+			pred_y = np.concatenate(ys, axis = 1)
 
 		test_y = np.asarray(test[1])
 
