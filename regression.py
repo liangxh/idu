@@ -22,6 +22,9 @@ def main():
 	key_regdata = sys.argv[1]
 	keys_model = sys.argv[2]
 	flag_split = len(sys.argv) > 3 and sys.argv[3] == 's'
+	
+	if flag_split:
+		print 'split_model'
 
 	print '=========== %s ============='%(key_regdata)
 	print 'model\tr_mean\tr_std\tp_mean\tp_std\ta_mean\ta_std'
