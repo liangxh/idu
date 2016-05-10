@@ -25,7 +25,7 @@ def main():
 	train, test = load_data(key_regdata)
 
 	model_class = {
-			'bayes':BayesianRidge,
+			'bayes':BayesRegression,
 			'ridge':Ridge,
 			'linear':LinearRegression,
 			'elasticnet':ElasticNet,
@@ -35,9 +35,22 @@ def main():
 		}[key_model]
 
 	model = model_class()
-	model.fit(train[0], train[1])
 
-	pred_y = model.predict(test[0])	
+	try:
+		model.fit(train[0], train[1])
+		pred_y = model.predict(test[0])	
+	except ValueError:
+		ys = []
+
+		for i in [0, 1]:
+			y = train[1][:, 0]
+			model = model_class()
+			model.fit(train[0], y)
+		
+			ys.append(model.predict(test[0]).reshape((y.shape[0], 1)))
+
+		ys = np.concatenate(ys, axis = 1)
+
 	test_y = np.asarray(test[1])
 
 	dif = pred_y - test_y
