@@ -42,7 +42,7 @@ def main():
 
 
 	def get_model(key_model):
-		MAX_ITER = 1000
+		MAX_ITER = 100000
 
 		if model_class.has_key(key_model):
 			model = model_class[key_model]()
