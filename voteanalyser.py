@@ -57,19 +57,27 @@ def vote_width(key, title, ofname):
 	
 	
 
-def count_vote(key, thr_rank):
+def count_vote(key, title, ofname):
 	fname = 'data/dataset/ysup/vote_%s.pkl'%(key)
-	print fname, thr_rank
 	yhists = cPickle.load(open(fname, 'r'))
 	
-	counts = []
+	counts = [[] for i in range(1, 4)]
+
 	for yhist in yhists:
-		if len(yhist) > thr_rank:
-			yhist = yhist[:thr_rank]
+		for i in range(1, 4):
+			partial_yhist = yhist if len(yhist) <= i else yhist[:i]
+			counts[i - 1].append(sum([f for y, f in partial_yhist]))
 	
-		counts.append(sum([f for y, f in yhist]))
-	
-	print np.mean(counts)
+	for i in range(1, 4):
+		plt.figure()
+		plt.title(title + ' thr_rank=%d'%(i))
+		plt.xlabel('Number of Similar Samples')
+		plt.ylabel('Number of Test Samples')
+
+		count = counts[i - 1]
+		plt.hist(count)
+
+		plt.savefig('data/dataset/ysup/votecount_%s_%d.png'%(key, i))
 
 def main():
 	pass
@@ -81,7 +89,10 @@ if __name__ == '__main__':
 	count_vote('050', 3)
 	count_vote('075', 2)
 	count_vote('075', 3)'''
+	
+	count_vote('075', 'thr_ED=0.75', 'data/dataset/ysup/votecount_075.png')
+	count_vote('050', 'thr_ED=0.50', 'data/dataset/ysup/votecount_050.png')
 
-	vote_width('075', 'thr_ED = 0.75', 'data/dataset/ysup/votewidth_075.png')
-	vote_width('050', 'thr_ED = 0.50', 'data/dataset/ysup/votewidth_050.png')
+	#vote_width('075', 'thr_ED = 0.75', 'data/dataset/ysup/votewidth_075.png')
+	#vote_width('050', 'thr_ED = 0.50', 'data/dataset/ysup/votewidth_050.png')
 	

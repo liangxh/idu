@@ -42,14 +42,16 @@ def main():
 
 
 	def get_model(key_model):
+		MAX_ITER = 1000
+
 		if model_class.has_key(key_model):
 			model = model_class[key_model]()
 		elif key_model.startswith('svm'):
 			params = key_model.split('-')
 			if len(params) == 1:
-				model = svm.SVR()
+				model = svm.SVR(max_iter = MAX_ITER)
 			else:
-				model = svm.SVR(kernel = params[1])
+				model = svm.SVR(kernel = params[1], max_iter = MAX_ITER)
 
 		return model
 
