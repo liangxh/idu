@@ -12,7 +12,7 @@ sys.setdefaultencoding('utf8')
 import cPickle
 import numpy as np
 
-from sklearn.linear_model import LinearRegression as LR
+from sklearn.linear_model import *
 
 def load_data(key_regdata):
 	fname = 'data/dataset/regdata/%s.pkl'%(key_regdata)
@@ -20,10 +20,21 @@ def load_data(key_regdata):
 
 def main():
 	key_regdata = sys.argv[1]
+	key_model = sys.argv[2]
 
 	train, test = load_data(key_regdata)
 
-	model = LR()
+	model_class = {
+			'bayes':BayesianRidge,
+			'ridge':Ridge,
+			'linear':LinearRegression,
+			'elasticnet':ElasticNet,
+			'lars':Lars,
+			'lasso':Lasso,
+			'lassolars':LassoLars,
+		}[key_model]
+
+	model = model_class()
 	model.fit(train[0], train[1])
 
 	pred_y = model.predict(test[0])	
