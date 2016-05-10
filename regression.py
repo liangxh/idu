@@ -42,6 +42,7 @@ def main():
 			pred_y = model.predict(test[0])	
 		except ValueError:
 			ys = []
+			train[1] = np.asarray(train[1])
 
 			for i in [0, 1]:
 				y = train[1][:, 0]
