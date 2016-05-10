@@ -41,9 +41,9 @@ def main():
 	r_std = np.std(r)
 
 	print '# %s'%(key_regdata)
-	print 'r mean: ', r_mean, ' std: ', r_std
-	print 'p mean: ', mean_dif[0], 'std: ', d0_std
-	print 'a mean: ', mean_dif[1], 'std: ', d1_std
+	print 'r mean: %.6f std: %.6f'%(r_mean, r_std)
+	print 'p mean: %.6f std: %.6f'%(mean_dif[0], d0_std)
+	print 'a mean: %.6f std: %.6f'%(mean_dif[1], d1_std)
 
 if __name__ == '__main__':
 	main()
