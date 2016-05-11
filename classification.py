@@ -11,9 +11,9 @@ sys.setdefaultencoding('utf8')
 
 import cPickle
 import numpy as np
-
 from optparse import OptionParser
 
+import validatica
 
 def classify_GMM(train, test, covariance_type = 'diag'):
 	from sklearn.mixture import GMM
