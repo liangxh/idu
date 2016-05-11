@@ -74,7 +74,7 @@ def main():
 			params = key_model.split('-')
 			kernel = params[1] if len(params) > 1 else 'rbf'
 			
-			proba = classify_svc(train, test, kernel)
+			proba = classify_SVC(train, test, kernel)
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
