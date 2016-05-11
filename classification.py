@@ -46,6 +46,8 @@ def main():
 	keys_model = opts.keys_model
 
 	for key_model in keys_model:
+		print 'testing model %s...'%(key_model)
+
 		proba = None
 
 		if key_model.startswith('gmm'):
