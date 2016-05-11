@@ -40,6 +40,25 @@ def classify_SVC(train, test, kernel = 'rbf', verbose = False):
 	proba = classifier.predict_proba(x, kernel = kernel)
 	return proba
 
+def tovec(i, y):
+	vec = np.zeros(y)
+	vec[i] = 1.
+	return vec
+
+def classify_OMP(train, test):
+	from sklearn.linear_model import OrthogonalMatchingPursuit as OMP
+
+	x, y = train
+	ydim = np.unique(y).shape[0]
+	y = [tovec(yi, ydim) for yi in y]
+
+	classifier = OMP()
+	classifier.fit(x, y)
+	
+	x, y = test
+	proba = classifier.predict(x)
+	return proba
+
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-i', '--input', action = 'store', type = 'str', dest = 'key_input')
@@ -76,6 +95,8 @@ def main():
 			kernel = params[1] if len(params) > 1 else 'rbf'
 			
 			proba = classify_SVC(train, test, kernel, opts.flag_verbose)
+		elif key_model.startswith('omp'):
+			proba = classify_OMP(train, test, kernel, opts.flag_verbose)
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
