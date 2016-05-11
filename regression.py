@@ -56,6 +56,9 @@ def main():
 
 	train, test = load_data(key_regdata)		
 
+	def rmse(a, b):
+		return np.sqrt(np.mean((a - b) ** 2))
+
 	for key_model in keys_model.split(','):
 		print 'test model#%s#'%(key_model)
 		model = get_model(key_model)
@@ -81,28 +84,26 @@ def main():
 
 		test_y = np.asarray(test[1])
 
-		dif = pred_y - test_y
-	
-		mean_dif = np.mean(dif, axis = 0)
 
-		d0_std = np.std(dif[:, 1])
-		d1_std = np.std(dif[:, 0])
+		p_test = test_y[:, 0]
+		a_test = test_y[:, 1]
+		
+		p_pred = pred_y[:, 0]
+		a_pred = pred_y[:, 1]
 
-		r = np.sqrt(np.sum(dif ** 2, axis = 1))
-		r_mean = np.mean(r)
-		r_std = np.std(r)
-
-		#print '# %s-%s'%(key_regdata, key_model)
-		#print 'r mean: %.6f std: %.6f'%(r_mean, r_std)
-		#print 'p mean: %.6f std: %.6f'%(mean_dif[0], d0_std)
-		#print 'a mean: %.6f std: %.6f'%(mean_dif[1], d1_std)
-
+		p_coef = np.corrcoef(p_test, p_pred)
+		a_coef = np.corrcoef(a_test, a_pred)
+		
+		p_rmse = rmse(p_test, p_pred)
+		a_rmse = rmse(a_test, a_pred)
+		
 		print 'model#%s# done!'%(key_model)
-
-		result += '%s\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n'%(key_model, r_mean, r_std, mean_dif[0], d0_std, mean_dif[1], d1_std)
+		msg = '%s\t%.4f\t%.4f\t%.4f\t%.4f'%(key_model, p_rmse, p_coef, a_rmse, a_coef)
+		result += msg + '\n'
+		print msg
 	
 	print '=========== %s ============='%(key_regdata)
-	print 'model\tr_mean\tr_std\tp_mean\tp_std\ta_mean\ta_std'
+	print 'model\tp_rmse\tp_coef\ta_rmse\ta_coef'
 	print result
 
 if __name__ == '__main__':
