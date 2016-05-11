@@ -62,7 +62,7 @@ def main():
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
-		fname_test = 'data/dataset/test/_test.pkl'%(prefix)
+		fname_test = 'data/dataset/test/%s_test.pkl'%(prefix)
 		cPickle.dump((test_y, proba), open(fname_test, 'w'))
 
 		validatica.report(test_y, proba, 'data/dataset/test/%s'%(prefix))
