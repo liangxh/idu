@@ -70,12 +70,12 @@ def main():
 			params = key_model.split('-')
 			covariance_type = params[1] if len(params) > 1 else 'diag'	
 
-			proba = classify_GMM(train, test, covariance_type, opts.verbose)
+			proba = classify_GMM(train, test, covariance_type, opts.flag_verbose)
 		elif key_model.startswith('svc'):
 			params = key_model.split('-')
 			kernel = params[1] if len(params) > 1 else 'rbf'
 			
-			proba = classify_SVC(train, test, kernel, opts.verbose)
+			proba = classify_SVC(train, test, kernel, opts.flag_verbose)
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
