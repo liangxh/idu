@@ -15,13 +15,13 @@ from optparse import OptionParser
 
 import validatica
 
-def classify_GMM(train, test, covariance_type = 'diag'):
+def classify_GMM(train, test, covariance_type = 'diag', verbose = False):
 	from sklearn.mixture import GMM
 
 	x, y = train
 	ydim = np.unique(y).shape[0]
 	
-	classifier = GMM(n_components = ydim, covariance_type = 'diag', init_params = 'wc')
+	classifier = GMM(n_components = ydim, covariance_type = 'diag', init_params = 'wc', verbose = verbose)
 	classifier.means_ = np.array([x[y == i].mean(axis = 0) for i in range(ydim)])
 	classifier.fit(x)
 
@@ -29,11 +29,11 @@ def classify_GMM(train, test, covariance_type = 'diag'):
 	proba = classifier.predict_proba(x)
 	return proba
 
-def classify_SVC(train, test, kernel = 'rbf'):
+def classify_SVC(train, test, kernel = 'rbf', verbose = False):
 	from sklearn.svm import SVC
 
 	x, y = train
-	classifier = SVC(probability = True)
+	classifier = SVC(probability = True, verbose = verbose)
 	classifier.fit(x, y)
 	
 	x, y = test
@@ -44,6 +44,7 @@ def main():
 	optparser = OptionParser()
 	optparser.add_option('-i', '--input', action = 'store', type = 'str', dest = 'key_input')
 	optparser.add_option('-m', '--models', action = 'store', type = 'str', dest = 'keys_model')
+	optparser.add_option('-v', '--verbose', action = 'store_true', dest = 'flag_verbose', default = False)
 
 	opts, args = optparser.parse_args()
 
@@ -69,12 +70,12 @@ def main():
 			params = key_model.split('-')
 			covariance_type = params[1] if len(params) > 1 else 'diag'	
 
-			proba = classify_GMM(train, test, covariance_type)
+			proba = classify_GMM(train, test, covariance_type, opts.verbose)
 		elif key_model.startswith('svc'):
 			params = key_model.split('-')
 			kernel = params[1] if len(params) > 1 else 'rbf'
 			
-			proba = classify_SVC(train, test, kernel)
+			proba = classify_SVC(train, test, kernel, opts.verbose)
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
