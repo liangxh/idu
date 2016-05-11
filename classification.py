@@ -38,9 +38,13 @@ def main():
 
 	ifname = 'data/dataset/xvec/%s.pkl'%(opts.key_input)
 	train, test = cPickle.load(open(ifname, 'r'))
+
+	x, y = train
+	train = (np.asarray(x), np.asarray(y))
 	
-	train = np.asarray(train)
-	test = np.asarray(test)
+	x, y = test 
+	test = (np.asarray(x), np.asarray(y))
+
 	test_y = test[1]
 
 	keys_model = opts.keys_model.split(',')
