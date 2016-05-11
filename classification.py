@@ -12,7 +12,7 @@ sys.setdefaultencoding('utf8')
 import cPickle
 import numpy as np
 
-from optparser import OptionParser
+from optparse import OptionParser
 
 
 def classify_GMM(train, test, covariance_type = 'diag'):
