@@ -24,7 +24,7 @@ def main():
 	optparser = OptionParser()
 	optparser.add_option('-i', '--input', action = 'store', type = 'str', dest = 'key_regdata')
 	optparser.add_option('-m', '--models', action = 'store', type = 'str', dest = 'keys_model')
-	optparser.add_option('-s', '--split', action = 'store_true', dest = 'flag_split', default = True)
+	optparser.add_option('-s', '--split', action = 'store_true', dest = 'flag_split', default = False)
 	optparser.add_option('-v', '--verbose', action = 'store_true', dest = 'flag_verbose', default = False)
 	opts, args = optparser.parse_args()
 
