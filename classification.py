@@ -19,7 +19,7 @@ def classify_GMM(train, test, covariance_type = 'diag'):
 	from sklearn.mixture import GMM
 
 	x, y = train
-	ydim = np.unique(test).shape[0]
+	ydim = np.unique(y).shape[0]
 	
 	classifier = GMM(n_components = ydim, covariance_type = 'diag', init_params = 'wc')
 	classifier.means_ = np.array([x[y == i].mean(axis = 0) for i in range(ydim)])
