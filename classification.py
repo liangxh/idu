@@ -43,7 +43,7 @@ def main():
 	test = np.asarray(test)
 	test_y = test[1]
 
-	keys_model = opts.keys_model
+	keys_model = opts.keys_model.split(',')
 
 	for key_model in keys_model:
 		print 'testing model %s...'%(key_model)
