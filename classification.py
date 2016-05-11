@@ -96,7 +96,7 @@ def main():
 			
 			proba = classify_SVC(train, test, kernel, opts.flag_verbose)
 		elif key_model.startswith('omp'):
-			proba = classify_OMP(train, test, kernel, opts.flag_verbose)
+			proba = classify_OMP(train, test)
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
