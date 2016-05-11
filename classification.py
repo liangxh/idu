@@ -27,7 +27,18 @@ def classify_GMM(train, test, covariance_type = 'diag'):
 
 	x, y = test
 	proba = classifier.predict_proba(x)
-	return proba	
+	return proba
+
+def classify_SVC(train, test, kernel = 'rbf'):
+	from sklearn.svm import SVC
+
+	x, y = train
+	classifier = SVC(probability = True)
+	classifier.fit(x, y)
+	
+	x, y = test
+	proba = classifier.predict_proba(x, kernel = kernel)
+	return proba
 
 def main():
 	optparser = OptionParser()
@@ -59,6 +70,11 @@ def main():
 			covariance_type = params[1] if len(params) > 1 else 'diag'	
 
 			proba = classify_GMM(train, test, covariance_type)
+		elif key_model.startswith('svc'):
+			params = key_model.split('-')
+			kernel = params[1] if len(params) > 1 else 'rbf'
+			
+			proba = classify_svc(train, test, kernel)
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
