@@ -60,7 +60,7 @@ def main():
 
 			proba = classify_GMM(train, test, covariance_type)
 
-		prefix = '%s_%s'%(key_input, key_model)
+		prefix = '%s_%s'%(opts.key_input, key_model)
 
 		fname_test = 'data/dataset/test/_test.pkl'%(prefix)
 		cPickle.dump((test_y, proba), open(fname_test, 'w'))
