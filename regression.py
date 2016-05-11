@@ -91,8 +91,8 @@ def main():
 		p_pred = pred_y[:, 0]
 		a_pred = pred_y[:, 1]
 
-		p_coef = np.corrcoef(p_test, p_pred)
-		a_coef = np.corrcoef(a_test, a_pred)
+		p_coef = np.corrcoef(p_test, p_pred)[0,1]
+		a_coef = np.corrcoef(a_test, a_pred)[1,0]
 		
 		p_rmse = rmse(p_test, p_pred)
 		a_rmse = rmse(a_test, a_pred)
