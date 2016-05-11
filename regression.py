@@ -11,6 +11,7 @@ sys.setdefaultencoding('utf8')
 
 import cPickle
 import numpy as np
+from optparse import OptionParser
 
 from sklearn import svm
 from sklearn.linear_model import *
@@ -20,9 +21,17 @@ def load_data(key_regdata):
 	return cPickle.load(open(fname, 'r'))
 
 def main():
-	key_regdata = sys.argv[1]
-	keys_model = sys.argv[2]
-	flag_split = len(sys.argv) > 3 and sys.argv[3] == 's'
+	optparser = OptionParser()
+	optparser.add_option('-i', '--input', action = 'store', type = 'str', dest = 'key_regdata')
+	optparser.add_option('-m', '--models', action = 'store', type = 'str', dest = 'keys_model')
+	optparser.add_option('-s', '--split', action = 'store_true', dest = 'flag_split', default = True)
+	optparser.add_option('-v', '--verbose', action = 'store_true', dest = 'flag_verbose', default = False)
+	opts, args = optparser.parse_args()
+
+	key_regdata = opts.key_regdata
+	keys_model = opts.keys_model
+	flag_split = opts.flag_split
+	flag_verbose = opts.flag_verbose
 	
 	if flag_split:
 		print 'split_model'
@@ -60,7 +69,9 @@ def main():
 		return np.sqrt(np.mean((a - b) ** 2))
 
 	for key_model in keys_model.split(','):
-		print 'test model#%s#'%(key_model)
+		if flag_verbose:
+			print 'test model#%s#'%(key_model)
+
 		model = get_model(key_model)
 
 		try:
@@ -97,10 +108,12 @@ def main():
 		p_rmse = rmse(p_test, p_pred)
 		a_rmse = rmse(a_test, a_pred)
 		
-		print 'model#%s# done!'%(key_model)
 		msg = '%s\t%.4f\t%.4f\t%.4f\t%.4f'%(key_model, p_rmse, p_coef, a_rmse, a_coef)
 		result += msg + '\n'
-		print msg
+
+		if flag_verbose:
+			print 'model#%s# done!'%(key_model)
+			print msg		
 	
 	print '=========== %s ============='%(key_regdata)
 	print 'model\tp_rmse\tp_coef\ta_rmse\ta_coef'
