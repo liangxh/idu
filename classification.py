@@ -15,18 +15,22 @@ from optparse import OptionParser
 
 import validatica
 
-def classify_GMM(train, test, covariance_type = 'diag', verbose = False):
+def classify_GMM(train, test, covariance_type = 'diag', , n_components = 1, verbose = False):
 	from sklearn.mixture import GMM
 
 	x, y = train
 	ydim = np.unique(y).shape[0]
 	
-	classifier = GMM(n_components = ydim, covariance_type = 'diag', init_params = 'wc', verbose = verbose)
-	classifier.means_ = np.array([x[y == i].mean(axis = 0) for i in range(ydim)])
-	classifier.fit(x)
+	gs = [GMM(n_components = n_components, covariance_type = covariance_type, init_params = 'wc')
+			for i in range(ydim)
+		]
+	for i, g in enumerate(gs):
+		g.fit(x[y == i])
 
 	x, y = test
-	proba = classifier.predict_proba(x)
+	scores = [g.score(x) for g in gs]
+	proba = np.column_stack(scores) # not probability really	
+
 	return proba
 
 def classify_SVC(train, test, kernel = 'rbf', verbose = False):
@@ -87,9 +91,10 @@ def main():
 
 		if key_model.startswith('gmm'):
 			params = key_model.split('-')
-			covariance_type = params[1] if len(params) > 1 else 'diag'	
+			covariance_type = params[1] if len(params) > 1 else 'diag'
+			n_components = int(params[2]) if len(params) > 2 else 1
 
-			proba = classify_GMM(train, test, covariance_type, opts.flag_verbose)
+			proba = classify_GMM(train, test, covariance_type, n_components, opts.flag_verbose)
 		elif key_model.startswith('svc'):
 			params = key_model.split('-')
 			kernel = params[1] if len(params) > 1 else 'rbf'
