@@ -63,9 +63,11 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 		print ubm.means_.shape
 
 		# means: matrix[M, xdim]
+		alpha_m = np.asarray(np.asmatrix(alpha_m).T)
 		new_means = alpha_m * Ex_i + (1. - alpha_m) * ubm.means_
 
 		# covar: matrix[M, xdim]
+		alpha_v = np.asarray(np.asmatrix(alpha_v).T)
 		new_covars = alpha_v * Ex2_i + (1. - alpha_v) * (ubm.covars_ + ubm.means_ **2) - new_means ** 2
 
 		g = GMM(n_components = M)
