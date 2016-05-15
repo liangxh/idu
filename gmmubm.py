@@ -60,7 +60,7 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 		new_weights = (alpha_w * n_i / T + (1. - alpha_w) * ubm.weights_) * gamma
 
 		print Ex_i.shape
-		print ubm.means_
+		print ubm.means_.shape
 
 		# means: matrix[M, xdim]
 		new_means = alpha_m * Ex_i + (1. - alpha_m) * ubm.means_
