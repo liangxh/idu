@@ -45,7 +45,7 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 		Pr_t_i = probs * weights
 		Pr_t_i = Pr_t_i / np.asmatrix(Pr_t_i.sum(axis = 1)).T    # matrix[T x M]
 
-		n_i = Pr_t_i.sum(axis = 0)      # matrix[M, ]
+		n_i = np.asarray(Pr_t_i.sum(axis = 0)).flatten()      # matrix[M, ]
 		Ex_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * xi).mean(axis = 0) / n_i[i] for i in range(M)])
 		# matrix[M x xdim]
 		Ex2_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * (xi ** 2)).mean(axis = 0) / n_i[i] for i in range(M)])
