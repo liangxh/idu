@@ -27,7 +27,7 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 	print >> sys.stderr, 'classify: [info] training ubm ...',
 	st = time.time()
 	ubm = GMM(n_components = M)
-	ubm.fit(x)
+	ubm.fit(x[:10])
 	print >> sys.stderr, ' OK (%.2f)'%(time.time() - st)
 
 	gs = []
@@ -58,6 +58,9 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 
 		# weights: matrix[M, ]
 		new_weights = (alpha_w * n_i / T + (1. - alpha_w) * ubm.weights_) * gamma
+
+		print Ex_i.shape
+		print ubm.means_
 
 		# means: matrix[M, xdim]
 		new_means = alpha_m * Ex_i + (1. - alpha_m) * ubm.means_
