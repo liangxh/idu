@@ -9,22 +9,34 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import time
 import cPickle
 import numpy as np
 from optparse import OptionParser
 from sklearn.mixture import GMM
 
 import validatica
+from utils import progbar
 
 def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 	x, y = train
 	ydim = np.unique(y).shape[0]
 
 	M = n_components
+
+	print >> sys.stderr, 'classify: [info] training ubm ...',
+	st = time.time()
 	ubm = GMM(n_components = M)
+
+	print >> sys.stderr, ' OK (%.2f)'%(time.time() - st)
+
 	ubm.fit(x)
 
 	gs = []
+
+	print >> sys.stderr, 'classify: [info] building gmm for each label ...'
+
+	pbar = progbar.start(ydim)
 	for i in range(ydim):
 		xi = x[y == i]                  # matrix[T x xdim]
 		T = xi.shape[0]
@@ -32,7 +44,7 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 		weights = ubm.weights_          # matrix[M, ]
 		probs = ubm.predict_proba(xi)   # matrix[T x M]
 
-		Pr_t_i = probs * weigths
+		Pr_t_i = probs * weights
 		Pr_t_i = Pr_t_i / np.asmatrix(Pr_t_i.sum(axis = 1)).T    # matrix[T x M]
 
 		n_i = Pr_t_i.sum(axis = 0)      # matrix[M, ]
@@ -59,6 +71,9 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 		g.covars_ = new_covars
 
 		gs.append(g)
+
+		pbar.update(i + 1)
+	pbar.finish()
 
 	x, y = test
 	scores = [g.score(x) for g in gs]
