@@ -48,7 +48,7 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 		n_i = Pr_t_i.sum(axis = 0)      # matrix[M, ]
 		Ex_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * xi).mean(axis = 0) / n_i[i] for i in range(M)])
 		# matrix[M x xdim]
-		Ex2_i = np.asarray([((np.asarray(Pr_t_i[:, i]) * (xi ** 2)).mean(axis = 0) / n_i[i] for i in range(M)])
+		Ex2_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * (xi ** 2)).mean(axis = 0) / n_i[i] for i in range(M)])
 		# matrix[M x xdim] 
 
 		alpha = lambda p: n_i / (n_i + gamma ** p)
