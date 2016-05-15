@@ -15,7 +15,7 @@ from optparse import OptionParser
 
 import validatica
 
-def classify_GMM(train, test, covariance_type = 'diag', n_components = 1, verbose = False):
+def classify_GMM(train, test, covariance_type = 'diag', n_components = 8, verbose = False):
 	from sklearn.mixture import GMM
 
 	x, y = train

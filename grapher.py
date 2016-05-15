@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 def export(label_prec, title, ofname):
 	plt.figure()
 
-	ydim = len(label_prec.values()[0])
+	ydim = len(label_prec[0][1])
 
 	ax = plt.subplot(1, 1, 1)
 	plt.title(title)
@@ -32,7 +32,7 @@ def export(label_prec, title, ofname):
 	plt.ylabel('Precision@N')
 	plt.axis([1, ydim, 0., 1.])
 
-	for label, prec in label_prec.items():
+	for label, prec in label_prec:
 		ax.plot(range(1, ydim + 1), prec, label = label)
 
 	handles, labels = ax.get_legend_handles_labels()
@@ -48,11 +48,11 @@ def export_by_config():
 	ofname = lines[0].strip()
 	title = lines[1].strip()
 
-	lprec = {}
+	lprec = []
 	for l in lines[2:]:
 		params = l.strip().split(' ')
 		if len(params) == 2:
-			lprec[params[0]] = cPickle.load(open(params[1], 'r'))
+			lprec.append((params[0], cPickle.load(open(params[1], 'r'))))
 		else:
 			break
 	
