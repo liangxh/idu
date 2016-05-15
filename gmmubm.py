@@ -24,9 +24,6 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 	ubm = GMM(n_components = M)
 	ubm.fit(x)
 
-	def alpha(p, i):
-		
-
 	gs = []
 	for i in range(ydim):
 		xi = x[y == i]                  # matrix[T x xdim]
@@ -72,7 +69,6 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-i', '--input', action = 'store', type = 'str', dest = 'key_input')
-	optparser.add_option('-m', '--models', action = 'store', type = 'str', dest = 'keys_model')
 	optparser.add_option('-v', '--verbose', action = 'store_true', dest = 'flag_verbose', default = False)
 
 	opts, args = optparser.parse_args()
