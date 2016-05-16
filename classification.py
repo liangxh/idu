@@ -37,13 +37,25 @@ def classify_SVC(train, test, kernel = 'rbf', verbose = False):
 	from sklearn.svm import SVC
 
 	x, y = train
-	classifier = SVC(probability = True, verbose = verbose)
-	classifier.fit(x, y)
+	clf = SVC(probability = True, verbose = verbose)
+	clf.fit(x, y)
 	
 	x, y = test
-	proba = classifier.predict_proba(x, kernel = kernel)
+	proba = clf.predict_proba(x, kernel = kernel)
 	return proba
 
+def classify_RandomForest(train, test):
+	from sklenar.ensemble import RandomForestClassifier as RFC
+
+	x, y = train
+	clf = RFC()
+	clf.fit(x, y)
+	
+	x, y = test
+	proba = clf.predict_proba(x)
+	
+	return proba
+	
 def tovec(i, y):
 	vec = np.zeros(y)
 	vec[i] = 1.
@@ -56,11 +68,11 @@ def classify_OMP(train, test):
 	ydim = np.unique(y).shape[0]
 	y = [tovec(yi, ydim) for yi in y]
 
-	classifier = OMP()
-	classifier.fit(x, y)
+	clf = OMP()
+	clf.fit(x, y)
 	
 	x, y = test
-	proba = classifier.predict(x)
+	proba = clf.predict(x)
 	return proba
 
 def main():
@@ -102,6 +114,8 @@ def main():
 			proba = classify_SVC(train, test, kernel, opts.flag_verbose)
 		elif key_model.startswith('omp'):
 			proba = classify_OMP(train, test)
+		elif key_model.startswith('rf'):
+			proba = classify_RandomForest(train, test)
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
