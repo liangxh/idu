@@ -121,9 +121,8 @@ def main():
 	fname_test = 'data/dataset/test/%s_test.pkl'%(prefix)
 	cPickle.dump((test_y, proba), open(fname_test, 'w'))
 
-	validatica.report(test_y, proba, 'data/dataset/test/%s'%(prefix))
-
-
+	acc = validatica.report(test_y, proba, 'data/dataset/test/%s'%(prefix))
+	print >> sys.stderr, 'Precision@N: ' + '   '.join(['(%d)%.4f'%(i + 1, acc[i]) for i in range(10)])
 
 if __name__ == '__main__':
 	main()

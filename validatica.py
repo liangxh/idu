@@ -57,6 +57,8 @@ def report(ys, pred_probs, prefix):
 
 	plt.savefig('%s_precision.png'%(prefix))
 
+	return acc
+
 def report_from_file(ifname, prefix):
 	'''
 	demo
