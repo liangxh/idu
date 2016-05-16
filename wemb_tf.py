@@ -60,14 +60,15 @@ def prepare_xvec():
 		for xi in x:
 			vecs.append(embedder.embed(xi))
 
-		return np.asarray(vecs), y
+		return vecs, y
 
 	train = x2vec(train)
 	test = x2vec(test)
 
 	print 'x2vec: %.2f sec'%(time.time() - st)
 
-	cPickle.dump((train, test), open('data/dataset/xvec/bow2000.pkl', 'w'))
+	#cPickle.dump((train, test), open('data/dataset/xvec/bow2000.pkl', 'w'))
+	return train, test
 
 if __name__ == '__main__':
 	#prepare_widx()
