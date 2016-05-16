@@ -12,6 +12,7 @@ import cPickle
 
 import numpy as np
 import theano
+from bowembedder import BowEmbedder
 
 def build(seqs, N):
 	tf = {}
@@ -37,7 +38,7 @@ def build(seqs, N):
 	
 	return Widx
 
-def prepare():
+def prepare_widx():
 	import datica
 	train, valid, test = datica.load_data('data/dataset/unigram/', 90, valid_rate = 0.)
 
@@ -45,5 +46,25 @@ def prepare():
 	Widx = build(x, 2000)
 	cPickle.dump(Widx, open('data/dataset/model/bow2000.pkl', 'w'))
 
+def prepare_xvec():
+	import datica
+	train, valid, test = datica.load_data('data/dataset/unigram/', 90, valid_rate = 0.)
+
+	embedder = BowEmbedder.load('data/dataset/model/bow2000.pkl')
+
+	def x2vec(xy):
+		x, y = xy
+		vecs = []
+		for xi in x:
+			vecs.append(embedder.embed(xi))
+
+		return np.asarray(vecs), y
+
+	train = x2vec(train)
+	test = x2vec(test)
+
+	cPickle.dump((train, test), open('data/dataset/xvec/bow2000.pkl', 'w'))
+
 if __name__ == '__main__':
-	prepare()
+	#prepare_widx()
+	prepare_xvec()
