@@ -87,7 +87,7 @@ def main():
 
 		print >> sys.stderr, ' OK (%.2f sec)'%(time.time() - st)
 
-		cPickle.dump(ubm, open('data/dataset/ubm/db_%s_%d.pkl'%(opts.key_embedder, n), 'w'))
+		cPickle.dump(ubm, open('data/dataset/gmmubm/db_%s_%d.pkl'%(opts.key_embedder, n), 'w'))
 
 if __name__ == '__main__':
 	main()

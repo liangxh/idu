@@ -19,6 +19,8 @@ from sklearn.mixture import GMM
 import validatica
 from utils import progbar
 
+odname = 'data/dataset/gmmubm/'
+
 def build_ubm(x, key_input, n_components):
 	#ifname = 'data/dataset/xvec/%s.pkl'%(key_input)
 	#train, test = cPickle.load(open(ifname, 'r'))
@@ -28,17 +30,16 @@ def build_ubm(x, key_input, n_components):
 	ubm = GMM(n_components = n_components)	
 	ubm.fit(x)
 
-	odname = 'data/dataset/gmmubm/'
 	if not os.path.isdir(odname):
 		os.mkdir(odname)
 
-	ofname = '%s_%d.pkl'%(key_input, n_components)
+	ofname = odname + '%s_%d.pkl'%(key_input, n_components)
 	cPickle.dump(ubm, open(ofname, 'w'))
 
 	return ubm
 
 def load_ubm(key_input, n_components):
-	ofname = '%s_%d.pkl'%(key_input, n_components)
+	ofname = odname + '%s_%d.pkl'%(key_input, n_components)
 
 	if os.path.exists(ofname):
 		return cPickle.load(open(ofname, 'r'))
