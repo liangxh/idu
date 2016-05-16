@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Author: Xihao Liang
-Created: 2016.04.25
+Created: 2016.05.16
 '''
 
 import sys
@@ -12,6 +12,7 @@ import cPickle
 import theano
 import numpy as np
 from optparse import OptionParser
+import time
 
 import zhtokenizer
 from wordembedder import WordEmbedder
@@ -67,16 +68,24 @@ def main():
 	opts, args = optparser.parse_args()
 
 	fname_embedder = 'data/dataset/model/%s_embedder.pkl'
-	embedder = WordEmbedder.loads(fname_embedder)
+	embedder = WordEmbedder.load(fname_embedder)
+
+	print >> sys.stderr, 'ubm_builder: [info] preparing x'
 
 	iterator = DBTextIterator(10)
 	x = []
 	for tokens in iterator:
 		x.append(np.mean(embedder.embed(seq), axis = 0))
 
+
 	for n in [8, 4, 16, 32]:
+		print >> sys.stderr, 'ubm_builder: [info] fitting model for n = %d ...'%(n),
+		st = time.time()
+
 		ubm = GMM(n_components = n)
 		ubm.fit(x)
+
+		print >> sys.stderr, ' OK (%.2f sec)'%(time.time() - st)
 
 		cPickle.dump(ubm, open('data/dataset/ubm/db_%s_%d.pkl'%(opts.key_embedder, n), 'w'))
 
