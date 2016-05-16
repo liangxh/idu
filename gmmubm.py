@@ -67,9 +67,9 @@ def classify(train, test, ubm, gamma = 1., r = 16.,  w = 1., m = 1., v = 1., n_c
 		Pr_t_i = Pr_t_i / np.asmatrix(Pr_t_i.sum(axis = 1)).T    # matrix[T x M]
 
 		n_i = np.asarray(Pr_t_i.sum(axis = 0)).flatten()      # matrix[M, ]
-		Ex_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * xi).mean(axis = 0) / n_i[i] for i in range(M)])
+		Ex_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * xi).sum(axis = 0) / n_i[i] for i in range(M)])
 		# matrix[M x xdim]
-		Ex2_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * (xi ** 2)).mean(axis = 0) / n_i[i] for i in range(M)])
+		Ex2_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * (xi ** 2)).sum(axis = 0) / n_i[i] for i in range(M)])
 		# matrix[M x xdim] 
 
 		alpha = lambda p: n_i / (n_i + r ** p)
@@ -111,7 +111,7 @@ def main():
 	optparser.add_option('-w', '--value_w', action = 'store', type = 'float', dest = 'value_w', default = 1.)
 	optparser.add_option('-m', '--value_m', action = 'store', type = 'float', dest = 'value_m', default = 1.)
 	optparser.add_option('-v', '--value_v', action = 'store', type = 'float', dest = 'value_v', default = 1.)
-	optparser.add_option('-r', '--value_r', action = 'store', type = 'float', dest = 'value_r', default = 16.)
+	optparser.add_option('-r', '--value_r', action = 'store', type = 'float', dest = 'value_r', default = 8.)
 	optparser.add_option('-n', '--n_components', action = 'store', type = 'int', dest = 'n_components', default = 8)
 
 	opts, args = optparser.parse_args()
