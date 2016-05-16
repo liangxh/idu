@@ -67,7 +67,7 @@ def main():
 	optparser.add_option('-e', '--key_embedder', action='store', type = 'str', dest='key_embedder')
 	opts, args = optparser.parse_args()
 
-	fname_embedder = 'data/dataset/model/%s_embedder.pkl'
+	fname_embedder = 'data/dataset/model/%s_embedder.pkl'%(opts.key_embedder)
 	embedder = WordEmbedder.load(fname_embedder)
 
 	print >> sys.stderr, 'ubm_builder: [info] preparing x'
