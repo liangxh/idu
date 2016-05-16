@@ -9,9 +9,10 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 import cPickle
-
-import numpy as np
+import time
 import theano
+import numpy as np
+
 from bowembedder import BowEmbedder
 
 def build(seqs, N):
@@ -52,6 +53,7 @@ def prepare_xvec():
 
 	embedder = BowEmbedder.load('data/dataset/model/bow2000.pkl')
 
+	st = time.time()
 	def x2vec(xy):
 		x, y = xy
 		vecs = []
@@ -62,6 +64,8 @@ def prepare_xvec():
 
 	train = x2vec(train)
 	test = x2vec(test)
+
+	print 'x2vec: %.2f sec'%(time.time() - st)
 
 	cPickle.dump((train, test), open('data/dataset/xvec/bow2000.pkl', 'w'))
 
