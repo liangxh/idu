@@ -45,7 +45,7 @@ def classify_SVC(train, test, kernel = 'rbf', verbose = False):
 	return proba
 
 def classify_RandomForest(train, test):
-	from sklenar.ensemble import RandomForestClassifier as RFC
+	from sklearn.ensemble import RandomForestClassifier as RFC
 
 	x, y = train
 	clf = RFC()
@@ -122,7 +122,8 @@ def main():
 		fname_test = 'data/dataset/test/%s_test.pkl'%(prefix)
 		cPickle.dump((test_y, proba), open(fname_test, 'w'))
 
-		validatica.report(test_y, proba, 'data/dataset/test/%s'%(prefix))
+		acc = validatica.report(test_y, proba, 'data/dataset/test/%s'%(prefix))
+		print >> sys.stderr, '%s-%s Precision@N: '%(opts.key_input, key_model) + '   '.join(['(%d)%.4f'%(i + 1, acc[i]) for i in range(10)])
 
 if __name__ == '__main__':
 	main()
