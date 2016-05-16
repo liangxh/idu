@@ -75,6 +75,8 @@ def main():
 	iterator = DBTextIterator(50000000)
 	x = []
 	for seq in iterator:
+		if len(seq) == 0:
+			continue
 		x.append(np.mean(embedder.embed(seq), axis = 0))
 
 
