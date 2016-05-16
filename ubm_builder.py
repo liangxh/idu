@@ -72,7 +72,7 @@ def main():
 
 	print >> sys.stderr, 'ubm_builder: [info] preparing x'
 
-	iterator = DBTextIterator(10)
+	iterator = DBTextIterator(50000000)
 	x = []
 	for seq in iterator:
 		x.append(np.mean(embedder.embed(seq), axis = 0))
