@@ -18,7 +18,7 @@ from sklearn.mixture import GMM
 import validatica
 from utils import progbar
 
-def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
+def classify(train, test, gamma = 1., r = 16.,  w = 1., m = 1., v = 1., n_components = 8):
 	x, y = train
 	ydim = np.unique(y).shape[0]
 
@@ -51,7 +51,7 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 		Ex2_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * (xi ** 2)).mean(axis = 0) / n_i[i] for i in range(M)])
 		# matrix[M x xdim] 
 
-		alpha = lambda p: n_i / (n_i + gamma ** p)
+		alpha = lambda p: n_i / (n_i + r ** p)
 		alpha_w = alpha(w)
 		alpha_m = alpha(m)
 		alpha_v = alpha(v)		
@@ -86,7 +86,12 @@ def classify(train, test, gamma = 1, w = 0, m = 0, v = 0, n_components = 8):
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-i', '--input', action = 'store', type = 'str', dest = 'key_input')
-	optparser.add_option('-v', '--verbose', action = 'store_true', dest = 'flag_verbose', default = False)
+	optparser.add_option('-g', '--value_gamma', action = 'store', type = 'float', dest = 'value_gamma', default = 1.)
+	optparser.add_option('-w', '--value_w', action = 'store', type = 'float', dest = 'value_w', default = 1.)
+	optparser.add_option('-m', '--value_m', action = 'store', type = 'float', dest = 'value_m', default = 1.)
+	optparser.add_option('-v', '--value_v', action = 'store', type = 'float', dest = 'value_v', default = 1.)
+	optparser.add_option('-r', '--value_r', action = 'store', type = 'float', dest = 'value_r', default = 16.)
+	optparser.add_option('-n', '--n_components', action = 'store', type = 'int', dest = 'n_components', default = 8)
 
 	opts, args = optparser.parse_args()
 
@@ -102,7 +107,14 @@ def main():
 	test = (np.asarray(x), np.asarray(y))
 
 	test_y = test[1]
-	proba = classify(train, test)
+	proba = classify(train, test,
+			gamma = opts.value_gamma, 
+			r = opts.value_r,
+			w = opts.value_w,
+			m = opts.value_m,
+			v = opts.value_v,
+			n_components = opts.n_components,
+		)
 
 	prefix = '%s_%s'%(opts.key_input, key_model)
 	
