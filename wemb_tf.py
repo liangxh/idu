@@ -39,7 +39,7 @@ def build(seqs, N):
 
 def prepare():
 	import datica
-	train, valid, test = datica.load_unigram(90, valid_rate = 0.)
+	train, valid, test = datica.load_data('data/dataset/unigram/', 90, valid_rate = 0.)
 
 	x, y = train
 	Widx = build(x, 2000)
