@@ -47,7 +47,7 @@ class BowEmbedder:
 		load a trained class/model
 		'''
 		Widx = cPickle.load(open(fname, 'r'))
-		return BowEmbedder(Widx, Wemb)
+		return BowEmbedder(Widx)
 
 if __name__ == '__main__':
 	pass
