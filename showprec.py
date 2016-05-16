@@ -19,7 +19,7 @@ def main():
 	opts, args = optparser.parse_args()
 
 	prec = cPickle.load(open('data/dataset/test/%s_prec.pkl'%(opts.input), 'r'))
-	print '  '.join(['(%d)%.4f'%(i + 1, p[i]) for i in range(opts.topN)])
+	print '  '.join(['(%d)%.4f'%(i + 1, prec[i]) for i in range(opts.topN)])
 
 if __name__ == '__main__':
 	main()
