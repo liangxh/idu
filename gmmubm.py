@@ -5,6 +5,7 @@ Author: Xihao Liang
 Created: 2016.05.15
 '''
 
+import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -18,17 +19,37 @@ from sklearn.mixture import GMM
 import validatica
 from utils import progbar
 
-def classify(train, test, gamma = 1., r = 16.,  w = 1., m = 1., v = 1., n_components = 8):
+def build_ubm(x, key_input, n_components):
+	#ifname = 'data/dataset/xvec/%s.pkl'%(key_input)
+	#train, test = cPickle.load(open(ifname, 'r'))
+
+	#x, y = train
+	#x = np.asarray(x)
+	ubm = GMM(n_components = n_components)	
+	ubm.fit(x)
+
+	odname = 'data/dataset/gmmubm/'
+	if not os.path.isdir(odname):
+		os.mkdir(odname)
+
+	ofname = '%s_%d.pkl'%(key_input, n_components)
+	cPickle.dump(ubm, open(ofname, 'w'))
+
+	return ubm
+
+def load_ubm(key_input, n_components)
+	ofname = '%s_%d.pkl'%(key_input, n_components)
+
+	if os.path.exists(ofname):
+		return cPickle.load(open(ofname, 'r'))
+	else:
+		return None
+
+def classify(train, test, ubm, gamma = 1., r = 16.,  w = 1., m = 1., v = 1., n_components = 8):
 	x, y = train
 	ydim = np.unique(y).shape[0]
 
 	M = n_components
-
-	print >> sys.stderr, 'classify: [info] training ubm ...',
-	st = time.time()
-	ubm = GMM(n_components = M)
-	ubm.fit(x)
-	print >> sys.stderr, ' OK (%.2f)'%(time.time() - st)
 
 	gs = []
 
@@ -106,8 +127,13 @@ def main():
 	x, y = test 
 	test = (np.asarray(x), np.asarray(y))
 
+	ubm = load_ubm(opts.key_input, opts.n_components)
+	if ubm is None:
+		ubm = build_ubm(train[0], opts.key_input, opts.n_components)
+
 	test_y = test[1]
 	proba = classify(train, test,
+			ubm = ubm,
 			gamma = opts.value_gamma, 
 			r = opts.value_r,
 			w = opts.value_w,
