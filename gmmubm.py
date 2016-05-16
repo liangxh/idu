@@ -37,7 +37,7 @@ def build_ubm(x, key_input, n_components):
 
 	return ubm
 
-def load_ubm(key_input, n_components)
+def load_ubm(key_input, n_components):
 	ofname = '%s_%d.pkl'%(key_input, n_components)
 
 	if os.path.exists(ofname):
