@@ -9,10 +9,10 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 import cPickle
-import theano
 import numpy as np
 from optparse import OptionParser
 import time
+from sklearn.mixture import GMM
 
 import zhtokenizer
 from wordembedder import WordEmbedder
