@@ -30,7 +30,7 @@ class BowEmbedder:
 				vec[self.Widx[t]] += 1.
 
 		vec_sum = vec.sum()
-		if not vec_sum == 0.
+		if not vec_sum == 0.:
 			vec /= vec_sum
 
 		return vec
