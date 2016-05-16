@@ -53,7 +53,17 @@ def classify_RandomForest(train, test):
 	
 	x, y = test
 	proba = clf.predict_proba(x)
+	return proba
+
+def classify_AdaBoost(train, test):
+	from sklearn.ensemble import AdaBoostClassifier as ABC
+
+	x, y = train
+	clf = ABC()
+	clf.fit(x, y)
 	
+	x, y = test
+	proba = clf.predict_proba(x)
 	return proba
 	
 def tovec(i, y):
@@ -116,6 +126,11 @@ def main():
 			proba = classify_OMP(train, test)
 		elif key_model.startswith('rf'):
 			proba = classify_RandomForest(train, test)
+		elif key_model.startswith('ada'):
+			proba = classify_AdaBoost(train, test)
+		else:
+			print >> sys.stderr, '[warning] model #%s not supported'%(key_model)
+			continue
 
 		prefix = '%s_%s'%(opts.key_input, key_model)
 
