@@ -27,6 +27,7 @@ def main():
 	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
 	optparser.add_option('-k', '--value_k', dest='value_k', type='float', action = 'store', default = 1.)
 	optparser.add_option('-u', '--unigram', action='store_true', dest='unigram', default = False)
+	optparser.add_option('-d', '--deduplicate', dest='flag_deduplicate', action = 'store_true', default = False)
 
 	# debug
 	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
@@ -51,7 +52,7 @@ def main():
 	train, test = dataset
 
 	classifier = NaiveBayesClassifier()
-	classifier.train(train[0], train[1], opts.value_k)
+	classifier.train(train[0], train[1], opts.value_k, opts.flag_deduplicate)
 	preds = [classifier.classify(x) for x in test[0]]
 
 	fname_test = 'data/dataset/test/%s_test.pkl'%(opts.prefix)
