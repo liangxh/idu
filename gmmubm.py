@@ -42,6 +42,7 @@ def load_ubm(key_input, n_components):
 	ofname = odname + '%s_%d.pkl'%(key_input, n_components)
 
 	if os.path.exists(ofname):
+		print >> sys.stderr, 'load_ubm: [info] ubm at %s found'%(ofname)
 		return cPickle.load(open(ofname, 'r'))
 	else:
 		return None
@@ -108,6 +109,7 @@ def classify(train, test, ubm, gamma = 1., r = 16.,  w = 1., m = 1., v = 1., n_c
 def main():
 	optparser = OptionParser()
 	optparser.add_option('-i', '--input', action = 'store', type = 'str', dest = 'key_input')
+	optparser.add_option('-d', '--db', action = 'store_true', dest = 'flag_db', default = False)
 	optparser.add_option('-g', '--value_gamma', action = 'store', type = 'float', dest = 'value_gamma', default = 1.)
 	optparser.add_option('-w', '--value_w', action = 'store', type = 'float', dest = 'value_w', default = 1.)
 	optparser.add_option('-m', '--value_m', action = 'store', type = 'float', dest = 'value_m', default = 1.)
@@ -132,7 +134,9 @@ def main():
 	x, y = test 
 	test = (np.asarray(x), np.asarray(y))
 
-	ubm = load_ubm(opts.key_input, opts.n_components)
+
+	key_ubm = 'db_' if opts.flag_db else '' + opts.key_input
+	ubm = load_ubm(key_ubm, opts.n_components)
 	if ubm is None:
 		ubm = build_ubm(train[0], opts.key_input, opts.n_components)
 
