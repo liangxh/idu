@@ -45,6 +45,7 @@ def load_ubm(key_input, n_components):
 		print >> sys.stderr, 'load_ubm: [info] ubm at %s found'%(ofname)
 		return cPickle.load(open(ofname, 'r'))
 	else:
+		print >> sys.stderr, 'load_ubm: [info] ubm expected at %s not found'%(ofname)
 		return None
 
 def classify(train, test, ubm, gamma = 1., r = 16.,  w = 1., m = 1., v = 1., n_components = 8):
@@ -129,7 +130,7 @@ def main():
 		train, test = cPickle.load(open(ifname, 'r'))
 
 
-	key_input = 'db_' if opts.flag_db else '' + opts.key_input
+	key_input = ('db_' if opts.flag_db else '') + opts.key_input
 
 	x, y = train
 	train = (np.asarray(x), np.asarray(y))
