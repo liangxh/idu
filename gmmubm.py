@@ -151,7 +151,7 @@ def main():
 			n_components = opts.n_components,
 		)
 
-	prefix = '%s_%s'%(opts.key_input, key_model)
+	prefix = 'db_' if opts.flag_db else '' + '%s_%s'%(opts.key_input, key_model)
 	
 	fname_test = 'data/dataset/test/%s_test.pkl'%(prefix)
 	cPickle.dump((test_y, proba), open(fname_test, 'w'))
