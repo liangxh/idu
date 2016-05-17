@@ -128,6 +128,9 @@ def main():
 		ifname = 'data/dataset/xvec/%s.pkl'%(opts.key_input)
 		train, test = cPickle.load(open(ifname, 'r'))
 
+
+	key_input = 'db_' if opts.flag_db else '' + opts.key_input
+
 	x, y = train
 	train = (np.asarray(x), np.asarray(y))
 	
@@ -135,10 +138,9 @@ def main():
 	test = (np.asarray(x), np.asarray(y))
 
 
-	key_ubm = 'db_' if opts.flag_db else '' + opts.key_input
-	ubm = load_ubm(key_ubm, opts.n_components)
+	ubm = load_ubm(key_input, opts.n_components)
 	if ubm is None:
-		ubm = build_ubm(train[0], opts.key_input, opts.n_components)
+		ubm = build_ubm(train[0], key_input, opts.n_components)
 
 	test_y = test[1]
 	proba = classify(train, test,
@@ -151,7 +153,7 @@ def main():
 			n_components = opts.n_components,
 		)
 
-	prefix = 'db_' if opts.flag_db else '' + '%s_%s'%(opts.key_input, key_model)
+	prefix = '%s_%s'%(key_input, key_model)
 	
 	fname_test = 'data/dataset/test/%s_test.pkl'%(prefix)
 	cPickle.dump((test_y, proba), open(fname_test, 'w'))
