@@ -93,8 +93,13 @@ def main():
 
 	opts, args = optparser.parse_args()
 
-	ifname = 'data/dataset/xvec/%s.pkl'%(opts.key_input)
-	train, test = cPickle.load(open(ifname, 'r'))
+
+	if opts.key_input.startswith('bow'):
+		from wemb_tf import prepare_xvec
+		train, test = prepare_xvec()
+	else:
+		ifname = 'data/dataset/xvec/%s.pkl'%(opts.key_input)
+		train, test = cPickle.load(open(ifname, 'r'))
 
 	x, y = train
 	train = (np.asarray(x), np.asarray(y))
