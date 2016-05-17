@@ -70,6 +70,8 @@ def classify(train, test, ubm, gamma = 1., r = 16.,  w = 1., m = 1., v = 1., n_c
 		Pr_t_i = Pr_t_i / np.asmatrix(Pr_t_i.sum(axis = 1)).T    # matrix[T x M]
 
 		n_i = np.asarray(Pr_t_i.sum(axis = 0)).flatten()      # matrix[M, ]
+		print n_i
+
 		Ex_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * xi).sum(axis = 0) / n_i[i] for i in range(M)])
 		# matrix[M x xdim]
 		Ex2_i = np.asarray([(np.asarray(Pr_t_i[:, i]) * (xi ** 2)).sum(axis = 0) / n_i[i] for i in range(M)])
