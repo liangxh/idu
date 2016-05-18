@@ -97,6 +97,9 @@ def main():
 	if opts.key_input.startswith('bow'):
 		from wemb_tf import prepare_xvec
 		train, test = prepare_xvec()
+	elif opts.key_input.startswith('tfidf'):
+		from wemb_tfidf import prepare_xvec
+		train, test = prepare_xvec()
 	else:
 		ifname = 'data/dataset/xvec/%s.pkl'%(opts.key_input)
 		train, test = cPickle.load(open(ifname, 'r'))
