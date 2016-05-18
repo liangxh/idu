@@ -31,7 +31,8 @@ class TfIdfEmbedder:
 				vec[self.Widx[t]] += 1.
 
 		for t in set(seq):
-			vec[self.Widx[t]] *= self.Widf[t]
+			if self.Widf.has_key(t):
+				vec[self.Widx[t]] *= self.Widf[t]
 
 		vec_sum = np.sqrt(np.sum(vec ** 2))
 		if not vec_sum == 0.:
