@@ -71,7 +71,7 @@ def prepare_xvec():
 	import datica
 	train, valid, test = datica.load_data('data/dataset/unigram/', 90, valid_rate = 0.)
 
-	embedder = BowEmbedder.load('data/dataset/model/bow2000.pkl')
+	embedder = TfIdfEmbedder.load('data/dataset/model/tfidf2000_embedder.pkl')
 
 	st = time.time()
 	def x2vec(xy):
