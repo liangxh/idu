@@ -14,10 +14,14 @@ import theano
 import numpy as np
 
 from tfidfembedder import TfIdfEmbedder
+from utils import progbar
 
 def build(seqs, N):
 	tf = {}
-	idf = {}
+	df = {}
+
+	pbar = progbar.start(len(seqs))
+	l = 0
 
 	for seq in seqs:
 		for t in seq:
@@ -27,16 +31,19 @@ def build(seqs, N):
 				tf[t] = 1.
 		
 		for t in set(seq):
-			if idf.has_key(t):
-				idf[t] += 1
+			if df.has_key(t):
+				df[t] += 1
 			else:
-				idf[t] = 1
+				df[t] = 1
+			
+		l += 1
+		pbar.update(l)
+
+	pbar.finish()
 
 	tf = sorted(tf.items(), key = lambda k: -k[1])
 
 	n_seq = len(seqs)
-	for t in idf.keys():
-		idf[t] = np.log((1. + n_seq) / idf[t])
 	
 	nums = set('0123456789')
 	Widx = {}
@@ -44,7 +51,7 @@ def build(seqs, N):
 	idx = 0
 	for t, f in tf:
 		if not t in nums:
-			Widf[t] = idf[t]
+			Widf[t] = np.log((1. + n_seq) / df[t])
 			Widx[t]	= idx	
 			idx += 1
 			if idx == N:
