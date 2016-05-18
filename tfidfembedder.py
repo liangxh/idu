@@ -51,7 +51,7 @@ class TfIdfEmbedder:
 		load a trained class/model
 		'''
 		Widx, Widf = cPickle.load(open(fname, 'r'))
-		return TfIdfEmbedder(Widx)
+		return TfIdfEmbedder(Widx, Widf)
 
 if __name__ == '__main__':
 	pass
