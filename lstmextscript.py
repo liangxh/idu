@@ -33,6 +33,7 @@ class LstmExtScript:
 
 		# necessary
 		parser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
+		parser.add_option('-o', '--dir_output', action='store', type = 'str', dest='dir_output', default = None)
 		parser.add_option('-x', '--dname_x', action='store', type = 'str', dest='dname_x')
 		parser.add_option('-s', '--dname_xsup', action='store', type = 'str', dest='dname_xsup', default = None)		
 
@@ -55,12 +56,12 @@ class LstmExtScript:
 		'''
 		self.optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj') # , default = 128
 
-	def init_folder(self):
+	def init_folder(self, dnames):
 		'''
 		mkdir if the necessary folders do not exist
 		'''
 
-		for dname in [DIR_EXTMODEL, DIR_EXTTEST]:
+		for dname in dnames:
 			if not os.path.isdir(dname):
 				os.mkdir(dname)
 
@@ -116,9 +117,17 @@ class LstmExtScript:
 		dim_proj = opts.dim_proj
 
 		prefix = opts.prefix
-		fname_test = DIR_EXTTEST + '%s_test.pkl'%(prefix)
-		fname_model = DIR_EXTMODEL + '%s_model.npz'%(prefix)
-		fname_embedder = DIR_EXTMODEL + '%s_embedder.pkl'%(prefix)
+	
+		if opts.dir_output is None:
+			dir_test = DIR_EXTTEST
+			dir_model = DIR_EXTMODEL
+		else:
+			dir_test = opts.dir_output + 'test/'
+			dir_model = opts.dir_output + 'model/'
+
+		fname_test = dir_test + '%s_test.pkl'%(prefix)
+		fname_model = dir_model + '%s_model.npz'%(prefix)
+		fname_embedder = dir_model + '%s_embedder.pkl'%(prefix)
 
 		print >> sys.stderr, 'Done'
 
@@ -130,7 +139,7 @@ class LstmExtScript:
 		print >> sys.stderr, 'Done'
 
 		#################### Preparation for Output ############
-		self.init_folder()
+		self.init_folder([dir_test, dir_model])
 
 		print >> sys.stderr, 'lstmextscript.run: [info] initialization of embedder'
 		embedder = self.init_embedder(dataset, fname_embedder)
@@ -178,7 +187,7 @@ class LstmExtScript:
 		cPickle.dump((test_y, preds_prob), open(fname_test, 'w'))
 
 		###################### Report ############################
-		validatica.report(test_y, preds_prob, DIR_EXTTEST + prefix)
+		validatica.report(test_y, preds_prob, dir_test + prefix)
 
 def main():
 	script = LstmExtScript()
