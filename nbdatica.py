@@ -11,6 +11,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import cPickle
 import numpy as np
+from optparse import OptionParser
 
 import datica
 from naivebayes import NaiveBayesClassifier
