@@ -55,6 +55,17 @@ def classify_RandomForest(train, test):
 	proba = clf.predict_proba(x)
 	return proba
 
+def classify_DecisionTree(train, test):
+	from sklearn.tree import DecisionTreeClassifier as DTC
+
+	x, y = train
+	clf = DTC()
+	clf.fit(x, y)
+
+	x, y = test
+	proba = clf.predict_proba(x)
+	return proba
+	
 def classify_AdaBoost(train, test):
 	from sklearn.ensemble import AdaBoostClassifier as ABC
 
@@ -136,6 +147,8 @@ def main():
 			proba = classify_RandomForest(train, test)
 		elif key_model.startswith('ada'):
 			proba = classify_AdaBoost(train, test)
+		elif key_model.startswith('dt'):
+			proba = classify_DecisionTree(train, test)
 		else:
 			print >> sys.stderr, '[warning] model #%s not supported'%(key_model)
 			continue
