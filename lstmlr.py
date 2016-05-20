@@ -18,12 +18,8 @@ from optparse import OptionParser
 import numpy as np
 import theano
 import theano.tensor as T
-from theano import config.floatX as floatX
+floatX = theano.config.floatX
 from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
-
-from utils.logger import Logger
-logger = Logger()
-
 
 # Set the random number generators' seeds for consistency
 SEED = 123 
@@ -33,20 +29,17 @@ np.random.seed(SEED)
 def np_floatX(data):
 	return np.asarray(data, dtype = floatX)
 
-def _p(pp, name):
-	return '%s_%s' % (pp, name)
-
 ###################### Zip and Unzip #################################
 def zipp(params, tparams):
 	'''
-	When we reload the model. Needed for the GPU stuff.
+	set values for tparams using params
 	'''
 	for kk, vv in params.iteritems():
 		tparams[kk].set_value(vv)
 
 def unzip(zipped):
 	'''
-	When we pickle the model. Needed for the GPU stuff.
+	get value from tparams to an OrderedDict for saving
 	'''
 	new_params = OrderedDict()
 	for kk, vv in zipped.iteritems():
@@ -91,6 +84,9 @@ def init_tparams(params):
 	return tparams
 
 def ortho_weight(ndim):
+	'''
+	initialization of a matrix [ndim x ndim]
+	'''
 	W = np.random.randn(ndim, ndim)
 	u, s, v = np.linalg.svd(W)
 	return u.astype(floatX)
@@ -108,25 +104,6 @@ def dropout_layer(state_before, use_noise, trng):
 		)
 	return proj
 
-def pred_error(f_pred, prepare_data, data, iterator, verbose=False):
-	'''
-	Just compute the error
-	'''
-	valid_err = 0
-	for _, valid_index in iterator:
-		x, mask, y = prepare_data(
-					[data[0][t] for t in valid_index],
-					np.array(data[1])[valid_index],
-					maxlen = None
-				)
-		preds = f_pred(x, mask)
-		targets = np.array(data[1])[valid_index]
-		valid_err += (preds == targets).sum()
-
-	valid_err = 1. - np_floatX(valid_err) / len(data[0])
-
-	return valid_err
-
 class LstmLrClassifier:
 	def __init__(self):
 		pass
@@ -140,7 +117,7 @@ class LstmLrClassifier:
 
 		# Embedding and LSTM
 	   	params['Wemb'] = Wemb
-		params = init_params_lstm(options, params, prefix = 'lstm')
+		params = self.init_params_lstm(options, params, prefix = 'lstm')
 		
 		# logistic Regression
 		params['U'] = 0.01 * np.random.randn(options['dim_proj'], options['ydim']).astype(floatX)
@@ -152,13 +129,13 @@ class LstmLrClassifier:
 		N = 4 # input/output/cell/forget gate
 
 		W = np.concatenate([ortho_weight(options['dim_proj']) for i in range(N)], axis=1)
-		params[_p(prefix, 'W')] = W
+		params['%s_W'%(prefix)] = W
 
 		U = np.concatenate([ortho_weight(options['dim_proj']) for i in range(N)], axis=1)
-		params[_p(prefix, 'U')] = U
+		params['%s_U'%(prefix)] = U
 
 		b = np.zeros((N * options['dim_proj'],))
-		params[_p(prefix, 'b')] = b.astype(floatX)
+		params['%s_b'%(prefix)] = b.astype(floatX)
 
 		return params
 
@@ -177,7 +154,7 @@ class LstmLrClassifier:
 			return _x[:, n * dim:(n + 1) * dim]
 
 		def _step(m_, x_, h_, c_):
-			preact = T.dot(h_, tparams[_p(prefix, 'U')])
+			preact = T.dot(h_, tparams['%s_U'%(prefix)])
 			preact += x_
 
 			i = T.nnet.sigmoid(_slice(preact, 0, options['dim_proj']))
@@ -193,8 +170,7 @@ class LstmLrClassifier:
 
 			return h, c
 
-		state_below = (T.dot(state_below, tparams[_p(prefix, 'W')]) +
-					   tparams[_p(prefix, 'b')])
+		state_below = (T.dot(state_below, tparams['%s_W'%(prefix)]) + tparams['%s_b'%(prefix)])
 
 		dim_proj = options['dim_proj']
 		rval, updates = theano.scan(
@@ -204,11 +180,10 @@ class LstmLrClassifier:
 						T.alloc(np_floatX(0.), n_samples, dim_proj),
 						T.alloc(np_floatX(0.), n_samples, dim_proj)
 						],
-					name=_p(prefix, '_layers'),
+					name = '%s_layers'%(prefix),
 					n_steps = nsteps
 				)
 		return rval[0]
-
 
 	def build_model(self, tparams, options):
 		trng = RandomStreams(SEED)
@@ -238,11 +213,11 @@ class LstmLrClassifier:
 		proj = self.lstm_layer(tparams, emb, options, prefix = 'lstm', mask = mask)
 
 		# mean pooling, a matrix of shape (n_samples, dim_proj)
-		if options['encoder'] == 'lstm':
-			proj = (proj * mask[:, :, None]).sum(axis=0)
-			proj = proj / mask.sum(axis=0)[:, None]
+		proj = (proj * mask[:, :, None]).sum(axis=0)
+		proj = proj / mask.sum(axis=0)[:, None]
 
 		# add a dropout layer after mean pooling
+
 		if options['use_dropout']:
 			proj = dropout_layer(proj, use_noise, trng)
 
@@ -257,9 +232,10 @@ class LstmLrClassifier:
 
 		cost = -T.log(pred[T.arange(n_samples), y] + off).mean()
 
+
 		return use_noise, x, mask, y, f_pred_prob, f_pred, cost
 
-	def adadelta(lr, tparams, grads, x, mask, y, cost):
+	def adadelta(self, lr, tparams, grads, x, mask, y, cost):
 		'''
 		An adaptive learning rate optimizer
 		'''
@@ -295,17 +271,9 @@ class LstmLrClassifier:
 
 		return f_grad_shared, f_update
 
-
 	########################## Classification ###################################
-	def load(self, 
-		fname_model,
-		encoder = 'lstm',
-	
-		#ydim, n_words,
-		#dim_proj = 128,
-		#use_dropout = True,	
-	):
 
+	def load(self, fname_model):
 		model_options = locals().copy()
 
 		train_params = cPickle.load(open('%s.pkl'%(fname_model), 'r')) # why -1??
@@ -320,36 +288,55 @@ class LstmLrClassifier:
 		self.f_pred = f_pred
 		self.f_pred_prob = f_pred_prob
 
-	def classify_batch(self, seqs):
-		x, x_mask = self.prepare_x(seqs)
-		#ps = self.f_pred(x, x_mask)
-		pds = self.f_pred_prob(x, x_mask)
+	def predict_proba(self, seqs, batch_size = 64):
 
-		return pds
+		def _predict(seqs):
+			x, x_mask = self.prepare_x(seqs)
+			proba = self.f_pred_prob(x, x_mask)
+			
+			return proba
 
-	def classify(self, seqs, batch_size = 64):
 		if not isinstance(seqs[0], list):
 			seqs = [seqs, ]
-			pred_probs = self.classify_batch(seqs)
+			pred_probs = _predict(seqs)
 
-			logger.warning('not examined yet, please check')
+			print >> sys.stderr, 'predict_proba: [warning] not examined yet, please check'
 			return pred_probs[0]
+
+		elif batch_size is None:
+			proba = _predict(seqs)
+			return proba
 		else:
 			kf = get_minibatches_idx(len(seqs), batch_size)
-		
-			#preds = []
-			pred_probs = []
+			proba = []
 
 			for _, idx in kf:
-				pds = self.classify_batch([seqs[i] for i in idx])
-				#preds.extend(ps)
-				pred_probs.extend(pds)
+				proba.extend(_predict(np.asarray([seqs[i] for i in idx])))
+			
+			proba = np.asarray(proba)
+			return proba
 
-			return pred_probs
+	def pred_error(self, data, iterator = None):
+		data_x = data[0]
+		data_y = np.array(data[1])
+		valid_err = 0
+
+		if iterator is None:
+			iterator = get_minibatches_idx(len(data[0]), 32)
+
+		for _, valid_index in iterator:
+			x, mask = self.prepare_x([data_x[t] for t in valid_index])
+			y = data_y[valid_index]
+
+			preds = self.f_pred(x, mask)
+			valid_err += (preds == y).sum()
+			
+		valid_err = 1. - np_floatX(valid_err) / len(data[0])
+
+		return valid_err
 
 	######################## Training ##########################################
 
-	@classmethod
 	def prepare_x(self, seqs):
 		'''
 		create two 2D-Arrays (seqs and mask)
@@ -367,11 +354,6 @@ class LstmLrClassifier:
 			x_mask[:lengths[idx], idx] = 1.
 		
 		return x, x_mask
-
-	@classmethod
-	def prepare_data(self, seqs, labels, maxlen = None):
-		x, x_mask = self.prepare_x(seqs)
-		return x, x_mask, labels
 	
 	def train(self,
 		dataset, Wemb, ydim,
@@ -390,23 +372,22 @@ class LstmLrClassifier:
 		lrate = 0.0001,
 		batch_size = 16,
 		valid_batch_size = 64,
-		optimizer = self.adadelta,
 		noise_std = 0., 
 
 		# debug params
-		dispFreq = 10,
-	):
+		dispFreq = 100,
+	):		
+		optimizer = self.adadelta
 		train, valid, test = dataset
 
 		# building model
-		logger.info('building model...')
+		print >> sys.stderr, 'train: [info] building model...'
 
 		dim_proj = Wemb.shape[1] # np.ndarray expected
 
 		model_options = locals().copy()
 		model_options['dim_proj'] = dim_proj
-		#model_options['encoder'] = 'lstm'
-
+		
 		model_config = {
 			'ydim':ydim,
 			'dim_proj':dim_proj,
@@ -421,17 +402,20 @@ class LstmLrClassifier:
 			if os.path.exists(fname_model):
 				load_params(fname_model, params)
 			else:
-				logger.warning('model %s not found'%(fname_model))
+				print >> sys.stderr, 'train: [warning] model %s not found'%(fname_model)
 				return None
 		elif Wemb is None:
-			logger.warning('Wemb is missing for training LSTM')
+			print >> sys.stderr, 'train: [warning] Wemb is missing for training LSTM'
 			return None
 		
 		tparams = init_tparams(params)
+		
 		use_noise, x, mask, y, f_pred_prob, f_pred, cost = self.build_model(tparams, model_options)
+		self.f_pred_prob = f_pred_prob
+		self.f_pred = f_pred
 
 		# preparing functions for training
-		logger.info('preparing functions')
+		print >> sys.stderr, 'train: [info] preparing functions'
 
 		if decay_c > 0.:
 			decay_c = theano.shared(np_floatX(decay_c), name='decay_c')
@@ -451,10 +435,10 @@ class LstmLrClassifier:
 		kf_valid = get_minibatches_idx(len(valid[0]), valid_batch_size)
 		kf_test = get_minibatches_idx(len(test[0]), valid_batch_size)
 
-		if validFreq == None:
+		if validFreq is None:
 			validFreq = len(train[0]) / batch_size
 		
-		if saveFreq == None:
+		if saveFreq is None:
 			saveFreq = len(train[0]) / batch_size
 		
 		history_errs = []
@@ -465,7 +449,7 @@ class LstmLrClassifier:
 		estop = False  # early stop
 
 		# training
-		logger.info('start training...')
+		print >> sys.stderr, 'train: [info] start training...'
 
 		start_time = time.time()
 
@@ -492,20 +476,20 @@ class LstmLrClassifier:
 						'''
 						NaN of Inf encountered
 						'''
-						logger.warning('NaN detected')
+						print >> sys.stderr, 'train: [warning] NaN detected'
 						return 1., 1., 1.
 					
 					if np.mod(uidx, dispFreq) == 0:
 						'''
 						display progress at $dispFreq
 						'''
-						logger.info('Epoch %d Update %d Cost %f'%(eidx, uidx, cost))
+						print >> sys.stderr, 'train: [info] Epoch %d Update %d Cost %f'%(eidx, uidx, cost)
 
 					if np.mod(uidx, saveFreq) == 0:
 						'''
 						save new model to file at $saveFreq
 						'''
-						logger.info('Model update')
+						print >> sys.stderr, 'train: [info] Model update'
 						
 						if best_p is not None:
 							params = best_p
@@ -520,35 +504,35 @@ class LstmLrClassifier:
 						'''
 						use_noise.set_value(0.)
 						
-						logger.info('Validation ....')
+						print >> sys.stderr, 'train: [info] Validation ....'
 
 						# not necessary	
-						train_err = pred_error(f_pred, self.prepare_data, train, kf)
-						valid_err = pred_error(f_pred, self.prepare_data, valid, kf_valid)
-						test_err = pred_error(f_pred, self.prepare_data, test, kf_test)
-
+						train_err = self.pred_error(train, kf)
+						valid_err = self.pred_error(valid, kf_valid)
+						test_err = self.pred_error(test, kf_test)
+						
 						history_errs.append([valid_err, test_err])
 						if (uidx == 0 or valid_err <= np.array(history_errs)[:, 0].min()):
 							best_p = unzip(tparams)
 							bad_count = 0
 						
-						logger.info('prediction error: train %f valid %f test %f'%(
+						print >> sys.stderr, 'train: [info] prediction error: train %f valid %f test %f'%(
 								train_err, valid_err, test_err)
-							)
+							
 						if (len(history_errs) > patience and
 							valid_err >= np.array(history_errs)[:-patience, 0].min()):
 							bad_count += 1
 							if bad_count > patience:
-								logger.info('Early stop!')
+								print >> sys.stderr, 'train: [info] Early stop!'
 								estop = True
 								break
 
-				logger.info('%d samples seen'%(n_samples))
+				print >> sys.stderr, 'train: [info] %d samples seen'%(n_samples)
 				if estop:
 					break
 	
 		except KeyboardInterrupt:
-			print logger.debug('training interrupted by user')
+			print >> sys.stderr, 'train: [debug] training interrupted by user'
 
 		end_time = time.time()
 
@@ -560,13 +544,12 @@ class LstmLrClassifier:
 		use_noise.set_value(0.)
 		
 		kf_train = get_minibatches_idx(len(train[0]), batch_size)
-		train_err = pred_error(f_pred, self.prepare_data, train, kf_train)
-		valid_err = pred_error(f_pred, self.prepare_data, valid, kf_valid)
-		test_err = pred_error(f_pred, self.prepare_data, test, kf_test)
+		train_err = self.pred_error(train, kf_train)
+		valid_err = self.pred_error(valid, kf_valid)
+		test_err = self.pred_error(test, kf_test)
  
-		logger.info('prediction error: train %f valid %f test %f'%(
+		print >> sys.stderr, 'train: [info] prediction error: train %f valid %f test %f'%(
 				train_err, valid_err, test_err)
-			)
 		
 		np.savez(
 			fname_model,
@@ -576,10 +559,8 @@ class LstmLrClassifier:
 			history_errs = history_errs, **best_p
 			)
 
-		logger.info('totally %d epoches in %.1f sec'%(eidx + 1, end_time - start_time))
+		print >> sys.stderr, 'train: [info] totally %d epoches in %.1f sec'%(eidx + 1, end_time - start_time)
 
-		self.f_pred_prob = f_pred_prob
-		self.f_pred = f_pred
 		self.tparams = tparams
 
 		return train_err, valid_err, test_err
@@ -589,6 +570,7 @@ def test():
 	xdim = 3
 	n_word = 20
 	n_length = 5
+	fname_model = 'output/lstmlr_model.npz'
 	
 	Wemb = np.random.random((n_word, xdim))
 
@@ -599,8 +581,8 @@ def test():
 		return (x, y)
 	
 	train = random_xy(2000)
-	valid = random_xy(300)
-	test = random_xy(100)
+	valid = random_xy(200)
+	test = random_xy(50)
 	dataset = (train, valid, test)
 
 	clf = LstmLrClassifier()
@@ -608,9 +590,117 @@ def test():
 			dataset = dataset,
 			Wemb = Wemb,
 			ydim = ydim,
-			
-			fname_model = 'output/lstmlr_model.npz'
+
+			validFreq = 100,
+			saveFreq = 100,
+		
+			fname_model = 'output/lstmlr_model.npz',
+			max_epochs = 2,
 		)
 
+	clf2 = LstmLrClassifier()
+	clf2.load(fname_model)
+	print clf2.pred_error(train)
+	print clf2.pred_error(valid)
+	print clf2.pred_error(test)
+
+def main():
+	import datica
+	import validatica
+	
+	import wemb_rand
+	from wordembedder import WordEmbedder
+	from const import N_EMO, DIR_MODEL, DIR_TEST
+	
+	def init_embedder(dataset, fname_embedder, xdim = None):
+		'''
+		initialize the embedder by load it from file if available
+		or build the model by the dataset and save it
+		'''
+
+		if os.path.exists(fname_embedder):
+			print >> sys.stderr, 'main: [info] embedding model %s found and loaded'%(fname_embedder)
+			return WordEmbedder.load(fname_embedder)
+		else:
+			assert xdim is not None
+
+			def x_iterator(dataset):
+				train, valid, test = dataset
+				for x, y in [train, valid]:
+					for xi in x:
+						yield xi
+
+			embedder = WordEmbedder(*wemb_rand.build(x_iterator(dataset), xdim))
+			embedder.dump(fname_embedder)
+		
+			return embedder
+
+	def prepare_input(dataset, embedder):
+		'''
+		turn sequences of string into list of vectors
+		'''
+		def index_xy(xy):
+			x, y = xy
+			new_x = [embedder.index(xi) for xi in x]
+			return (new_x, y)
+
+		train, test, valid = dataset
+		new_dataset = (index_xy(train), index_xy(test), index_xy(valid))
+
+		return new_dataset, embedder.get_Wemb()
+
+
+	# Initialization of OptionParser
+	optparser = OptionParser()
+
+	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
+	optparser.add_option('-o', '--dir_output', action='store', type = 'str', dest='dir_output', default = 'data/dataset/')
+	optparser.add_option('-x', '--dir_x', action='store', type = 'str', dest='dir_x', default = 'data/dataset/unigram/')
+
+	optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj')
+	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
+	optparser.add_option('-n', '--n_samples', action='store', dest='n_samples', default = None)
+
+	optparser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
+	opts, args = optparser.parse_args()
+
+	prefix = opts.prefix
+	
+	# Prepare filenames
+	dir_test = opts.dir_output + 'test/'
+	dir_model = opts.dir_output + 'model/'
+
+	fname_test = dir_test + '%s_test.pkl'%(prefix)
+	fname_model = dir_model + '%s_model.npz'%(prefix)
+	fname_embedder = dir_model + '%s_embedder.pkl'%(prefix)
+
+	dataset = datica.load_data(opts.dir_x, opts.ydim, opts.n_samples)
+
+	print >> sys.stderr, 'main: [info] initialization of embedder'
+	embedder = init_embedder(dataset, fname_embedder, opts.dim_proj)
+
+	print >> sys.stderr, 'main: [info] preparing input'
+	dataset, Wemb = prepare_input(dataset, embedder)
+
+	print >> sys.stderr, 'lstmextscript.run: [info] start training'
+	clf = LstmLrClassifier()
+
+	res = clf.train(
+			dataset = dataset,
+			Wemb = Wemb,
+			ydim = opts.ydim,
+			fname_model = fname_model,
+			batch_size = opts.batch_size,
+
+			max_epochs = 5000,
+		)
+
+	test_x, test_y = dataset[2]
+	proba = clf.predict_proba(test_x)
+	cPickle.dump((test_y, proba), open(fname_test, 'w'))
+
+	###################### Report ############################
+	validatica.report(test_y, proba, DIR_TEST + prefix)
+
 if __name__ == '__main__':
-	test()
+	main()

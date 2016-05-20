@@ -431,7 +431,141 @@ def main_valid():
 	valid(n_emo, datalen, fname_model, fname_result, fname_valid_prefix)
 '''
 
+def test():	
+	ydim = 2
+	xdim = 3
+	n_word = 20
+	n_length = 5
+	
+	Wemb = np.random.random((n_word, xdim))
+
+	def random_xy(n_samples):
+		x = [[np.random.randint(n_word) for j in range(n_length)] for i in range(n_samples)]
+		y = [np.random.randint(ydim) for j in range(n_samples)]
+
+		return (x, y)
+	
+	train = random_xy(2000)
+	valid = random_xy(200)
+	test = random_xy(50)
+	dataset = (train, valid, test)
+
+	clf = LstmClassifier()
+	res = clf.train(
+			dataset = dataset,
+			Wemb = Wemb,
+			ydim = ydim,
+
+			validFreq = 100,
+			saveFreq = 100,
+		
+			fname_model = 'output/lstmlr_model.npz',
+			max_epochs = 2,
+		)
+
+	clf2 = LstmClassifier()
+	clf2.load(fname_model)
+	print clf2.pred_error(train)
+	print clf2.pred_error(valid)
+	print clf2.pred_error(test)
+
+def main():
+	import datica
+	import validatica
+	
+	import wemb_rand
+	from wordembedder import WordEmbedder
+	from const import N_EMO, DIR_MODEL, DIR_TEST
+	
+	def init_embedder(dataset, fname_embedder, xdim = None):
+		'''
+		initialize the embedder by load it from file if available
+		or build the model by the dataset and save it
+		'''
+
+		if os.path.exists(fname_embedder):
+			print >> sys.stderr, 'main: [info] embedding model %s found and loaded'%(fname_embedder)
+			return WordEmbedder.load(fname_embedder)
+		else:
+			assert xdim is not None
+
+			def x_iterator(dataset):
+				train, valid, test = dataset
+				for x, y in [train, valid]:
+					for xi in x:
+						yield xi
+
+			embedder = WordEmbedder(*wemb_rand.build(x_iterator(dataset), xdim))
+			embedder.dump(fname_embedder)
+		
+			return embedder
+
+	def prepare_input(dataset, embedder):
+		'''
+		turn sequences of string into list of vectors
+		'''
+		def index_xy(xy):
+			x, y = xy
+			new_x = [embedder.index(xi) for xi in x]
+			return (new_x, y)
+
+		train, test, valid = dataset
+		new_dataset = (index_xy(train), index_xy(test), index_xy(valid))
+
+		return new_dataset, embedder.get_Wemb()
+
+
+	# Initialization of OptionParser
+	optparser = OptionParser()
+
+	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
+	optparser.add_option('-o', '--dir_output', action='store', type = 'str', dest='dir_output', default = 'data/dataset/')
+	optparser.add_option('-x', '--dir_x', action='store', type = 'str', dest='dir_x', default = 'data/dataset/unigram/')
+
+	optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj')
+	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
+	optparser.add_option('-n', '--n_samples', action='store', dest='n_samples', default = None)
+
+	optparser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
+	opts, args = optparser.parse_args()
+
+	prefix = opts.prefix
+	
+	# Prepare filenames
+	dir_test = opts.dir_output + 'test/'
+	dir_model = opts.dir_output + 'model/'
+
+	fname_test = dir_test + '%s_test.pkl'%(prefix)
+	fname_model = dir_model + '%s_model.npz'%(prefix)
+	fname_embedder = dir_model + '%s_embedder.pkl'%(prefix)
+
+	dataset = datica.load_data(opts.dir_x, opts.ydim, opts.n_samples)
+
+	print >> sys.stderr, 'main: [info] initialization of embedder'
+	embedder = init_embedder(dataset, fname_embedder, opts.dim_proj)
+
+	print >> sys.stderr, 'main: [info] preparing input'
+	dataset, Wemb = prepare_input(dataset, embedder)
+
+	print >> sys.stderr, 'lstmextscript.run: [info] start training'
+	clf = LstmClassifier()
+
+	res = clf.train(
+			dataset = dataset,
+			Wemb = Wemb,
+			ydim = opts.ydim,
+			fname_model = fname_model,
+			batch_size = opts.batch_size,
+
+			max_epochs = 5000,
+		)
+
+	test_x, test_y = dataset[2]
+	proba = clf.predict_proba(test_x)
+	cPickle.dump((test_y, proba), open(fname_test, 'w'))
+
+	###################### Report ############################
+	validatica.report(test_y, proba, DIR_TEST + prefix)
+
 if __name__ == '__main__':
 	main()
-	#main_valid()
-
