@@ -176,6 +176,13 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 
 65. data/bow_result.txt 為以bow為輸入的實驗結果, 或 ls data/dataset/test | grep bow | grep prec.pkl
 
+66. 加入naivebayes的預測結果作為logisticRegression的輸出, 修改lstmextscript進行實驗
+	python nbdatica.py -x data/dataset/token/ -s data/dataset/nb_token/ -y 
+	python nbdatica.py -x data/dataset/unigram/ -s data/dataset/nb_unigram/ -y 90
+
+	sudo python lstmextscript.py -p randunbu9064 -x data/dataset/unigram/ -s data/dataset/nb_unigram -o data/dataset/ -y 90 -d 64
+	sudo python lstmextscript.py -p randunb9064 -x data/dataset/unigram/ -s data/dataset/nb_token/ -o data/dataset/ -y 90 -d 64
+
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
