@@ -3,7 +3,7 @@
 '''
 Author: Xihao Liang
 Created: 2016.05.19
-Description: Interface for Lstm-LR, only the last vector of LSTM remained
+Description: Interface for Lstm-LR, Cell connected
 '''
 
 import os
@@ -134,6 +134,9 @@ class LstmLrClassifier:
 		U = np.concatenate([ortho_weight(options['dim_proj']) for i in range(N)], axis=1)
 		params['%s_U'%(prefix)] = U
 
+		V = np.concatenate([ortho_weight(options['dim_proj']) for i in range(3)], axis=1)
+		params['%s_V'%(prefix)] = V
+
 		b = np.zeros((N * options['dim_proj'],))
 		params['%s_b'%(prefix)] = b.astype(floatX)
 
@@ -157,9 +160,11 @@ class LstmLrClassifier:
 			preact = T.dot(h_, tparams['%s_U'%(prefix)])
 			preact += x_
 
-			i = T.nnet.sigmoid(_slice(preact, 0, options['dim_proj']))
-			f = T.nnet.sigmoid(_slice(preact, 1, options['dim_proj']))
-			o = T.nnet.sigmoid(_slice(preact, 2, options['dim_proj']))
+			cell_effect = T.dot(c_, tparams['%s_V'%(prefix)])
+
+			i = T.nnet.sigmoid(_slice(preact, 0, options['dim_proj']) + _slice(cell_effect, 0, options['dim_proj']))
+			f = T.nnet.sigmoid(_slice(preact, 1, options['dim_proj']) + _slice(cell_effect, 1, options['dim_proj']))
+			o = T.nnet.sigmoid(_slice(preact, 2, options['dim_proj']) + _slice(cell_effect, 2, options['dim_proj']))
 			c = T.tanh(_slice(preact, 3, options['dim_proj']))
 
 			c = f * c_ + i * c
@@ -351,7 +356,7 @@ class LstmLrClassifier:
 
 		for idx, s in enumerate(seqs):
 			x[:lengths[idx], idx] = s
-			x_mask[lengths[idx] - 1, idx] = 1.
+			x_mask[:lengths[idx], idx] = 1.
 		
 		return x, x_mask
 	
