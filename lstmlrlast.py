@@ -213,8 +213,9 @@ class LstmLrClassifier:
 		proj = self.lstm_layer(tparams, emb, options, prefix = 'lstm', mask = mask)
 
 		# mean pooling, a matrix of shape (n_samples, dim_proj)
-		proj = (proj * mask[:, :, None]).sum(axis=0)
-		proj = proj / mask.sum(axis=0)[:, None]
+		#proj = (proj * mask[:, :, None]).sum(axis=0)
+		#proj = proj / mask.sum(axis=0)[:, None]
+		proj = proj[-1]
 
 		# add a dropout layer after mean pooling
 
@@ -351,7 +352,7 @@ class LstmLrClassifier:
 
 		for idx, s in enumerate(seqs):
 			x[:lengths[idx], idx] = s
-			x_mask[lengths[idx] - 1, idx] = 1.
+			x_mask[:lengths[idx], idx] = 1.
 		
 		return x, x_mask
 	

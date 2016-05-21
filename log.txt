@@ -183,6 +183,11 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	sudo python lstmextscript.py -p randunbu9064 -x data/dataset/unigram/ -s data/dataset/nb_unigram -o data/dataset/ -y 90 -d 64
 	sudo python lstmextscript.py -p randunb9064 -x data/dataset/unigram/ -s data/dataset/nb_token/ -o data/dataset/ -y 90 -d 64
 
+67. 重組lstm代碼,　嘗試不同細節
+	1) 只考虑輸入句子到LSTM的最后一個向量
+	sudo python lstmlrlast.py -p randulast9064 -d 90 -y 64                            
+	2) 添加LSTM中Cell到３個gate的連接
+	sudo python lstmlrc.py -p randucell9064 -d 64 -y 90
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
