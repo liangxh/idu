@@ -12,49 +12,43 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 import zhtokenizer
+from utils import progbar
 
-def prepare():	
-	'''
-	tokenize and unigramize the text under data/dataset/text
-	'''
-	import blogger
-	import zhtokenizer
-	from utils import progbar, zhprocessor
+def reform(idir, odir):
+	if not os.path.isdir(odir):
+		os.mkdir(odir)
 	
-	dir_unigram = 'uniseq'
-	dir_token = 'tokseq'
+	n_emo = 90
+	pbar = progbar.start(n_emo)
 
-	if not os.path.isdir(DIR_UNIGRAM):
-		os.mkdir(DIR_UNIGRAM)
+	for i in range(n_emo):
+		seqs = cPickle.load(open(idir + '%d.pkl'%(i), 'r'))	
+		fobj = open(odir + '%d.txt'%(i), 'w')
+		content = u''
+		content = u'\n'.join([u' '.join(seq) for seq in seqs])
+		fobj.write(content)
+		fobj.close()
 
-	if not os.path.isdir(DIR_TOKEN):
-		os.mkdir(DIR_TOKEN)
+		pbar.update(i + 1)
+	pbar.finish()
 
-	unigram_list = []
-	token_list = []
+def load(ifname):
+	'''
+	load one file
+	'''
+	content = open(ifname, 'r').read()
+	seqs = [line.split(u' ') for line in content.split(u'\n')]
 
-	for eid in eids:
-		lines = open(DIR_TEXT + '%d.txt'%(eid), 'r').read().split('\n')
-		
-		unigram_list = []
-		token_list = []
-		
-		print 'preparing data for EID-%d'%(eid)
-		pbar = progbar.start(len(lines))
-	
-		for i, line in enumerate(lines):
-			text, emo = blogger.extract(line)
-			text = zhprocessor.simplify(text)
+	return seqs
 
-			unigrams = zhtokenizer.unigramize(text)	
-			tokens = zhtokenizer.tokenize(text)
-			
-			unigram_list.append(unigrams)
-			token_list.append(tokens)
-		
-			pbar.update(i + 1)
-		pbar.finish()
+def main():
+	'''
+	a short cut to reform
+	'''
+	idir = sys.argv[1]
+	odir = sys.argv[2]
 
-		cPickle.dump(unigram_list, open(DIR_UNIGRAM + '%d.pkl'%(eid), 'w'))
-		cPickle.dump(token_list, open(DIR_TOKEN + '%d.pkl'%(eid), 'w'))
+	reform(idir, odir)
 
+if __name__ == '__main__':
+	main()
