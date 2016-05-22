@@ -669,6 +669,7 @@ def main():
 	opts, args = optparser.parse_args()
 
 	prefix = opts.prefix
+	prefix_embedder = opts.prefix
 	
 	# Prepare filenames
 	dir_test = opts.dir_output + 'test/'
@@ -676,7 +677,7 @@ def main():
 
 	fname_test = dir_test + '%s_test.pkl'%(prefix)
 	fname_model = dir_model + '%s_model.npz'%(prefix)
-	fname_embedder = dir_model + '%s_embedder.pkl'%(prefix)
+	fname_embedder = dir_model + '%s_embedder.pkl'%(prefix_embedder)
 
 	dataset = datica.load_data(opts.dir_x, opts.ydim, opts.n_samples)
 
