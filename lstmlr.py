@@ -623,6 +623,7 @@ def main():
 			return WordEmbedder.load(fname_embedder)
 		else:
 			assert xdim is not None
+			print >> sys.stderr, 'main: [warning] embedding model %s not found, RANDOM is used by default'%(fname_embedder)
 
 			def x_iterator(dataset):
 				train, valid, test = dataset
@@ -654,17 +655,20 @@ def main():
 	optparser = OptionParser()
 
 	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
-	optparser.add_option('-o', '--dir_output', action='store', type = 'str', dest='dir_output', default = 'data/dataset/')
-	optparser.add_option('-x', '--dir_x', action='store', type = 'str', dest='dir_x', default = 'data/dataset/unigram/')
+	optparser.add_option('-e', '--prefix_embedder', action='store', type = 'str', dest='prefix_embeder')
 
+	optparser.add_option('-x', '--dir_x', action='store', type = 'str', dest='dir_x', default = 'data/dataset/unigram/')	
+	optparser.add_option('-o', '--dir_output', action='store', type = 'str', dest='dir_output', default = 'data/dataset/')
+	
 	optparser.add_option('-d', '--dim_proj', action='store', type = 'int', dest='dim_proj')
 	optparser.add_option('-y', '--ydim', action='store', type='int', dest='ydim', default = N_EMO)
 	optparser.add_option('-n', '--n_samples', action='store', dest='n_samples', default = None)
-
 	optparser.add_option('-b', '--batch_size', action='store', type='int', dest='batch_size', default = 16)
+
 	opts, args = optparser.parse_args()
 
 	prefix = opts.prefix
+	prefix_embedder = opts.prefix
 	
 	# Prepare filenames
 	dir_test = opts.dir_output + 'test/'
@@ -672,7 +676,7 @@ def main():
 
 	fname_test = dir_test + '%s_test.pkl'%(prefix)
 	fname_model = dir_model + '%s_model.npz'%(prefix)
-	fname_embedder = dir_model + '%s_embedder.pkl'%(prefix)
+	fname_embedder = dir_model + '%s_embedder.pkl'%(prefix_embedder)
 
 	dataset = datica.load_data(opts.dir_x, opts.ydim, opts.n_samples)
 
@@ -691,15 +695,12 @@ def main():
 			ydim = opts.ydim,
 			fname_model = fname_model,
 			batch_size = opts.batch_size,
-
-			max_epochs = 5000,
 		)
 
 	test_x, test_y = dataset[2]
 	proba = clf.predict_proba(test_x)
 	cPickle.dump((test_y, proba), open(fname_test, 'w'))
 
-	###################### Report ############################
 	validatica.report(test_y, proba, DIR_TEST + prefix)
 
 if __name__ == '__main__':
