@@ -656,7 +656,7 @@ def main():
 	optparser = OptionParser()
 
 	optparser.add_option('-p', '--prefix', action='store', type = 'str', dest='prefix')
-	optparser.add_option('-e', '--prefix_embedder', action='store', type = 'str', dest='prefix_embeder')
+	optparser.add_option('-e', '--prefix_embedder', action='store', type = 'str', dest='prefix_embedder')
 
 	optparser.add_option('-x', '--dir_x', action='store', type = 'str', dest='dir_x', default = 'data/dataset/unigram/')	
 	optparser.add_option('-o', '--dir_output', action='store', type = 'str', dest='dir_output', default = 'data/dataset/')
@@ -669,7 +669,6 @@ def main():
 	opts, args = optparser.parse_args()
 
 	prefix = opts.prefix
-	prefix_embedder = opts.prefix_embedder
 	
 	# Prepare filenames
 	dir_test = opts.dir_output + 'test/'
@@ -677,7 +676,7 @@ def main():
 
 	fname_test = dir_test + '%s_test.pkl'%(prefix)
 	fname_model = dir_model + '%s_model.npz'%(prefix)
-	fname_embedder = dir_model + '%s_embedder.pkl'%(prefix_embedder)
+	fname_embedder = dir_model + '%s_embedder.pkl'%(opts.prefix_embedder)
 
 	dataset = datica.load_data(opts.dir_x, opts.ydim, opts.n_samples)
 
