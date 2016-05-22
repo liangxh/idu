@@ -668,7 +668,7 @@ def main():
 	opts, args = optparser.parse_args()
 
 	prefix = opts.prefix
-	prefix_embedder = opts.prefix
+	prefix_embedder = opts.prefix_embedder
 	
 	# Prepare filenames
 	dir_test = opts.dir_output + 'test/'
