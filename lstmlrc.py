@@ -218,8 +218,9 @@ class LstmLrClassifier:
 		proj = self.lstm_layer(tparams, emb, options, prefix = 'lstm', mask = mask)
 
 		# mean pooling, a matrix of shape (n_samples, dim_proj)
-		proj = (proj * mask[:, :, None]).sum(axis=0)
-		proj = proj / mask.sum(axis=0)[:, None]
+		#proj = (proj * mask[:, :, None]).sum(axis=0)
+		#proj = proj / mask.sum(axis=0)[:, None]
+		proj = proj[-1]
 
 		# add a dropout layer after mean pooling
 

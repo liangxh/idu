@@ -189,6 +189,11 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	2) 添加LSTM中Cell到３個gate的連接
 	sudo python lstmlrc.py -p randucell9064 -d 64 -y 90
 
+68. TODO 嘗試重構datica和數據存儲方法, 滿足以下功能
+	1) 讀取加速
+	2) 不同讀取方式
+	3) 基於不同的詞篩選方法對數據進行加工
+
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 記錄結果
