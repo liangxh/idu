@@ -194,6 +194,14 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	2) 不同讀取方式
 	3) 基於不同的詞篩選方法對數據進行加工
 
+	daticaplus構建成功, 但由於lstmlrlast效果提升, 對輸入內容的優化擱置
+
+69. lstmlrlast在 Rand得到較好的效果,　加入-e選項嘗試不同的詞向量初始化方法
+	sudo python lstmlrlast.py -p svdulast9064 -d 90 -y 64 -e svdu9064   
+	sudo python lstmlrlast.py -p wvulast9064 -d 90 -y 64 -e wvu9064
+	sudo python lstmlrlast.py -p pcaulast9064 -d 90 -y 64 -e pcau9064
+
+
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 記錄結果

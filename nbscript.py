@@ -53,13 +53,18 @@ def main():
 
 	classifier = NaiveBayesClassifier()
 	classifier.train(train[0], train[1], opts.value_k, opts.flag_deduplicate)
-	preds = [classifier.classify(x) for x in test[0]]
+	
+	preds = [classifier.classify(x) for x in train[0]]
+	prec = validatica.precision_at_n(train[1], preds)
+	print prec
 
-	fname_test = 'data/dataset/test/%s_test.pkl'%(opts.prefix)
-	fname_valid = 'data/dataset/test/%s'%(opts.prefix)
+	#preds = [classifier.classify(x) for x in test[0]]
 
-	cPickle.dump((test[1], preds), open(fname_test, 'w'))
-	validatica.report(test[1], preds, fname_valid)
+	#fname_test = 'data/dataset/test/%s_test.pkl'%(opts.prefix)
+	#fname_valid = 'data/dataset/test/%s'%(opts.prefix)
+
+	#cPickle.dump((test[1], preds), open(fname_test, 'w'))
+	#validatica.report(test[1], preds, fname_valid)
 
 
 if __name__ == '__main__':
