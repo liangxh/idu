@@ -609,7 +609,7 @@ def main():
 	import datica
 	import validatica
 	
-	import wemb_rand
+	import wemb_randtf
 	from wordembedder import WordEmbedder
 	from const import N_EMO, DIR_MODEL, DIR_TEST
 	
