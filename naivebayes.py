@@ -158,8 +158,8 @@ class NaiveBayesClassifier:
 		pbar = progbar.start(len(count))
 		l = 0
 		for t, c in count.items():
-			#self.prob_token[t] =  (c + k) / ((k + 1) * n_y_len)
-			self.prob_token[t] =  (c + 1) / (n_V * n_y_len)
+			#self.prob_token[t] = (c + k) / ((k + 1) * n_y_len)
+			self.prob_token[t] = np.log((c + k) / ((k + 1) * n_y_len))
 
 			l += 1
 			pbar.update(l)
@@ -187,13 +187,15 @@ class NaiveBayesClassifier:
 			if show:
 				print '%20s: '%(t), self.prob_token[t].tolist()
 
-			p *= self.prob_token[t]
+			#p *= self.prob_token[t]
+			p += self.prob_token[t]
 
-		p *= p_global
-		p_sum = np.sum(p)
-		
-		if p_sum > 0:
-			p /= p_sum
+		p += np.log(p_global)
+
+		#p *= p_global
+		#p_sum = np.sum(p)
+		#if p_sum > 0:
+		#	p /= p_sum
 
 		return p
 
