@@ -153,10 +153,13 @@ class NaiveBayesClassifier:
 		print >> sys.stderr, 'normalization'
 
 		self.prob_token = {}
+		n_V = len(count)
+
 		pbar = progbar.start(len(count))
 		l = 0
 		for t, c in count.items():
-			self.prob_token[t] =  (c + k) / ((k + 1) * n_y_len)
+			#self.prob_token[t] =  (c + k) / ((k + 1) * n_y_len)
+			self.prob_token[t] =  (c + 1) / (n_V * n_y_len)
 
 			l += 1
 			pbar.update(l)

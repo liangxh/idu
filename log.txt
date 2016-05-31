@@ -138,7 +138,7 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 
 52. 對51, 懐疑數據量不足导致LSTM效果比NaiveBayes效果差, 從數據庫中重新篩選數據進行實驗
 
-53. 重新提取數據
+53. 重新提取數據, 4類情感各4個表情符順序取70000條樣本
 
 	python textscanner.py
 	python -c "import datica; i = 0; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
@@ -150,6 +150,7 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	sudo python lstmscript_dir.py -p emo4708 -x data/dataset_emo/unigram/ -y 4 -d 8
 	sudo python lstmscript_dir.py -p emo4732 -x data/dataset_emo/unigram/ -y 4 -d 32
 	python nbscript_dir.py -p nbemo4710 -x data/dataset_emo/unigram/ -y 4 -k 1.
+	python nbscript_dir.py -p nbemo4710token -x data/dataset_emo/token/ -y 4 -k 1.
 
 54. 對baseline算法Contextual knowledge, 使用cvxpy進行實驗 cvxclassifier.py data/config2x14.txt, 正負性情感各14個表情符,　最優情況準確率為70% (data/dataset/test/cvx2x14_report1.txt)
 
