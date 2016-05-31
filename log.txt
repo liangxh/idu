@@ -201,6 +201,10 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 	sudo python lstmlrlast.py -p wvulast9064 -d 90 -y 64 -e wvu9064
 	sudo python lstmlrlast.py -p pcaulast9064 -d 90 -y 64 -e pcau9064
 
+70. 重新運行2分類和4分類的結果
+
+sudo python lstmlrlast.py -p randulastemo4764 -x data/dataset_emo/unigram/ -y 4 -d 64 -e randulastemo4764 
+sudo python lstmlrlast_config.py -p randulastemo021464 -x data/dataset/unigram/ -c data/config2x14.txt -e randulastemo021464 -d 64
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -226,6 +230,8 @@ thr_ED	thr_rank	count
 * 對a的誤差的標準差比p的高
 * 對詞向量构造方法svdu64, 回歸模型linear_regression時, 平均誤差最小
 * 對linear_regression, 按平均誤差自小至大排序為: svdu64 (0.5259) > pcau64 (0.5261) > wvu(0.5311) > wvuall(0.5259) > randu(0.5784)
+
+
 
 
 ## BUG

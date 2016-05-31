@@ -36,6 +36,28 @@ def prepare_unigramize(ifname, ofname):
 
 	cPickle.dump(seqs, open(ofname, 'w'))
 
+def prepare_tokenize(ifname, ofname):
+	import zhtokenizer
+	from utils import zhprocessor, progbar
+
+	lines = open(ifname, 'r').readlines()
+
+	pbar = progbar.start(len(lines))
+	l = 0
+
+	seqs = []
+	for line in lines:
+		line = line.decode('utf8')
+		line = zhprocessor.simplify(line)
+		tokens = zhtokenizer.tokenize(line)
+		seqs.append(tokens)
+
+		l += 1
+		pbar.update(l)
+	pbar.finish()
+
+	cPickle.dump(seqs, open(ofname, 'w'))
+
 def prepare(eids = range(N_EMO)):
 	'''
 	tokenize and unigramize the text under data/dataset/text
