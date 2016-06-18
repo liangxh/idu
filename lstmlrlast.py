@@ -628,7 +628,8 @@ def main():
 
 			def x_iterator(dataset):
 				train, valid, test = dataset
-				for x, y in [train, valid]:
+				#for x, y in [train, valid]:
+				for x, y in train:
 					for xi in x:
 						yield xi
 
