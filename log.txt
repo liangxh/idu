@@ -141,10 +141,16 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 53. 重新提取數據, 4類情感各4個表情符順序取70000條樣本
 
 	python textscanner.py
-	python -c "import datica; i = 0; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
-	python -c "import datica; i = 1; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
-	python -c "import datica; i = 2; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
-	python -c "import datica; i = 3; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+python -c "import datica; i = 0; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+python -c "import datica; i = 1; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+python -c "import datica; i = 2; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+python -c "import datica; i = 3; datica.prepare_unigramize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/unigram/%d.pkl'%(i))"
+
+python -c "import datica; i = 0; datica.prepare_tokenize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/token/%d.pkl'%(i))"
+python -c "import datica; i = 1; datica.prepare_tokenize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/token/%d.pkl'%(i))"
+python -c "import datica; i = 2; datica.prepare_tokenize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/token/%d.pkl'%(i))"
+python -c "import datica; i = 3; datica.prepare_tokenize('data/dataset_emo/raw/%d.txt'%(i), 'data/dataset_emo/token/%d.pkl'%(i))"
+
 
 
 	sudo python lstmscript_dir.py -p emo4708 -x data/dataset_emo/unigram/ -y 4 -d 8
@@ -166,6 +172,10 @@ python -c "import contextprocessor as ctp; ctp.merge('dataset', ['above_t_nb', '
 61. simanalyser.main產生 ysup/%s.pkl,
 	.revalidate基於已有的_test.pkl 產生multi_label結果后的_test.pkl
 	.export_vote產生 data/dataset/ysup/vote_%s.pkl記錄投票結果
+
+python -c "import simanalyser as sima; sima.revalidate('data/dataset/ysup/075.pkl', 1, 'randulast9064', 'randulast9064_ysup07501')" 
+python -c "import simanalyser as sima; sima.revalidate('data/dataset/ysup/075.pkl', 2, 'randulast9064', 'randulast9064_ysup07502')"                                   
+python -c "import simanalyser as sima; sima.revalidate('data/dataset/ysup/075.pkl', 3, 'randulast9064', 'randulast9064_ysup07503')"                                   
 
 62. voteanalyser.py
 	.count_vote產生參與投票樣本數的直方圖至data/dataset/ysup/votecount_075.png

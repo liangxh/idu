@@ -27,7 +27,7 @@ def tohist(ls):
 
 def get_width(seq):
 		if len(seq) < 2:
-			return 0
+			return len(seq)
 
 		d = np.diff(seq)
 		min_d = 0.
@@ -38,6 +38,20 @@ def get_width(seq):
 				w = i
 		return w + 1
 
+'''
+def get_cov(seq):
+	if len(seq) < 2:
+			return len(seq)
+
+	c = []
+	total = np.sum(seq)
+	last = 0.
+	for di in seq:
+		last += di / total
+		if c > 0.75:
+			c.append(last)
+'''	
+
 def vote_width(key, title, ofname):
 	fname = 'data/dataset/ysup/vote_%s.pkl'%(key)
 	yhists = cPickle.load(open(fname, 'r'))
@@ -47,14 +61,21 @@ def vote_width(key, title, ofname):
 		f_seq = np.asarray([f for y, f in yhist])
 		widths.append(get_width(f_seq))
 
-	#whist = tohist(widths)
-
 	plt.figure()
 	plt.title(title)
-	plt.xlabel('Width')
+	plt.xlabel('Number of Representative Emoticons')
 	plt.ylabel('Number of Samples')
 	plt.hist(widths, bins = np.arange(0, max(widths), 1), normed = True)
 	plt.savefig(ofname)
+
+	whist = tohist(widths)
+	total = sum(whist.values())
+	wc = []
+	last = 0.
+	for k, v in sorted(whist.items(), key = lambda k:k[0])[1:]:
+		last = float(v) / total 
+		print k, last
+	
 	
 	
 
@@ -96,9 +117,14 @@ def count_vote(key, title):
 
 	plt.figure()
 	plt.title(title)
+
+
+	x_min, x_max = (min(counts), 1500)
+	plt.axis((x_min, x_max, 0, 30600))
+
 	plt.xlabel('Number of Similar Samples')
 	plt.ylabel('Percentage of Test Samples (%)')
-	plt.hist(counts, bins = 50)
+	plt.hist(counts, bins = np.arange(x_min, x_max, 20))
 	
 	to_percentage = lambda y, pos: str(round( ( y / 36000. ) * 100.0, 1))
 	plt.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))

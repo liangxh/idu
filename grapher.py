@@ -28,7 +28,7 @@ def export(label_prec, title, ofname):
 
 	ax = plt.subplot(1, 1, 1)
 	plt.title(title)
-	plt.xlabel('N')
+	plt.xlabel('Top N')
 	plt.ylabel('Precision@N')
 	plt.axis([1, ydim, 0., 1.])
 
